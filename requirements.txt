@@ -1,0 +1,10 @@
+diffusers
+gradio>=4.44.1
+torch>=2.4.0
+numpy
+matplotlib
+pillow
+wandb
+einops
+transformers
+accelerate
