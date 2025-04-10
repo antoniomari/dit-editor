@@ -8,3 +8,4 @@ wandb
 einops
 transformers
 accelerate
+sentencepiece
