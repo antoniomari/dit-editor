@@ -5,6 +5,10 @@ from hooks import HooksRegister
 import torch
 
 class ModelActivationCache(ABC):
+    """
+    Cache for inference pass of a Diffusion Transformer.
+    Used to cache residual-streams and activations.
+    """
     def __init__(self):
     
         # Initialize caches for "double transformer" blocks using the subclass-defined NUM_TRANSFORMER_BLOCKS
@@ -57,6 +61,14 @@ class PixartActivationCache(ModelActivationCache):
 
 
 class ActivationCacheEditor:
+    """ Used to manage ModelActivationCache of a Diffusion Transformer.
+
+    Raises:
+        NotImplementedError: _description_
+
+    Returns:
+        _type_: _description_
+    """
 
     def __init__(self, cache: ModelActivationCache):
         self.cache = cache
