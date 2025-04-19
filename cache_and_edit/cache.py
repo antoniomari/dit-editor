@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
-from hooks import HooksRegister
+from cache_and_edit.hooks import HooksRegister
 import torch
 
 class ModelActivationCache(ABC):
@@ -13,15 +13,28 @@ class ModelActivationCache(ABC):
     
         # Initialize caches for "double transformer" blocks using the subclass-defined NUM_TRANSFORMER_BLOCKS
         if hasattr(self, 'NUM_TRANSFORMER_BLOCKS'):
-            self.image_residual = [None] * self.NUM_TRANSFORMER_BLOCKS
-            self.image_activation = [None] * self.NUM_TRANSFORMER_BLOCKS
-            self.text_residual = [None] * self.NUM_TRANSFORMER_BLOCKS
-            self.text_activation = [None] * self.NUM_TRANSFORMER_BLOCKS
+            self.image_residual = []
+            self.image_activation = []
+            self.text_residual = []
+            self.text_activation = []
 
         # Initialize caches for "single transformer" blocks if defined (using NUM_SINGLE_TRANSFORMER_BLOCKS)
         if hasattr(self, 'NUM_SINGLE_TRANSFORMER_BLOCKS'):
-            self.text_image_residual = [None] * self.NUM_SINGLE_TRANSFORMER_BLOCKS
-            self.text_image_activation = [None] * self.NUM_SINGLE_TRANSFORMER_BLOCKS
+            self.text_image_residual = []
+            self.text_image_activation = []
+
+    def __str__(self):
+        lines = [f"{self.__class__.__name__}:"]
+        for attr_name, value in self.__dict__.items():
+            if isinstance(value, list) and all(isinstance(v, torch.Tensor) for v in value):
+                shapes = value[0].shape
+                lines.append(f"  {attr_name}: len={len(value)}, shapes={shapes}")
+            else:
+                lines.append(f"  {attr_name}: {type(value)}")
+        return "\n".join(lines)
+
+    def _repr_pretty_(self, p, cycle):
+        p.text(str(self))
 
     @abstractmethod
     def get_cache_info(self):
@@ -42,7 +55,7 @@ class FluxActivationCache(ModelActivationCache):
 
     def get_cache_info(self):
         return {
-            "double_transformer_blocks": self.NUM_TRANSFORMER_BLOCKS,
+            "transformer_blocks": self.NUM_TRANSFORMER_BLOCKS,
             "single_transformer_blocks": self.NUM_SINGLE_TRANSFORMER_BLOCKS,
         }
 
@@ -82,6 +95,23 @@ class ActivationCacheEditor:
         return x
     
 
+    @staticmethod
+    @torch.no_grad()
+    def fix_inf_values(*args):
+
+        # Case 1: no kwards are passed to the module
+        if len(args) == 3:
+            module, input, output = args
+        # Case 2: when kwargs are passed to the model as input
+        elif len(args) == 4:
+            module, input, kwinput, output = args
+
+        if isinstance(module, FluxTransformerBlock):
+            return ActivationCacheEditor._safe_clip(output[0]), ActivationCacheEditor._safe_clip(output[1])
+
+        elif isinstance(module, FluxSingleTransformerBlock):
+            return ActivationCacheEditor._safe_clip(output)
+
     @torch.no_grad()
     def cache_residual_and_activation(self, *args):
         """ 
@@ -98,14 +128,14 @@ class ActivationCacheEditor:
             encoder_hidden_states = output[0]            
             hidden_states = output[1]
 
-            self.cache["transformer_blocks"]["image_activation"].append(hidden_states - kwinput["hidden_states"])
-            self.cache["transformer_blocks"]["text_activation"].append(encoder_hidden_states - kwinput["encoder_hidden_states"])
-            self.cache["transformer_blocks"]["image_residual"].append(kwinput["hidden_states"])
-            self.cache["transformer_blocks"]["text_residual"].append(kwinput["encoder_hidden_states"])
+            self.cache.image_activation.append(hidden_states - kwinput["hidden_states"])
+            self.cache.text_activation.append(encoder_hidden_states - kwinput["encoder_hidden_states"])
+            self.cache.image_residual.append(kwinput["hidden_states"])
+            self.cache.text_residual.append(kwinput["encoder_hidden_states"])
 
         elif isinstance(module, FluxSingleTransformerBlock):
-            self.cache["single_transformer_blocks"]["text_image_activation"].append(output - kwinput["hidden_states"])
-            self.cache["single_transformer_blocks"]["text_image_residual"].append(kwinput["hidden_states"])
+            self.cache.text_image_activation.append(output - kwinput["hidden_states"])
+            self.cache.text_image_residual.append(kwinput["hidden_states"])
         else:
             raise NotImplementedError(f"Caching not implemented for {type(module)}")
         
@@ -121,7 +151,7 @@ class ActivationCacheEditor:
 
                 # setup safe torch16 clipping
                 safeclip_hook = HooksRegister._register_general_hook(pipe, module_name, 
-                                                         ActivationCacheEditor._safe_clip, 
+                                                         ActivationCacheEditor.fix_inf_values, 
                                                          with_kwargs=True,
                                                          is_pre_hook=False)
                 self.hooks_dict[module_name].append(safeclip_hook)
