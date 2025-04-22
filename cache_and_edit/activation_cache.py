@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
-from cache_and_edit.hooks import HooksRegister
+from cache_and_edit.hooks import fix_inf_values_hook, register_general_hook
 import torch
 
 class ModelActivationCache(ABC):
@@ -58,6 +58,9 @@ class FluxActivationCache(ModelActivationCache):
             "transformer_blocks": self.NUM_TRANSFORMER_BLOCKS,
             "single_transformer_blocks": self.NUM_SINGLE_TRANSFORMER_BLOCKS,
         }
+    
+    def __getitem__(self, key):
+        return getattr(self, key)
 
 
 class PixartActivationCache(ModelActivationCache):
@@ -73,7 +76,7 @@ class PixartActivationCache(ModelActivationCache):
         }
 
 
-class ActivationCacheEditor:
+class ActivationCacheHandler:
     """ Used to manage ModelActivationCache of a Diffusion Transformer.
 
     Raises:
@@ -85,35 +88,9 @@ class ActivationCacheEditor:
 
     def __init__(self, cache: ModelActivationCache):
         self.cache = cache
-        self.hooks_dict = defaultdict(list)
-
-    @staticmethod
-    def _safe_clip(x: torch.Tensor):
-        if x.dtype == torch.float16:
-            x[torch.isposinf(x)] = 65504
-            x[torch.isneginf(x)] = -65504
-        return x
-    
-
-    @staticmethod
-    @torch.no_grad()
-    def fix_inf_values(*args):
-
-        # Case 1: no kwards are passed to the module
-        if len(args) == 3:
-            module, input, output = args
-        # Case 2: when kwargs are passed to the model as input
-        elif len(args) == 4:
-            module, input, kwinput, output = args
-
-        if isinstance(module, FluxTransformerBlock):
-            return ActivationCacheEditor._safe_clip(output[0]), ActivationCacheEditor._safe_clip(output[1])
-
-        elif isinstance(module, FluxSingleTransformerBlock):
-            return ActivationCacheEditor._safe_clip(output)
 
     @torch.no_grad()
-    def cache_residual_and_activation(self, *args):
+    def cache_residual_and_activation_hook(self, *args):
         """ 
             To be used as a forward hook on a Transformer Block.
             It caches both residual_stream and activation (defined as output - residual_stream).
@@ -138,38 +115,19 @@ class ActivationCacheEditor:
             self.cache.text_image_residual.append(kwinput["hidden_states"])
         else:
             raise NotImplementedError(f"Caching not implemented for {type(module)}")
-        
-    
-    def set_cache_hooks(self, pipe):
+
+
+    @property
+    def forward_hooks_dict(self):
         
         # insert cache storing in dict
+        hooks = defaultdict(list)
+
         for block_type, num_layers in self.cache.get_cache_info().items():
-
             for i in range(num_layers):
-
                 module_name: str = f"transformer.{block_type}.{i}"
-
-                # setup safe torch16 clipping
-                safeclip_hook = HooksRegister._register_general_hook(pipe, module_name, 
-                                                         ActivationCacheEditor.fix_inf_values, 
-                                                         with_kwargs=True,
-                                                         is_pre_hook=False)
-                self.hooks_dict[module_name].append(safeclip_hook)
-
-                # register hook for caching
-                hook = HooksRegister._register_general_hook(pipe, module_name, 
-                                                         self.cache_residual_and_activation, 
-                                                         with_kwargs=True,
-                                                         is_pre_hook=False)
-                
-                self.hooks_dict[module_name].append(hook)
-
-
-    def clear_cache_hooks(self):
-
-        # Remove hooks
-        for _, hooks in self.hooks_dict.items():
-                for hook in hooks:
-                    hook.remove()
-
+                hooks[module_name].append(fix_inf_values_hook)
+                hooks[module_name].append(self.cache_residual_and_activation_hook)
+        
+        return hooks
         

@@ -119,7 +119,7 @@ class QKVCache(TypedDict):
     value: List[torch.Tensor]
 
 
-class QKVCacheFlux:
+class QKVCacheFluxHandler:
     """Used to cache queries, keys and values of a FluxPipeline.
     """
 

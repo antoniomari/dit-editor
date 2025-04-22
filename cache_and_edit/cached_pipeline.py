@@ -1,0 +1,204 @@
+from collections import defaultdict
+from functools import partial
+import gc
+from typing import Callable, Dict, List, Literal
+from diffusers import FluxPipeline, PixArtSigmaPipeline, DiffusionPipeline
+import torch
+from cache_and_edit.activation_cache import FluxActivationCache, ModelActivationCache, PixartActivationCache, ActivationCacheHandler
+from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
+from cache_and_edit.hooks import locate_block, register_general_hook, fix_inf_values_hook, edit_streams_hook
+from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache
+
+
+
+
+
+
+class CachedPipeline:
+    
+    def __init__(self, pipe: DiffusionPipeline):
+        self.pipe = pipe
+
+        # Flag for using caches
+        self.use_activation_cache = True
+        self.use_qkv_cache = False
+        # Cache handlers
+        self.activation_cache_handler = None
+        self.qkv_cache_handler = None
+        # keeps references to all registered hooks
+        self.registered_hooks = []
+
+
+    def setup_cache(self, use_activation_cache = True, use_qkv_cache = False) -> None:
+        """
+            Sets up activation_cache and/or qkv_cache, setting the required hooks.
+        """
+
+        self.use_activation_cache = use_activation_cache
+        self.use_qkv_cache = use_qkv_cache
+
+        if use_activation_cache:
+            if isinstance(self.pipe, FluxPipeline):
+                activation_cache = FluxActivationCache()
+            elif isinstance(self.pipe, PixArtSigmaPipeline):
+                activation_cache = PixartActivationCache()
+            else:
+                raise AssertionError(f"activation cache not implemented for {type(self.pipe)}")
+
+            self.activation_cache_handler = ActivationCacheHandler(activation_cache)
+            # register hooks crated by activation_cache
+            self._set_hooks(position_hook_dict=self.activation_cache_handler.forward_hooks_dict,
+                            with_kwargs=True)
+        
+        if use_qkv_cache:
+            if isinstance(self.pipe, FluxPipeline):
+                self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe)
+            else:
+                raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
+            
+            # qkv_cache does not use hooks
+                
+
+    @property
+    def activation_cache(self) -> ModelActivationCache:
+        return self.activation_cache_handler.cache if self.activation_cache_handler else None
+    
+
+    @property
+    def qkv_cache(self) -> QKVCache:
+        return self.qkv_cache_handler.cache if self.qkv_cache_handler else None
+    
+
+    @torch.no_grad
+    def run(self, 
+            prompt: str, 
+            num_inference_steps: int = 1,
+            seed: int = 42):
+        
+        # First, clear all registered hooks 
+        self.clear_all_hooks()
+
+        # Delete cache already present
+        if self.activation_cache or self.qkv_cache:
+
+            if self.activation_cache:
+                del(self.activation_cache_handler.cache)
+                del(self.activation_cache_handler)
+
+            if self.qkv_cache:
+                # Necessary to delete the old cache. 
+                self.qkv_cache_handler.clear_cache()
+                del(self.qkv_cache_handler)
+
+            gc.collect()  # force Python to clean up unreachable objects            
+            torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
+
+        # Setup cache again for the current inference pass
+        self.setup_cache(self.use_activation_cache, self.use_qkv_cache)
+
+        #return self.pipe(prompt=prompt, 
+        #                 num_inference_steps=num_inference_steps,
+        #                 generator=torch.Generator(device="cpu").manual_seed(seed))
+    
+        assert isinstance(seed, int)
+        seed_list = [seed]
+        gen = [torch.Generator(device="cpu").manual_seed(i) for i in seed_list]
+        output = self.pipe(
+                prompt=[""] * len(gen),
+                prompt_2=[prompt] * len(gen),
+                num_inference_steps=num_inference_steps,
+                guidance_scale=0.0,
+                generator=gen,
+                width=1024,
+                height=1024,
+            )
+
+        return output
+
+
+    def clear_all_hooks(self):
+
+        # 1. Clear all registered hooks
+        for hook in self.registered_hooks:
+                hook.remove()
+        self.registered_hooks = []
+
+        # 2. Eventually clear other hooks registered in the pipeline but not present here
+        # TODO: make it general for other models
+        for i in range(len(locate_block(self.pipe, "transformer.transformer_blocks"))):
+            locate_block(self.pipe, f"transformer.transformer_blocks.{i}")._forward_hooks.clear()
+            
+        for i in range(len(locate_block(self.pipe, "transformer.single_transformer_blocks"))):
+            locate_block(self.pipe, f"transformer.single_transformer_blocks.{i}")._forward_hooks.clear()
+
+
+    def _set_hooks(self, 
+                   position_hook_dict: Dict[str, List[Callable]] = {}, 
+                   position_pre_hook_dict: Dict[str, List[Callable]] = {},
+                   with_kwargs=False
+    ):
+        '''
+        Set hooks at specified positions and register them.
+        Args:
+            position_hook_dict: A dictionary mapping positions to hooks.
+                The keys are positions in the pipeline where the hooks should be registered.
+                The values are either a single hook or a list of hooks to be registered at the specified position.
+                Each hook should be a callable that takes three arguments: (module, input, output).
+            **kwargs: Keyword arguments to pass to the pipeline.
+        '''
+
+        # Register hooks
+        for is_pre_hook, hook_dict in [(True, position_pre_hook_dict), (False, position_hook_dict)]:
+            for position, hook in hook_dict.items():
+                assert isinstance(hook, list)
+                for h in hook:
+                    self.registered_hooks.append(register_general_hook(self.pipe, position, h, with_kwargs, is_pre_hook))
+        
+
+
+    def run_with_edit(self, 
+                      prompt: str,
+                      edit_fn: callable,
+                      layers_for_edit_fn: List[int],
+                      stream: Literal['text', 'image', 'both'],
+                      seed=42,
+                      num_inference_steps=1
+                    ):
+
+        assert isinstance(seed, int)
+        seed_list = [seed]
+
+        self.clear_all_hooks()
+    
+
+        # Setup hooks for edit_fn at the specified layers
+        # NOTE: edit_fn_hooks has to be Dict[str, List[Callable]]
+        if isinstance(self.pipe, FluxPipeline):
+            edit_fn_hooks = {f"transformer.transformer_blocks.{layer}": [lambda *args: edit_streams_hook(*args, recompute_fn=partial(edit_fn, layer=layer), stream=stream)]
+                             for layer in layers_for_edit_fn if layer < 19}
+            edit_fn_hooks.update({f"transformer.single_transformer_blocks.{layer - 19}": [lambda *args: edit_streams_hook(*args, recompute_fn=partial(edit_fn, layer=layer), stream=stream)]
+                                  for layer in layers_for_edit_fn if layer >= 19})
+        else:
+            raise NotImplementedError(f"Operation not implemented for {type(self.pipe)}")
+        
+        # register hooks in the pipe
+        self._set_hooks(position_hook_dict=edit_fn_hooks, with_kwargs=True)
+
+        # Create generators
+        gen = [torch.Generator(device="cpu").manual_seed(i) for i in seed_list]
+
+        # with torch.autocast(device_type="cuda", dtype=dtype):
+        with torch.no_grad():
+
+            output = self.pipe(
+                prompt=[""] * len(gen),
+                prompt_2=[prompt] * len(gen),
+                num_inference_steps=num_inference_steps,
+                guidance_scale=0.0,
+                generator=gen,
+                width=1024,
+                height=1024,
+            )
+        
+        return output
+    
