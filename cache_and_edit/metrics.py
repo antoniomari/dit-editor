@@ -2,6 +2,9 @@ import numpy as np
 from PIL import Image
 from typing import Union
 import torch
+from transformers import CLIPProcessor, CLIPModel
+import torch.nn.functional as F
+
 
 
 def masked_mse_tiled_mask(
@@ -37,3 +40,40 @@ def masked_mse_tiled_mask(
 
     mse = np.sum(masked_diff) / valid_pixel_count
     return float(mse)
+
+
+def compute_clip_similarity(image: Image.Image, prompt: str) -> float:
+    """
+    Compute CLIP similarity between a PIL image and a text prompt.
+    Loads CLIP model only once and caches it.
+    
+    Args:
+        image (PIL.Image.Image): Input image.
+        prompt (str): Text prompt.
+    
+    Returns:
+        float: Cosine similarity between image and text.
+    """
+    if not hasattr(compute_clip_similarity, "model"):
+        compute_clip_similarity.model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
+        compute_clip_similarity.processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
+        compute_clip_similarity.model.eval()
+
+    model = compute_clip_similarity.model
+    processor = compute_clip_similarity.processor
+
+    image = image.convert("RGB")
+    image_inputs = processor(images=image, return_tensors="pt")
+    text_inputs = processor(text=[prompt], return_tensors="pt")
+
+
+    with torch.no_grad():
+        image_features = model.get_image_features(**image_inputs)
+        text_features = model.get_text_features(**text_inputs)
+
+        image_features = F.normalize(image_features, p=2, dim=-1)
+        text_features = F.normalize(text_features, p=2, dim=-1)
+
+        similarity = (image_features @ text_features.T).item()
+
+    return similarity
