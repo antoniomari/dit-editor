@@ -1,12 +1,13 @@
 # Add parent directory to sys.path
 from collections import defaultdict
+import gc
 import os, sys
 from pathlib import Path
 parent_dir = Path.cwd().parent.resolve()
 if str(parent_dir) not in sys.path:
     sys.path.insert(0, str(parent_dir))
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, TypedDict
 import torch
 from diffusers.models.attention_processor import Attention
 from diffusers.models.transformers import FluxTransformer2DModel
@@ -112,6 +113,12 @@ class CachedFluxAttnProcessor2_0:
             return hidden_states
 
 
+class QKVCache(TypedDict):
+    query: List[torch.Tensor]
+    key: List[torch.Tensor]
+    value: List[torch.Tensor]
+
+
 class QKVCacheFlux:
     """Used to cache queries, keys and values of a FluxPipeline.
     """
@@ -128,7 +135,7 @@ class QKVCacheFlux:
             layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
 
     @property
-    def cache(self):
+    def cache(self) -> QKVCache:
         """Returns a dictionary initialized as {"query": [], "key": [], "value": []}.
             After calling a forward pass for pipe, queries, keys and values will be 
             appended in the respective list for each layer. 
@@ -138,9 +145,11 @@ class QKVCacheFlux:
         """
         return self._cache
     
-    def clear_cache(self):
+    def clear_cache(self) -> None:
         # TODO: check if we have to force clean GPU memory
         del(self._cache)
+        gc.collect()              # force Python to clean up unreachable objects
+        torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
         self._cache = {"query": [], "key": [], "value": []}
 
 
