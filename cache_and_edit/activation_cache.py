@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
+from typing import List
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
 from cache_and_edit.hooks import fix_inf_values_hook, register_general_hook
 import torch
@@ -78,16 +79,24 @@ class PixartActivationCache(ModelActivationCache):
 
 class ActivationCacheHandler:
     """ Used to manage ModelActivationCache of a Diffusion Transformer.
-
-    Raises:
-        NotImplementedError: _description_
-
-    Returns:
-        _type_: _description_
     """
 
-    def __init__(self, cache: ModelActivationCache):
+    def __init__(self, cache: ModelActivationCache, positions_to_cache: List[str] = None):
+        """Constructor.
+
+        Args:
+            cache (ModelActivationCache): cache to be used to store tensors.
+            positions_to_cache (List[str], optional): name of modules to cached. 
+                If None, all modules as specified in `cache.get_cache_info()` will be cached. Defaults to None.
+
+        Raises:
+            NotImplementedError: _description_
+
+        Returns:
+            _type_: _description_
+        """
         self.cache = cache
+        self.positions_to_cache = positions_to_cache
 
     @torch.no_grad()
     def cache_residual_and_activation_hook(self, *args):
@@ -123,11 +132,16 @@ class ActivationCacheHandler:
         # insert cache storing in dict
         hooks = defaultdict(list)
 
-        for block_type, num_layers in self.cache.get_cache_info().items():
-            for i in range(num_layers):
-                module_name: str = f"transformer.{block_type}.{i}"
+        if self.positions_to_cache is None:
+            for block_type, num_layers in self.cache.get_cache_info().items():
+                for i in range(num_layers):
+                    module_name: str = f"transformer.{block_type}.{i}"
+                    hooks[module_name].append(fix_inf_values_hook)
+                    hooks[module_name].append(self.cache_residual_and_activation_hook)
+        else:
+            for module_name in self.positions_to_cache:
                 hooks[module_name].append(fix_inf_values_hook)
                 hooks[module_name].append(self.cache_residual_and_activation_hook)
-        
+
         return hooks
         

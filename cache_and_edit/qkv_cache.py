@@ -13,6 +13,7 @@ from diffusers.models.attention_processor import Attention
 from diffusers.models.transformers import FluxTransformer2DModel
 from diffusers import FluxPipeline
 from diffusers.models.embeddings import apply_rotary_emb
+from cache_and_edit.hooks import locate_block
 import torch.nn.functional as F
 
 
@@ -123,16 +124,24 @@ class QKVCacheFluxHandler:
     """Used to cache queries, keys and values of a FluxPipeline.
     """
 
-    def __init__(self, pipe: FluxPipeline):
+    def __init__(self, pipe: FluxPipeline, positions_to_cache: List[str] = None):
         self._cache = {"query": [], "key": [], "value": []}
 
-        transformer: FluxTransformer2DModel = pipe.transformer
+        if positions_to_cache is not None:
+            # TODO: extens for other models
+            if not isinstance(pipe, FluxPipeline):
+                raise NotImplementedError(f"QKVCache not yet implemented for {type(pipe)}.")
+            transformer: FluxTransformer2DModel = pipe.transformer
+            for layer in transformer.transformer_blocks:
+                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
+            for layer in transformer.single_transformer_blocks:
+                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
+        else:
 
-        for layer in transformer.transformer_blocks:
-            layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
+            for module_name in positions_to_cache:
+                module = locate_block(module_name)
+                module.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
 
-        for layer in transformer.single_transformer_blocks:
-            layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
 
     @property
     def cache(self) -> QKVCache:

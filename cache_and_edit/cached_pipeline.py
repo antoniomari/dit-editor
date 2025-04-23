@@ -1,7 +1,7 @@
 from collections import defaultdict
 from functools import partial
 import gc
-from typing import Callable, Dict, List, Literal
+from typing import Callable, Dict, List, Literal, Union
 from diffusers import FluxPipeline, PixArtSigmaPipeline, DiffusionPipeline
 import torch
 from cache_and_edit.activation_cache import FluxActivationCache, ModelActivationCache, PixartActivationCache, ActivationCacheHandler
@@ -29,9 +29,12 @@ class CachedPipeline:
         self.registered_hooks = []
 
 
-    def setup_cache(self, use_activation_cache = True, use_qkv_cache = False) -> None:
+    def setup_cache(self, use_activation_cache = True, 
+                    use_qkv_cache = False, 
+                    positions_to_cache: List[str] = None) -> None:
         """
             Sets up activation_cache and/or qkv_cache, setting the required hooks.
+            If positions_to_cache is None, then all modules will be cached.
         """
 
         self.use_activation_cache = use_activation_cache
@@ -45,14 +48,14 @@ class CachedPipeline:
             else:
                 raise AssertionError(f"activation cache not implemented for {type(self.pipe)}")
 
-            self.activation_cache_handler = ActivationCacheHandler(activation_cache)
+            self.activation_cache_handler = ActivationCacheHandler(activation_cache, positions_to_cache)
             # register hooks crated by activation_cache
             self._set_hooks(position_hook_dict=self.activation_cache_handler.forward_hooks_dict,
                             with_kwargs=True)
         
         if use_qkv_cache:
             if isinstance(self.pipe, FluxPipeline):
-                self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe)
+                self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe, positions_to_cache)
             else:
                 raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
             
@@ -71,9 +74,26 @@ class CachedPipeline:
 
     @torch.no_grad
     def run(self, 
-            prompt: str, 
+            prompt: Union[str, List[str]], 
             num_inference_steps: int = 1,
-            seed: int = 42):
+            seed: int = 42,
+            cache_activations: bool = True,
+            cache_qkv: bool = False,
+            positions_to_cache: List[str] = None):
+        """run the pipeline, possibly cachine activations or QKV.
+
+        Args:
+            prompt (str): Prompt to run the pipeline (NOTE: for Flux, parameters passed are prompt='' and prompt2=prompt)
+            num_inference_steps (int, optional): Num steps for inference. Defaults to 1.
+            seed (int, optional): seed for generators. Defaults to 42.
+            cache_activations (bool, optional): Whether to cache activations. Defaults to True.
+            cache_qkv (bool, optional): Whether to cache queries, keys, values. Defaults to False.
+            positions_to_cache (List[str], optional): list of blocks to cache. 
+                    If None, all transformer blocks will be cached. Defaults to None.
+
+        Returns:
+            _type_: same output as wrapped pipeline.
+        """
         
         # First, clear all registered hooks 
         self.clear_all_hooks()
@@ -94,18 +114,25 @@ class CachedPipeline:
             torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
 
         # Setup cache again for the current inference pass
-        self.setup_cache(self.use_activation_cache, self.use_qkv_cache)
+        self.setup_cache(cache_activations, cache_qkv, positions_to_cache)
 
         #return self.pipe(prompt=prompt, 
         #                 num_inference_steps=num_inference_steps,
         #                 generator=torch.Generator(device="cpu").manual_seed(seed))
     
         assert isinstance(seed, int)
-        seed_list = [seed]
-        gen = [torch.Generator(device="cpu").manual_seed(i) for i in seed_list]
+
+        if isinstance(prompt, str):
+            empty_prompt = [""] * len(gen)
+            prompt = [prompt] * len(gen)
+        else:
+            empty_prompt = [""] * len(prompt)
+        
+        gen = [torch.Generator(device="cpu").manual_seed(seed) for _ in range(len(prompt))]
+
         output = self.pipe(
-                prompt=[""] * len(gen),
-                prompt_2=[prompt] * len(gen),
+                prompt=empty_prompt,
+                prompt_2=prompt,
                 num_inference_steps=num_inference_steps,
                 guidance_scale=0.0,
                 generator=gen,
@@ -155,7 +182,6 @@ class CachedPipeline:
                     self.registered_hooks.append(register_general_hook(self.pipe, position, h, with_kwargs, is_pre_hook))
         
 
-
     def run_with_edit(self, 
                       prompt: str,
                       edit_fn: callable,
@@ -166,7 +192,6 @@ class CachedPipeline:
                     ):
 
         assert isinstance(seed, int)
-        seed_list = [seed]
 
         self.clear_all_hooks()
     
@@ -185,14 +210,19 @@ class CachedPipeline:
         self._set_hooks(position_hook_dict=edit_fn_hooks, with_kwargs=True)
 
         # Create generators
-        gen = [torch.Generator(device="cpu").manual_seed(i) for i in seed_list]
 
-        # with torch.autocast(device_type="cuda", dtype=dtype):
+        if isinstance(prompt, str):
+            empty_prompt = [""] * len(gen)
+            prompt = [prompt] * len(gen)
+        else:
+            empty_prompt = [""] * len(prompt)
+
+        gen = [torch.Generator(device="cpu").manual_seed(seed) for _ in range(len(prompt))]
+
         with torch.no_grad():
-
             output = self.pipe(
-                prompt=[""] * len(gen),
-                prompt_2=[prompt] * len(gen),
+                prompt=empty_prompt,
+                prompt_2=prompt,
                 num_inference_steps=num_inference_steps,
                 guidance_scale=0.0,
                 generator=gen,
