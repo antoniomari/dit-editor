@@ -7,7 +7,7 @@ parent_dir = Path.cwd().parent.resolve()
 if str(parent_dir) not in sys.path:
     sys.path.insert(0, str(parent_dir))
 
-from typing import Dict, List, Optional, TypedDict
+from typing import Dict, List, Literal, Optional, TypedDict
 import torch
 from diffusers.models.attention_processor import Attention
 from diffusers.models.transformers import FluxTransformer2DModel
@@ -17,13 +17,28 @@ from cache_and_edit.hooks import locate_block
 import torch.nn.functional as F
 
 
+class QKVCache(TypedDict):
+    query: List[torch.Tensor]
+    key: List[torch.Tensor]
+    value: List[torch.Tensor]
+
+
 class CachedFluxAttnProcessor2_0:
     """Attention processor used typically in processing the SD3-like self-attention projections."""
 
-    def __init__(self, external_cache: Dict[str, List[torch.Tensor]]):
+    def __init__(self, external_cache: QKVCache, inject_kv: Literal["image", "text", "both"]= None):
+        """Constructor for Cached attention processor.
+
+        Args:
+            external_cache (QKVCache): cache to store/inject values.
+            inject_kv (Literal[&quot;image&quot;, &quot;text&quot;, &quot;both&quot;], optional): whether to inject image, text or both streams KV. 
+                If None, it does not perform injection but the full cache is stored. Defaults to None.
+        """
+
         if not hasattr(F, "scaled_dot_product_attention"):
             raise ImportError("FluxAttnProcessor2_0 requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0.")
         self.cache = external_cache
+        self.inject_kv = inject_kv
         assert all((cache_key in external_cache) for cache_key in {"query", "key", "value"}), "Cache has to contain 'query', 'key' and 'value' keys."
 
     def __call__(
@@ -84,6 +99,22 @@ class CachedFluxAttnProcessor2_0:
             query = apply_rotary_emb(query, image_rotary_emb)
             key = apply_rotary_emb(key, image_rotary_emb)
 
+        # Cache Q, K, V
+        if self.inject_kv == "image":
+            # NOTE: I am replacing key and values only for the image branch
+            # NOTE: in default settings, encoder_hidden_states_key_proh.shape[2] == 512
+            key[:, :, encoder_hidden_states_key_proj.shape[2]:] = self.cache["key"].pop(0)[:, :, encoder_hidden_states_key_proj.shape[2]:]
+            value[:, :, encoder_hidden_states_value_proj.shape[2]:] = self.cache["value"].pop(0)[:, :, encoder_hidden_states_value_proj.shape[2]:]
+        elif self.inject_kv == "text":
+            key[:, :, :encoder_hidden_states_key_proj.shape[2]] = self.cache["key"].pop(0)[:, :, :encoder_hidden_states_key_proj.shape[2]] 
+            value[:, :, :encoder_hidden_states_value_proj.shape[2]] = self.cache["value"].pop(0)[:, :, :encoder_hidden_states_value_proj.shape[2]]
+        elif self.inject_kv == "both":
+            key = self.cache["key"].pop(0)
+            value = self.cache["value"].pop(0)
+        else: # Don't inject, store cache!
+            self.cache["query"].append(query)
+            self.cache["key"].append(key)
+            self.cache["value"].append(value)
 
         hidden_states = F.scaled_dot_product_attention(
             query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
@@ -91,10 +122,6 @@ class CachedFluxAttnProcessor2_0:
         hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
         hidden_states = hidden_states.to(query.dtype)
 
-        # Cache Q, K, V
-        self.cache["query"].append(query)
-        self.cache["key"].append(key)
-        self.cache["value"].append(value)
 
         if encoder_hidden_states is not None:
             encoder_hidden_states, hidden_states = (
@@ -114,18 +141,19 @@ class CachedFluxAttnProcessor2_0:
             return hidden_states
 
 
-class QKVCache(TypedDict):
-    query: List[torch.Tensor]
-    key: List[torch.Tensor]
-    value: List[torch.Tensor]
-
-
 class QKVCacheFluxHandler:
     """Used to cache queries, keys and values of a FluxPipeline.
     """
 
-    def __init__(self, pipe: FluxPipeline, positions_to_cache: List[str] = None):
-        self._cache = {"query": [], "key": [], "value": []}
+    def __init__(self, pipe: FluxPipeline, 
+                 positions_to_cache: List[str] = None,
+                 inject_kv: Literal["image", "text", "both"] = None,
+                 cache_to_inject: QKVCache = None):
+        
+        if cache_to_inject is not None:
+            self._cache = cache_to_inject
+        else:
+            self._cache = {"query": [], "key": [], "value": []}
 
         if positions_to_cache is not None:
             # TODO: extens for other models
@@ -133,14 +161,14 @@ class QKVCacheFluxHandler:
                 raise NotImplementedError(f"QKVCache not yet implemented for {type(pipe)}.")
             transformer: FluxTransformer2DModel = pipe.transformer
             for layer in transformer.transformer_blocks:
-                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
+                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, inject_kv=inject_kv))
             for layer in transformer.single_transformer_blocks:
-                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
+                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, inject_kv=inject_kv))
         else:
 
             for module_name in positions_to_cache:
                 module = locate_block(module_name)
-                module.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache))
+                module.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, inject_kv=inject_kv))
 
 
     @property

@@ -31,10 +31,13 @@ class CachedPipeline:
 
     def setup_cache(self, use_activation_cache = True, 
                     use_qkv_cache = False, 
-                    positions_to_cache: List[str] = None) -> None:
+                    positions_to_cache: List[str] = None,
+                    qkv_to_inject: QKVCache = None,
+                    kv_inject_mode: Literal["image", "text", "both"] = None) -> None:
         """
             Sets up activation_cache and/or qkv_cache, setting the required hooks.
             If positions_to_cache is None, then all modules will be cached.
+            If kv_inject_mode is None, then qkv cache will be stored, otherwise qkv_to_inject will be injected.
         """
 
         self.use_activation_cache = use_activation_cache
@@ -55,7 +58,10 @@ class CachedPipeline:
         
         if use_qkv_cache:
             if isinstance(self.pipe, FluxPipeline):
-                self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe, positions_to_cache)
+                self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe, 
+                                                             positions_to_cache, 
+                                                             inject_kv=kv_inject_mode, 
+                                                             cache_to_inject=qkv_to_inject)
             else:
                 raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
             
@@ -117,15 +123,77 @@ class CachedPipeline:
         # Setup cache again for the current inference pass
         self.setup_cache(cache_activations, cache_qkv, positions_to_cache)
 
-        #return self.pipe(prompt=prompt, 
-        #                 num_inference_steps=num_inference_steps,
-        #                 generator=torch.Generator(device="cpu").manual_seed(seed))
-    
         assert isinstance(seed, int)
 
         if isinstance(prompt, str):
-            empty_prompt = [""] * len(gen)
-            prompt = [prompt] * len(gen)
+            empty_prompt = [""]
+            prompt = [prompt]
+        else:
+            empty_prompt = [""] * len(prompt)
+        
+        gen = [torch.Generator(device="cpu").manual_seed(seed) for _ in range(len(prompt))]
+
+        output = self.pipe(
+                prompt=empty_prompt,
+                prompt_2=prompt,
+                num_inference_steps=num_inference_steps,
+                guidance_scale=0.0,
+                generator=gen,
+                width=1024,
+                height=1024,
+                **kwargs
+            )
+
+        return output
+    
+    @torch.no_grad
+    def run_inject_qkv(self, 
+            prompt: Union[str, List[str]], 
+            qkv_to_inject: QKVCache,
+            positions_to_inject: List[str] = None,
+            inject_kv_mode: Literal["image", "text", "both"] = "image",
+            num_inference_steps: int = 1,
+            seed: int = 42,
+            **kwargs):
+        """run the pipeline, possibly cachine activations or QKV.
+
+        Args:
+            prompt (str): Prompt to run the pipeline (NOTE: for Flux, parameters passed are prompt='' and prompt2=prompt)
+            num_inference_steps (int, optional): Num steps for inference. Defaults to 1.
+            seed (int, optional): seed for generators. Defaults to 42.
+            cache_activations (bool, optional): Whether to cache activations. Defaults to True.
+            cache_qkv (bool, optional): Whether to cache queries, keys, values. Defaults to False.
+            positions_to_cache (List[str], optional): list of blocks to cache. 
+                    If None, all transformer blocks will be cached. Defaults to None.
+
+        Returns:
+            _type_: same output as wrapped pipeline.
+        """
+        
+        # First, clear all registered hooks 
+        self.clear_all_hooks()
+
+        # Delete previous QKVCache
+        if hasattr(self, "qkv_cache_handler"):
+            self.qkv_cache_handler.clear_cache()
+            del(self.qkv_cache_handler)
+            gc.collect()  # force Python to clean up unreachable objects            
+            torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
+
+        # Will setup existing QKV cache to be injected
+        self.setup_cache(use_activation_cache=False, 
+                         use_qkv_cache=True, 
+                         positions_to_cache=positions_to_inject,
+                         qkv_to_inject=qkv_to_inject,
+                         inject_kv_mode=inject_kv_mode)
+        
+        self.qkv_cache_handler
+
+        assert isinstance(seed, int)
+
+        if isinstance(prompt, str):
+            empty_prompt = [""] 
+            prompt = [prompt] 
         else:
             empty_prompt = [""] * len(prompt)
         
@@ -214,8 +282,8 @@ class CachedPipeline:
         # Create generators
 
         if isinstance(prompt, str):
-            empty_prompt = [""] * len(gen)
-            prompt = [prompt] * len(gen)
+            empty_prompt = [""]
+            prompt = [prompt]
         else:
             empty_prompt = [""] * len(prompt)
 
