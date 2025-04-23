@@ -79,7 +79,8 @@ class CachedPipeline:
             seed: int = 42,
             cache_activations: bool = True,
             cache_qkv: bool = False,
-            positions_to_cache: List[str] = None):
+            positions_to_cache: List[str] = None,
+            **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
         Args:
@@ -138,6 +139,7 @@ class CachedPipeline:
                 generator=gen,
                 width=1024,
                 height=1024,
+                **kwargs
             )
 
         return output

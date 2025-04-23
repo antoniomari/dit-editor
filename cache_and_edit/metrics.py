@@ -4,6 +4,7 @@ from typing import Union
 import torch
 from transformers import CLIPProcessor, CLIPModel
 import torch.nn.functional as F
+from transformers import AutoModel, AutoImageProcessor
 
 
 
@@ -75,5 +76,41 @@ def compute_clip_similarity(image: Image.Image, prompt: str) -> float:
         text_features = F.normalize(text_features, p=2, dim=-1)
 
         similarity = (image_features @ text_features.T).item()
+
+    return similarity
+
+
+def compute_dinov2_similarity(image1: Image.Image, image2: Image.Image) -> float:
+    """
+    Compute perceptual similarity between two images using DINOv2 embeddings.
+    
+    Args:
+        image1 (PIL.Image.Image): First image.
+        image2 (PIL.Image.Image): Second image.
+        
+    Returns:
+        float: Cosine similarity between DINOv2 embeddings of the images.
+    """
+    # Load model and processor only once
+    if not hasattr(compute_dinov2_similarity, "model"):
+        compute_dinov2_similarity.processor = AutoImageProcessor.from_pretrained("facebook/dinov2-base")
+        compute_dinov2_similarity.model = AutoModel.from_pretrained("facebook/dinov2-base")
+        compute_dinov2_similarity.model.eval()
+
+    processor = compute_dinov2_similarity.processor
+    model = compute_dinov2_similarity.model
+
+    # Preprocess both images
+    inputs = processor(images=[image1.convert("RGB"), image2.convert("RGB")], return_tensors="pt")
+
+    with torch.no_grad():
+        outputs = model(**inputs)
+        features = outputs.last_hidden_state.mean(dim=1)  # [CLS] or mean-pooled features
+
+        # Normalize
+        features = F.normalize(features, p=2, dim=-1)
+
+        # Cosine similarity
+        similarity = (features[0] @ features[1].T).item()
 
     return similarity
