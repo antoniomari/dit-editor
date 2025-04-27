@@ -12,3 +12,4 @@ accelerate
 sentencepiece
 jupyter
 ipykernel
+hpsv2
