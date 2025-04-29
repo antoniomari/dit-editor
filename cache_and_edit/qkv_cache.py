@@ -26,7 +26,9 @@ class QKVCache(TypedDict):
 class CachedFluxAttnProcessor2_0:
     """Attention processor used typically in processing the SD3-like self-attention projections."""
 
-    def __init__(self, external_cache: QKVCache, inject_kv: Literal["image", "text", "both"]= None):
+    def __init__(self, external_cache: QKVCache, 
+                 inject_kv: Literal["image", "text", "both"]= None,
+                 text_seq_length: int = 512):
         """Constructor for Cached attention processor.
 
         Args:
@@ -39,6 +41,7 @@ class CachedFluxAttnProcessor2_0:
             raise ImportError("FluxAttnProcessor2_0 requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0.")
         self.cache = external_cache
         self.inject_kv = inject_kv
+        self.text_seq_length = text_seq_length
         assert all((cache_key in external_cache) for cache_key in {"query", "key", "value"}), "Cache has to contain 'query', 'key' and 'value' keys."
 
     def __call__(
@@ -103,14 +106,14 @@ class CachedFluxAttnProcessor2_0:
         if self.inject_kv == "image":
             # NOTE: I am replacing key and values only for the image branch
             # NOTE: in default settings, encoder_hidden_states_key_proh.shape[2] == 512
-            key[:, :, encoder_hidden_states_key_proj.shape[2]:] = self.cache["key"].pop(0)[:, :, encoder_hidden_states_key_proj.shape[2]:]
-            value[:, :, encoder_hidden_states_value_proj.shape[2]:] = self.cache["value"].pop(0)[:, :, encoder_hidden_states_value_proj.shape[2]:]
+            key[1:, :, self.text_seq_length:] = key[:1, :, self.text_seq_length:]
+            value[1:, :, self.text_seq_length:] = value[:1, :, self.text_seq_length:]
         elif self.inject_kv == "text":
-            key[:, :, :encoder_hidden_states_key_proj.shape[2]] = self.cache["key"].pop(0)[:, :, :encoder_hidden_states_key_proj.shape[2]] 
-            value[:, :, :encoder_hidden_states_value_proj.shape[2]] = self.cache["value"].pop(0)[:, :, :encoder_hidden_states_value_proj.shape[2]]
+            key[1:, :, :self.text_seq_length] = key[:1, :, :self.text_seq_length] 
+            value[1:, :, :self.text_seq_length] = value[:1, :, :self.text_seq_length]
         elif self.inject_kv == "both":
-            key = self.cache["key"].pop(0)
-            value = self.cache["value"].pop(0)
+            key[1:] = key[:1]
+            value[1:] = value[:1]
         else: # Don't inject, store cache!
             self.cache["query"].append(query)
             self.cache["key"].append(key)
@@ -148,27 +151,30 @@ class QKVCacheFluxHandler:
     def __init__(self, pipe: FluxPipeline, 
                  positions_to_cache: List[str] = None,
                  inject_kv: Literal["image", "text", "both"] = None,
-                 cache_to_inject: QKVCache = None):
-        
-        if cache_to_inject is not None:
-            self._cache = cache_to_inject
-        else:
-            self._cache = {"query": [], "key": [], "value": []}
+                 text_seq_length: int = 512):
 
-        if positions_to_cache is not None:
+        self._cache = {"query": [], "key": [], "value": []}
+
+        if positions_to_cache is None:
             # TODO: extens for other models
             if not isinstance(pipe, FluxPipeline):
                 raise NotImplementedError(f"QKVCache not yet implemented for {type(pipe)}.")
             transformer: FluxTransformer2DModel = pipe.transformer
             for layer in transformer.transformer_blocks:
-                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, inject_kv=inject_kv))
+                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, 
+                                                                    inject_kv=inject_kv,
+                                                                    text_seq_length=text_seq_length))
             for layer in transformer.single_transformer_blocks:
-                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, inject_kv=inject_kv))
+                layer.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, 
+                                                                    inject_kv=inject_kv,
+                                                                    text_seq_length=text_seq_length))
         else:
 
             for module_name in positions_to_cache:
-                module = locate_block(module_name)
-                module.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, inject_kv=inject_kv))
+                module = locate_block(pipe, module_name)
+                module.attn.set_processor(CachedFluxAttnProcessor2_0(external_cache=self._cache, 
+                                                                     inject_kv=inject_kv,
+                                                                     text_seq_length=text_seq_length))
 
 
     @property

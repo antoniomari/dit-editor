@@ -16,12 +16,10 @@ from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache
 
 class CachedPipeline:
     
-    def __init__(self, pipe: DiffusionPipeline):
+    def __init__(self, pipe: DiffusionPipeline, text_seq_length: int = 512):
         self.pipe = pipe
+        self.text_seq_length = text_seq_length
 
-        # Flag for using caches
-        self.use_activation_cache = True
-        self.use_qkv_cache = False
         # Cache handlers
         self.activation_cache_handler = None
         self.qkv_cache_handler = None
@@ -33,15 +31,12 @@ class CachedPipeline:
                     use_qkv_cache = False, 
                     positions_to_cache: List[str] = None,
                     qkv_to_inject: QKVCache = None,
-                    kv_inject_mode: Literal["image", "text", "both"] = None) -> None:
+                    inject_kv_mode: Literal["image", "text", "both"] = None) -> None:
         """
             Sets up activation_cache and/or qkv_cache, setting the required hooks.
             If positions_to_cache is None, then all modules will be cached.
-            If kv_inject_mode is None, then qkv cache will be stored, otherwise qkv_to_inject will be injected.
+            If inject_kv_mode is None, then qkv cache will be stored, otherwise qkv_to_inject will be injected.
         """
-
-        self.use_activation_cache = use_activation_cache
-        self.use_qkv_cache = use_qkv_cache
 
         if use_activation_cache:
             if isinstance(self.pipe, FluxPipeline):
@@ -60,8 +55,8 @@ class CachedPipeline:
             if isinstance(self.pipe, FluxPipeline):
                 self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe, 
                                                              positions_to_cache, 
-                                                             inject_kv=kv_inject_mode, 
-                                                             cache_to_inject=qkv_to_inject)
+                                                             inject_kv=inject_kv_mode, 
+                                                             text_seq_length=self.text_seq_length)
             else:
                 raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
             
@@ -85,7 +80,9 @@ class CachedPipeline:
             seed: int = 42,
             cache_activations: bool = True,
             cache_qkv: bool = False,
+            guidance_scale: float = 0.0,
             positions_to_cache: List[str] = None,
+            empty_clip_embeddings: bool = True,
             **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
@@ -121,7 +118,7 @@ class CachedPipeline:
             torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
 
         # Setup cache again for the current inference pass
-        self.setup_cache(cache_activations, cache_qkv, positions_to_cache)
+        self.setup_cache(cache_activations, cache_qkv, positions_to_cache, inject_kv_mode=None)
 
         assert isinstance(seed, int)
 
@@ -134,10 +131,10 @@ class CachedPipeline:
         gen = [torch.Generator(device="cpu").manual_seed(seed) for _ in range(len(prompt))]
 
         output = self.pipe(
-                prompt=empty_prompt,
+                prompt=empty_prompt if empty_clip_embeddings else prompt,
                 prompt_2=prompt,
                 num_inference_steps=num_inference_steps,
-                guidance_scale=0.0,
+                guidance_scale=guidance_scale,
                 generator=gen,
                 width=1024,
                 height=1024,
@@ -149,11 +146,12 @@ class CachedPipeline:
     @torch.no_grad
     def run_inject_qkv(self, 
             prompt: Union[str, List[str]], 
-            qkv_to_inject: QKVCache,
             positions_to_inject: List[str] = None,
             inject_kv_mode: Literal["image", "text", "both"] = "image",
             num_inference_steps: int = 1,
+            guidance_scale: float = 0.0,
             seed: int = 42,
+            empty_clip_embeddings: bool = True,
             **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
@@ -174,7 +172,7 @@ class CachedPipeline:
         self.clear_all_hooks()
 
         # Delete previous QKVCache
-        if hasattr(self, "qkv_cache_handler"):
+        if hasattr(self, "qkv_cache_handler") and self.qkv_cache_handler is not None:
             self.qkv_cache_handler.clear_cache()
             del(self.qkv_cache_handler)
             gc.collect()  # force Python to clean up unreachable objects            
@@ -184,7 +182,6 @@ class CachedPipeline:
         self.setup_cache(use_activation_cache=False, 
                          use_qkv_cache=True, 
                          positions_to_cache=positions_to_inject,
-                         qkv_to_inject=qkv_to_inject,
                          inject_kv_mode=inject_kv_mode)
         
         self.qkv_cache_handler
@@ -200,10 +197,10 @@ class CachedPipeline:
         gen = [torch.Generator(device="cpu").manual_seed(seed) for _ in range(len(prompt))]
 
         output = self.pipe(
-                prompt=empty_prompt,
+                prompt=empty_prompt if empty_clip_embeddings else prompt,
                 prompt_2=prompt,
                 num_inference_steps=num_inference_steps,
-                guidance_scale=0.0,
+                guidance_scale=guidance_scale,
                 generator=gen,
                 width=1024,
                 height=1024,
@@ -257,8 +254,10 @@ class CachedPipeline:
                       edit_fn: callable,
                       layers_for_edit_fn: List[int],
                       stream: Literal['text', 'image', 'both'],
+                      guidance_scale: float = 0.0,
                       seed=42,
-                      num_inference_steps=1
+                      num_inference_steps=1,
+                      empty_clip_embeddings: bool = True,
                     ):
 
         assert isinstance(seed, int)
@@ -291,10 +290,10 @@ class CachedPipeline:
 
         with torch.no_grad():
             output = self.pipe(
-                prompt=empty_prompt,
+                prompt=empty_prompt if empty_clip_embeddings else prompt,
                 prompt_2=prompt,
                 num_inference_steps=num_inference_steps,
-                guidance_scale=0.0,
+                guidance_scale=guidance_scale,
                 generator=gen,
                 width=1024,
                 height=1024,
