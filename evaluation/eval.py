@@ -126,7 +126,7 @@ def get_scores_for_single_example(example: BenchmarkExample):
         background_mse = compute_background_mse(example.bg_image, example.tf_icon_image, example.target_mask)
         clip_text_image = compute_clip_similarity(example.tf_icon_image, example.prompt)
         # TODO: how to compute dinov2 score for our purposes?
-        dinov2_similarity = compute_dinov2_similarity(example.result_image, example.fg_image, example.fg_mask)
+        dinov2_similarity = compute_dinov2_similarity(example.tf_icon_image, example.fg_image, example.fg_mask)
 
         score_dict["TF-ICON"] = {
                             "hpsv2_score": hpsv2_score,
