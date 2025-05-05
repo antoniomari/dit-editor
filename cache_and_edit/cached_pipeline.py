@@ -8,6 +8,7 @@ from cache_and_edit.activation_cache import FluxActivationCache, ModelActivation
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
 from cache_and_edit.hooks import locate_block, register_general_hook, fix_inf_values_hook, edit_streams_hook
 from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache
+from cache_and_edit.scheduler_inversion import FlowMatchEulerDiscreteSchedulerForInversion
 
 
 
@@ -78,11 +79,12 @@ class CachedPipeline:
             prompt: Union[str, List[str]], 
             num_inference_steps: int = 1,
             seed: int = 42,
-            cache_activations: bool = True,
+            cache_activations: bool = False,
             cache_qkv: bool = False,
             guidance_scale: float = 0.0,
             positions_to_cache: List[str] = None,
             empty_clip_embeddings: bool = True,
+            inverse: bool = False,
             **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
@@ -130,6 +132,17 @@ class CachedPipeline:
         
         gen = [torch.Generator(device="cpu").manual_seed(seed) for _ in range(len(prompt))]
 
+        if inverse:
+            # maybe create scheduler for inversion
+            if not hasattr(self, "inversion_scheduler"):
+                self.inversion_scheduler = FlowMatchEulerDiscreteSchedulerForInversion.from_config(
+                    self.pipe.scheduler.config, 
+                    inverse=True
+                )
+                self.og_scheduler = self.pipe.scheduler
+            
+            self.pipe.scheduler = self.inversion_scheduler
+
         output = self.pipe(
                 prompt=empty_prompt if empty_clip_embeddings else prompt,
                 prompt_2=prompt,
@@ -140,6 +153,10 @@ class CachedPipeline:
                 height=1024,
                 **kwargs
             )
+        
+        # Restore original scheduler
+        if inverse: 
+            self.pipe.scheduler = self.og_scheduler
 
         return output
     
