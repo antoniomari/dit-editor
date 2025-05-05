@@ -12,4 +12,9 @@ accelerate
 sentencepiece
 jupyter
 ipykernel
-hpsv2
+# hpsv2
+scipy
+pytorch_lightning
+seaborn
+pandas
+matplotlib

@@ -10,6 +10,13 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Download Scoring Models
+
+If you want to run the quantitative benchmarking, you'll need to download the aesthetic score predictor and place it in the root of the directory.
+
+```bash
+wget https://github.com/christophschuhmann/improved-aesthetic-predictor/raw/refs/heads/main/sac+logos+ava1-l14-linearMSE.pth 
+```
 ## Usage (with izar cluster)
 EPFL SCITAS izar cluster provides nodes with Nvidia V100 GPUs (32GB). Hereafter is a quick tutorial to set up the environment for development.
 
