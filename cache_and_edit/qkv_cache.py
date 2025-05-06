@@ -15,7 +15,7 @@ from diffusers import FluxPipeline
 from diffusers.models.embeddings import apply_rotary_emb
 from cache_and_edit.hooks import locate_block
 import torch.nn.functional as F
-
+from diffusers.models.attention_processor import FluxAttnProcessor2_0
 
 class QKVCache(TypedDict):
     query: List[torch.Tensor]
@@ -222,9 +222,6 @@ class CachedFluxAttnProcessor3_0:
             key = torch.cat([encoder_hidden_states_key_proj, key], dim=2)
             value = torch.cat([encoder_hidden_states_value_proj, value], dim=2)
 
-        if image_rotary_emb is not None:
-            query = apply_rotary_emb(query, image_rotary_emb)
-            key = apply_rotary_emb(key, image_rotary_emb)
 
         # # Cache Q, K, V
         # if self.inject_kv == "image":
@@ -258,8 +255,10 @@ class CachedFluxAttnProcessor3_0:
         # the key and value of the background image and foreground image according to the query mask.
         # Inject from background (element 0) where mask is True
 
+        if image_rotary_emb is not None:
+            query = apply_rotary_emb(query, image_rotary_emb)
+            key = apply_rotary_emb(key, image_rotary_emb)
 
-        
         # Get the index range after the text tokens
         start_idx = self.text_seq_length
 
@@ -277,8 +276,9 @@ class CachedFluxAttnProcessor3_0:
         )
         # mask hidden states from bg:
         hidden_states = hidden_states_fg[:, :, start_idx:] * mask + hidden_states_bg[:, :, start_idx:] * (~mask)
+
         # concatenate the text
-        hidden_states = torch.cat([hidden_states_bg[:, :, :start_idx], hidden_states], dim=2)
+        hidden_states = torch.cat([hidden_states_fg[:, :, :start_idx], hidden_states], dim=2)
         hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
         hidden_states = hidden_states.to(query.dtype)
 
@@ -311,35 +311,31 @@ class QKVCacheFluxHandler:
                  text_seq_length: int = 512,
                  q_mask: Optional[torch.Tensor] = None,
                  ):
+        
+        if not isinstance(pipe, FluxPipeline):
+            raise NotImplementedError(f"QKVCache not yet implemented for {type(pipe)}.")
+    
+        self.pipe = pipe
+        
+        if positions_to_cache is not None:
+            self.positions_to_cache = positions_to_cache
+        else:
+            # act on all transformer layers
+            self.positions_to_cache = [f"transformer.transformer_blocks.{i}" for i in range(19)] + \
+                [f"transformer.single_transformer_blocks.{i}" for i in range(38)]
 
         self._cache = {"query": [], "key": [], "value": []}
 
-        if positions_to_cache is None:
-            # TODO: extens for other models
-            if not isinstance(pipe, FluxPipeline):
-                raise NotImplementedError(f"QKVCache not yet implemented for {type(pipe)}.")
-            transformer: FluxTransformer2DModel = pipe.transformer
-            for layer in transformer.transformer_blocks:
-                layer.attn.set_processor(CachedFluxAttnProcessor3_0(external_cache=self._cache, 
+        # Set Cached Processor to perform editing
+        self.og_processors = []
+        for module_name in self.positions_to_cache:
+            module = locate_block(pipe, module_name)
+            self.og_processors.append(module.attn.get_processor())
+            module.attn.set_processor(CachedFluxAttnProcessor3_0(external_cache=self._cache, 
                                                                     inject_kv=inject_kv,
                                                                     text_seq_length=text_seq_length,
                                                                     q_mask=q_mask,
                                                                     ))
-            for layer in transformer.single_transformer_blocks:
-                layer.attn.set_processor(CachedFluxAttnProcessor3_0(external_cache=self._cache, 
-                                                                    inject_kv=inject_kv,
-                                                                    text_seq_length=text_seq_length,
-                                                                    q_mask=q_mask,
-                                                                    ))
-        else:
-
-            for module_name in positions_to_cache:
-                module = locate_block(pipe, module_name)
-                module.attn.set_processor(CachedFluxAttnProcessor3_0(external_cache=self._cache, 
-                                                                     inject_kv=inject_kv,
-                                                                     text_seq_length=text_seq_length,
-                                                                     q_mask=q_mask,
-                                                                     ))
 
 
     @property
@@ -360,5 +356,8 @@ class QKVCacheFluxHandler:
         torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
         self._cache = {"query": [], "key": [], "value": []}
 
-
+        for module_name in self.positions_to_cache:
+                    module = locate_block(self.pipe, module_name)
+                    self.og_processors.append(module.attn.get_processor())
+                    module.attn.set_processor(FluxAttnProcessor2_0())
 

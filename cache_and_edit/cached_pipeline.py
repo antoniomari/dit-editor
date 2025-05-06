@@ -69,12 +69,12 @@ class CachedPipeline:
 
     @property
     def activation_cache(self) -> ModelActivationCache:
-        return self.activation_cache_handler.cache if self.activation_cache_handler else None
+        return self.activation_cache_handler.cache if hasattr(self, "activation_cache_handler") and self.activation_cache_handler else None
     
 
     @property
     def qkv_cache(self) -> QKVCache:
-        return self.qkv_cache_handler.cache if self.qkv_cache_handler else None
+        return self.qkv_cache_handler.cache if hasattr(self, "qkv_cache_handler") and self.qkv_cache_handler else None
     
 
     @torch.no_grad
@@ -229,6 +229,8 @@ class CachedPipeline:
                 height=1024,
                 **kwargs
             )
+        
+
 
         return output
 
