@@ -27,6 +27,7 @@ class BenchmarkExample:
         self.result_image = None
         self.target_mask = None
         self.final_mask = None
+        self.tf_icon_image = None
         
         for img_file in all_images:
             if img_file.startswith('bg'):
@@ -41,6 +42,9 @@ class BenchmarkExample:
                 self.target_mask = os.path.join(image_path, img_file)
             elif img_file == 'dccf_image.jpg':
                 self.final_mask = os.path.join(image_path, img_file)
+            
+            elif img_file == 'tf-icon.png':
+                self.tf_icon_image = os.path.join(image_path, img_file)
 
         # check if all images are present
         if not all([self.bg_image, self.fg_image, self.fg_mask, self.result_image, self.target_mask, self.final_mask]):
@@ -69,21 +73,12 @@ class BenchmarkExample:
         self.target_mask = Image.open(self.target_mask).convert("L")
         self.final_mask = Image.open(self.final_mask).convert("L")
 
-    def return_tensor_representation(self):
-        """
-        Convert the images to tensor representation.
-        """
-        raise NotImplementedError("Tensor representation is not implemented yet.")
+        # load results
+        if self.tf_icon_image:
+            self.tf_icon_image = Image.open(self.tf_icon_image).convert("RGB")
 
-        self.bg_image = torch.tensor(self.bg_image)
-        self.fg_image = torch.tensor(self.fg_image)
-        self.fg_mask = torch.tensor(self.fg_mask)
-        self.result_image = torch.tensor(self.result_image)
-        self.target_mask = torch.tensor(self.target_mask)
-        self.final_mask = torch.tensor(self.final_mask)
+        # TODO: Load more results if we have them
 
-        # TODO: convert image to appropriate representation that we need for quantitaitve evaluation
-        return 
     
     def plot_sample(self):
         """

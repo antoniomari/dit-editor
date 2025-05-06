@@ -32,7 +32,8 @@ class CachedPipeline:
                     use_qkv_cache = False, 
                     positions_to_cache: List[str] = None,
                     qkv_to_inject: QKVCache = None,
-                    inject_kv_mode: Literal["image", "text", "both"] = None) -> None:
+                    inject_kv_mode: Literal["image", "text", "both"] = None,
+                    q_mask=None) -> None:
         """
             Sets up activation_cache and/or qkv_cache, setting the required hooks.
             If positions_to_cache is None, then all modules will be cached.
@@ -57,7 +58,9 @@ class CachedPipeline:
                 self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe, 
                                                              positions_to_cache, 
                                                              inject_kv=inject_kv_mode, 
-                                                             text_seq_length=self.text_seq_length)
+                                                             text_seq_length=self.text_seq_length,
+                                                             q_mask=q_mask
+                                                             )
             else:
                 raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
             
@@ -169,6 +172,7 @@ class CachedPipeline:
             guidance_scale: float = 0.0,
             seed: int = 42,
             empty_clip_embeddings: bool = True,
+            q_mask=None,
             **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
@@ -199,7 +203,9 @@ class CachedPipeline:
         self.setup_cache(use_activation_cache=False, 
                          use_qkv_cache=True, 
                          positions_to_cache=positions_to_inject,
-                         inject_kv_mode=inject_kv_mode)
+                         inject_kv_mode=inject_kv_mode,
+                         q_mask=q_mask
+                         )
         
         self.qkv_cache_handler
 
