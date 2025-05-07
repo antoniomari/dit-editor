@@ -178,6 +178,8 @@ class CachedPipeline:
             seed: int = 42,
             empty_clip_embeddings: bool = True,
             q_mask=None,
+            width: int = 1024,
+            height: int = 1024,
             **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
@@ -231,8 +233,8 @@ class CachedPipeline:
                 num_inference_steps=num_inference_steps,
                 guidance_scale=guidance_scale,
                 generator=gen,
-                width=1024,
-                height=1024,
+                width=width,
+                height=height,
                 **kwargs
             )
         
@@ -289,6 +291,9 @@ class CachedPipeline:
                       seed=42,
                       num_inference_steps=1,
                       empty_clip_embeddings: bool = True,
+                      width: int = 1024,
+                      height: int = 1024,
+                      **kwargs,
                     ):
 
         assert isinstance(seed, int)
@@ -326,8 +331,9 @@ class CachedPipeline:
                 num_inference_steps=num_inference_steps,
                 guidance_scale=guidance_scale,
                 generator=gen,
-                width=1024,
-                height=1024,
+                width=width,
+                height=height,
+                **kwargs
             )
         
         return output
