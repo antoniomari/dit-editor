@@ -31,6 +31,7 @@ class CachedPipeline:
     def setup_cache(self, use_activation_cache = True, 
                     use_qkv_cache = False, 
                     positions_to_cache: List[str] = None,
+                    positions_to_cache_foreground: List[str] = None,
                     qkv_to_inject: QKVCache = None,
                     inject_kv_mode: Literal["image", "text", "both"] = None,
                     q_mask=None) -> None:
@@ -57,6 +58,7 @@ class CachedPipeline:
             if isinstance(self.pipe, FluxPipeline):
                 self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe, 
                                                              positions_to_cache, 
+                                                             positions_to_cache_foreground,
                                                              inject_kv=inject_kv_mode, 
                                                              text_seq_length=self.text_seq_length,
                                                              q_mask=q_mask
@@ -82,6 +84,8 @@ class CachedPipeline:
             prompt: Union[str, List[str]], 
             num_inference_steps: int = 1,
             seed: int = 42,
+            width=1024,
+            height=1024,
             cache_activations: bool = False,
             cache_qkv: bool = False,
             guidance_scale: float = 0.0,
@@ -152,8 +156,8 @@ class CachedPipeline:
                 num_inference_steps=num_inference_steps,
                 guidance_scale=guidance_scale,
                 generator=gen,
-                width=1024,
-                height=1024,
+                width=width,
+                height=height,
                 **kwargs
             )
         
@@ -167,6 +171,7 @@ class CachedPipeline:
     def run_inject_qkv(self, 
             prompt: Union[str, List[str]], 
             positions_to_inject: List[str] = None,
+            positions_to_inject_foreground: List[str] = None,
             inject_kv_mode: Literal["image", "text", "both"] = "image",
             num_inference_steps: int = 1,
             guidance_scale: float = 0.0,
@@ -203,6 +208,7 @@ class CachedPipeline:
         self.setup_cache(use_activation_cache=False, 
                          use_qkv_cache=True, 
                          positions_to_cache=positions_to_inject,
+                         positions_to_cache_foreground=positions_to_inject_foreground,
                          inject_kv_mode=inject_kv_mode,
                          q_mask=q_mask
                          )

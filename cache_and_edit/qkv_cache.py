@@ -150,6 +150,7 @@ class CachedFluxAttnProcessor3_0:
 
     def __init__(self, external_cache: QKVCache, 
                  inject_kv: Literal["image", "text", "both"]= None,
+                 inject_kv_foreground: bool = False,
                  text_seq_length: int = 512,
                  q_mask: Optional[torch.Tensor] = None,):
         """Constructor for Cached attention processor.
@@ -164,6 +165,7 @@ class CachedFluxAttnProcessor3_0:
             raise ImportError("FluxAttnProcessor2_0 requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0.")
         self.cache = external_cache
         self.inject_kv = inject_kv
+        self.inject_kv_foreground = inject_kv_foreground
         self.text_seq_length = text_seq_length
         self.q_mask = q_mask
         assert all((cache_key in external_cache) for cache_key in {"query", "key", "value"}), "Cache has to contain 'query', 'key' and 'value' keys."
@@ -268,8 +270,10 @@ class CachedFluxAttnProcessor3_0:
         hidden_states_bg = F.scaled_dot_product_attention(
             query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
         )
-        key[2:, :, start_idx:] = key[1:2, :, start_idx:]
-        value[2:, :, start_idx:] = value[1:2, :, start_idx:]
+
+        if self.inject_kv_foreground:
+            key[2:, :, start_idx:] = key[1:2, :, start_idx:]
+            value[2:, :, start_idx:] = value[1:2, :, start_idx:]
 
         hidden_states_fg = F.scaled_dot_product_attention(
             query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
@@ -278,7 +282,7 @@ class CachedFluxAttnProcessor3_0:
         hidden_states = hidden_states_fg[:, :, start_idx:] * mask + hidden_states_bg[:, :, start_idx:] * (~mask)
 
         # concatenate the text
-        hidden_states = torch.cat([hidden_states_fg[:, :, :start_idx], hidden_states], dim=2)
+        hidden_states = torch.cat([hidden_states_bg[:, :, :start_idx], hidden_states], dim=2)
         hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
         hidden_states = hidden_states.to(query.dtype)
 
@@ -307,6 +311,7 @@ class QKVCacheFluxHandler:
 
     def __init__(self, pipe: FluxPipeline, 
                  positions_to_cache: List[str] = None,
+                 positions_to_cache_foreground: List[str] = None,
                  inject_kv: Literal["image", "text", "both"] = None,
                  text_seq_length: int = 512,
                  q_mask: Optional[torch.Tensor] = None,
@@ -323,16 +328,24 @@ class QKVCacheFluxHandler:
             # act on all transformer layers
             self.positions_to_cache = [f"transformer.transformer_blocks.{i}" for i in range(19)] + \
                 [f"transformer.single_transformer_blocks.{i}" for i in range(38)]
+        
+        if positions_to_cache_foreground is not None:
+            self.positions_to_cache_foreground = positions_to_cache_foreground
+        else:
+            self.positions_to_cache_foreground = []
 
         self._cache = {"query": [], "key": [], "value": []}
 
         # Set Cached Processor to perform editing
-        self.og_processors = []
+
         for module_name in self.positions_to_cache:
+
+            inject_kv_foreground = module_name in self.positions_to_cache_foreground
+
             module = locate_block(pipe, module_name)
-            self.og_processors.append(module.attn.get_processor())
             module.attn.set_processor(CachedFluxAttnProcessor3_0(external_cache=self._cache, 
                                                                     inject_kv=inject_kv,
+                                                                    inject_kv_foreground=inject_kv_foreground,
                                                                     text_seq_length=text_seq_length,
                                                                     q_mask=q_mask,
                                                                     ))
@@ -358,6 +371,5 @@ class QKVCacheFluxHandler:
 
         for module_name in self.positions_to_cache:
                     module = locate_block(self.pipe, module_name)
-                    self.og_processors.append(module.attn.get_processor())
                     module.attn.set_processor(FluxAttnProcessor2_0())
 
