@@ -1,13 +1,13 @@
 from collections import defaultdict
 from functools import partial
 import gc
-from typing import Callable, Dict, List, Literal, Union
+from typing import Callable, Dict, List, Literal, Union, Optional, Type
 from diffusers import FluxPipeline, PixArtSigmaPipeline, DiffusionPipeline
 import torch
 from cache_and_edit.activation_cache import FluxActivationCache, ModelActivationCache, PixartActivationCache, ActivationCacheHandler
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
 from cache_and_edit.hooks import locate_block, register_general_hook, fix_inf_values_hook, edit_streams_hook
-from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache
+from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache, CachedFluxAttnProcessor3_0
 from cache_and_edit.scheduler_inversion import FlowMatchEulerDiscreteSchedulerForInversion
 
 
@@ -34,7 +34,9 @@ class CachedPipeline:
                     positions_to_cache_foreground: List[str] = None,
                     qkv_to_inject: QKVCache = None,
                     inject_kv_mode: Literal["image", "text", "both"] = None,
-                    q_mask=None) -> None:
+                    q_mask=None,
+                    processor_class: Optional[Type] = CachedFluxAttnProcessor3_0
+                    ) -> None:
         """
             Sets up activation_cache and/or qkv_cache, setting the required hooks.
             If positions_to_cache is None, then all modules will be cached.
@@ -61,7 +63,8 @@ class CachedPipeline:
                                                              positions_to_cache_foreground,
                                                              inject_kv=inject_kv_mode, 
                                                              text_seq_length=self.text_seq_length,
-                                                             q_mask=q_mask
+                                                             q_mask=q_mask,
+                                                             processor_class=processor_class,
                                                              )
             else:
                 raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
@@ -180,6 +183,7 @@ class CachedPipeline:
             q_mask=None,
             width: int = 1024,
             height: int = 1024,
+            processor_class: Optional[Type] = CachedFluxAttnProcessor3_0,
             **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
@@ -212,7 +216,8 @@ class CachedPipeline:
                          positions_to_cache=positions_to_inject,
                          positions_to_cache_foreground=positions_to_inject_foreground,
                          inject_kv_mode=inject_kv_mode,
-                         q_mask=q_mask
+                         q_mask=q_mask,
+                         processor_class=processor_class,
                          )
         
         self.qkv_cache_handler
