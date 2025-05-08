@@ -1,0 +1,12 @@
+Generate an image in the style of a loose, impressionistic oil painting.  The scene depicts a cityscape, specifically the New York City skyline, viewed from across a body of water.
+
+**Scene:** The skyline is composed of numerous buildings of varying heights and colors.  The One World Trade Center is prominently featured, taller and more slender than its neighboring structures.  Other buildings are rendered in a simplified, almost cubist fashion, with blocks of pastel and muted colors – pinks, blues, creams, light oranges and greys.  There's a suggestion of greenery along the waterfront, indicated by dark strokes at the base of the buildings. A few small boats are visible on the water.
+
+**Lighting:** The lighting is soft and diffused, suggestive of an overcast day.  There are no harsh shadows; the light is evenly distributed across the scene, creating a calm and peaceful atmosphere. The sky is a pale, light blue, almost washed out.
+
+**Style:** The style should emulate a painterly approach, with visible brushstrokes and a textured quality. Colors are not sharply defined but rather blended and layered to create a sense of depth and atmosphere. The edges of the buildings are not precise; they appear slightly blurred and undefined, contributing to the impressionistic feel.  Think of a style reminiscent of a simplified cityscape by a post-impressionist painter.
+
+**Composition:** The skyline is centrally positioned, occupying most of the canvas.  The water reflects the cityscape in a muted and somewhat abstract manner – not a precise mirroring, but rather a suggestive reflection of color and light. The overall composition is balanced and harmonious, leading the eye across the waterfront and up towards the tallest building. The perspective is slightly elevated, allowing the viewer a comprehensive view of the skyline.
+
+
+The overall mood should be serene and contemplative, capturing the essence of an urban scene without excessive detail. The emphasis is on the interplay of color, light, and texture.

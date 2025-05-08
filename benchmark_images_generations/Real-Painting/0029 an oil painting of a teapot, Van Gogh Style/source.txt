@@ -1,0 +1,17 @@
+Generate an image in a stylized, semi-abstract painting style reminiscent of naive art or folk art.  The scene depicts a simple tabletop setting.
+
+**Scene:** The main focus is a table covered with a green and white checkered tablecloth. On the table are:
+
+* **A purple teapot:**  A slightly bulbous, classic teapot shape, rendered in a solid purple with subtle shading to suggest form.  It's positioned slightly off-center.
+* **A blue teacup and saucer:** A small teacup filled with dark brown tea, sitting on a matching blue saucer.  The cup and saucer are slightly stylized, not perfectly realistic.
+* **A small brown baked good:**  A round, slightly domed cake or pudding-like item on a pink plate.  The cake has a textured surface suggested through brushstrokes. A knife and perhaps a napkin are near it on the plate.
+* **A small, yellow mug:**  A simple mug, perhaps for milk or cream, positioned in the background, slightly out of focus.
+
+**Background:**  Two simple wooden chairs are visible in the background, one blue and one yellow-brown, rendered with broad, slightly uneven brushstrokes to suggest a textured wood grain. The wall behind the chairs is muted grey with hints of other colours, suggesting a blurred or out-of-focus background.
+
+**Lighting:** The lighting is soft and diffused, with no harsh shadows.  There's a suggestion of light falling from above, slightly to one side.
+
+**Style:** The overall style should be highly painterly, with visible brushstrokes and a slightly childlike or folk-art quality.  Colors are slightly saturated and slightly unrealistic, with a focus on bold shapes and flat color fields. The edges aren't sharply defined, leading to a sense of softness and gentleness. The checkered tablecloth should have a clearly visible pattern, but still with a painterly feel, not geometrically precise.
+
+
+**Composition:** The objects are arranged in a pleasing, slightly asymmetrical manner on the table, drawing the eye naturally from the teapot and down to the teacup and cake. The background chairs add depth without overpowering the main elements. The perspective is slightly elevated, looking down onto the table.

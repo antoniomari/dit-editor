@@ -1,0 +1,11 @@
+Generate an image in the style of Vincent van Gogh, depicting a landscape under a dramatic sky.
+
+**Scene:** The foreground is a vibrant green field speckled with small, colorful flowers, suggesting springtime.  A dark green, almost black, line separates the field from a row of willow-like trees.  Behind the trees, a low, rectangular building, primarily orange-red with hints of blue, is visible.  Further back, more trees stretch across the horizon, creating a sense of depth.
+
+**Sky:**  The sky dominates the upper two-thirds of the image. It's filled with large, swirling, expressive clouds rendered in shades of grey, purple, and light blue. The clouds are not realistically depicted, but rather with visible brushstrokes that convey a sense of movement and energy. There's a suggestion of rain or mist descending from the clouds.  The blues in the sky are pale and airy, contrasting with the darker, heavier clouds.
+
+**Lighting:** The lighting is diffuse, perhaps suggesting an overcast day, though patches of lighter sky peek through the clouds.  The light seems to be subtly illuminating the flowers in the foreground and the trees, while the building remains in relative shadow.
+
+**Style:** The style must be distinctly Van Gogh.  This means using thick, impasto brushstrokes of varying lengths and directions. The colors should be bold and expressive, not muted or realistic.  The brushstrokes should contribute to the overall emotional feeling of the scene, conveying movement and energy in both the sky and the landscape. The colors should be somewhat vibrant but still maintain a somewhat muted, almost melancholic tone.
+
+**Composition:** The composition is relatively simple, with a clear horizon line separating the sky and the land.  The trees and building provide visual anchors, while the clouds create a dynamic and dominant element. The overall feeling should be one of peaceful contemplation, but with a subtle underlying energy and drama from the sky.  The use of color should help enhance this feeling, balancing the bright green with the darker, more moody blues and purples.

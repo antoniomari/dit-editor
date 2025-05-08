@@ -1,0 +1,14 @@
+Generate an image in the style of Vincent van Gogh, depicting a landscape under a dramatic sky.
+
+**Scene:** The scene is a flat, expansive field of short, bright green grass speckled with small, colorful wildflowers (mostly white, yellow, and orange).  In the mid-ground, there is a line of low-lying, lush green trees or bushes, behind which sits a low, rectangular building – primarily orange/red with hints of blue or dark green. A few taller, more prominent trees with sparse, slightly pink-tinged foliage stand out in front of the treeline, to the left and right of the center. The background extends into a darker, more uniform green.
+
+**Sky:** The sky dominates the upper two-thirds of the composition. It is filled with large, swirling clouds in shades of pale blue, grey, and dark purple.  The clouds are highly textured, with visible brushstrokes suggesting movement and a sense of impending storm or heavy rain. The clouds should have a distinct impasto quality. Some lighter, wispier clouds are interspersed amongst the larger, darker ones.
+
+**Lighting:** The overall lighting is somewhat diffuse, suggesting an overcast day, but with some light still filtering through the clouds. The light seems to be coming from above and slightly in front of the scene. The colors should feel vibrant despite the overcast conditions.
+
+**Style:**  The style must be distinctly Van Gogh. This means highly visible, expressive brushstrokes, with varying thickness and direction. The colors should be bold and slightly exaggerated, with a visible texture to the paint.  The palette should be primarily greens, blues, purples, and oranges/reds, with accents of white and yellow.  Imitate Van Gogh's characteristic swirling and impasto techniques. The composition should feel dynamic, despite the somewhat static landscape scene, due to the expressive handling of paint.
+
+**Composition:** The horizon line should be placed roughly one-third of the way up from the bottom edge, allowing the dramatic sky to command attention. The trees should be somewhat evenly spaced, leading the eye across the image, but with the central focus on the clouds and the field. The building should be a subtle addition in the midground, not a major focus.
+
+
+The overall feel should be one of  powerful nature and impending change, a moody yet vibrant landscape.

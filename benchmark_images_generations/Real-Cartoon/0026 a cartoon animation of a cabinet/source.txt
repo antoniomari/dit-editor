@@ -1,0 +1,11 @@
+Generate an image of a living room scene in a minimalist, cartoonish style. The color palette should be muted and warm, with beige walls and an orange floor.
+
+**Scene:** The main focus is a light olive-green two-seater sofa positioned centrally.  To the left, a small, light orange bookshelf holds several books and a small, decorative bowl.  Above the bookshelf is a small shelf with a potted cactus and a stack of books.  To the right of the sofa is a floor lamp with a rose-pink shade, and a potted snake plant sits next to it. A simple teal circular rug is placed in front of the sofa.  On the wall, a framed picture depicts a minimalist landscape with a pale sun and muted teal hills against a pale pink sky. A simple clock is also on the wall, to the right of the picture.
+
+**Lighting:** The lighting should be soft and even, suggesting natural daylight. No harsh shadows should be present.
+
+**Style:** The overall style should be simple and flat, like a vector illustration.  All lines should be clean and crisp, without any texture or shading beyond flat color fills. The style should be reminiscent of mid-century modern design. The elements should have a slightly rounded look to them.
+
+**Composition:** The elements should be arranged symmetrically, with the sofa as the clear focal point.  The space should feel calm and inviting. The objects are all proportionally sized to create a cozy atmosphere.  Avoid complex backgrounds; keep it simple and focused on the furniture and accessories.
+
+The level of detail should be consistent with simple, flat-colored cartoon-like illustrations. There's no need for intricate detailing on the textures or patterns of the objects.  Avoid any 3D effects or realistic shadows.

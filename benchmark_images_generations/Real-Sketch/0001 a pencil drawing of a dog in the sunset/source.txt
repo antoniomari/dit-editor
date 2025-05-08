@@ -1,0 +1,13 @@
+Generate a grayscale image in a realistic pencil sketch style.  The scene should depict a tranquil sunset over a calm body of water.
+
+**Foreground:**  The foreground is dominated by a wooden dock or boardwalk made of planks running horizontally across the image, creating a strong sense of depth and perspective.  Render the wood grain meticulously with individual lines suggesting the texture of the wood.
+
+**Midground:**  Tall, slender reeds or grasses grow along the edges of the water, creating a natural border between the land and water.  The reeds should be rendered with varying lengths and shading to give a sense of depth and natural variation. The water itself should be relatively still, with subtle reflections of the sunset visible.
+
+**Background:**  The setting sun, a large, partially obscured circle, is the central element of the background.  Render it with soft shading to give it a sense of luminosity,  and add a few small birds silhouetted against the sun and the sky. The sky itself should be rendered with horizontal hatching, creating the impression of clouds or a hazy atmosphere. The sky gets darker towards the top.
+
+**Lighting:** The primary light source is the setting sun, casting a warm, diffused glow across the scene. Shadows should be soft and subtle, creating a peaceful and serene atmosphere. The light reflects softly on the water.
+
+**Overall Composition:**  The image should have a horizontal orientation.  The composition is straightforward but effective, leading the viewer's eye from the boardwalk in the foreground to the sunset in the background. The use of lines and shading should create a strong sense of depth and perspective.  The overall feel should be calm, peaceful, and slightly melancholic.
+
+**Style:**  The style is hyperrealistic pencil sketch. Aim for a precise, detailed rendering, emphasizing the texture of the wood, reeds, and water. The use of shading should be subtle yet effective in conveying the three-dimensional form and light in the scene.  The final image should have a delicate but strong sense of linework. Add a small, unobtrusive signature in Japanese characters (毛衣) in the bottom right corner.

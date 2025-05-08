@@ -1,0 +1,9 @@
+Generate a grayscale image in a pencil sketch style, reminiscent of a hand-drawn illustration.  The scene should depict a tranquil rural landscape at either dawn or dusk.
+
+**Scene:**  The main focus is a person sitting under a large, leafy tree, playing a flute or similar wind instrument. They are positioned on the bank of a calm river or canal.  Across the water, two small, simple houses with pitched roofs are visible, suggesting a small village.  Several palm trees are scattered in the background, adding to the tropical or subtropical feel. A small boat with a person in it is gently gliding on the water, near the houses. The foreground includes some simple grass and foliage around the tree and the bank.
+
+**Lighting:** The lighting should be soft and diffused, indicative of the early morning or late evening sun.  The sun itself should be partially visible, possibly just peeking over the horizon, casting a gentle glow across the scene without harsh shadows.  The overall mood should be peaceful and serene.
+
+**Style:** The style must strictly be a realistic grayscale pencil sketch.  Use varying shades of gray to create depth and texture, with clear linework defining shapes and details.  The style should avoid strong contrast or heavy shading, maintaining a light and airy feel.  The level of detail should be moderate – enough to clearly convey the elements but not overly complex or photorealistic.
+
+**Composition:** The composition should be balanced, with the person under the tree as the central point of interest.  The river acts as a natural visual divider, separating the foreground with the person and tree from the background with the houses and palm trees. The perspective should be relatively wide, capturing a pleasant view of the entire scene.  The horizon line should be positioned roughly in the middle of the frame.

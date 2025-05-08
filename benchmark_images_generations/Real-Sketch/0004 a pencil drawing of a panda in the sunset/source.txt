@@ -1,0 +1,9 @@
+Generate a grayscale image in a realistic drawing style, reminiscent of a detailed pencil sketch.  The scene depicts a tranquil sunset over a calm body of water.
+
+**Scene:** The main focus is a wooden dock extending from the foreground toward the water.  Tall, slender grasses or reeds line the edges of the water, creating a natural border.  A large, low-hanging sun, almost touching the horizon, is the central element of the background.  Several small birds are silhouetted against the sky.  The water reflects the light of the setting sun, with subtle ripples suggested.
+
+**Lighting:** The lighting is soft and diffused, characteristic of a sunset. The sun itself is a bright, but not harsh, light source, casting a warm glow on the water and grasses. The sky is subtly shaded, indicating a twilight atmosphere. Shadows are minimal and used to suggest depth and volume within the grasses and on the dock planks.
+
+**Style:** The style should be hyperrealistic,  achieved through meticulous use of shading and linework, mimicking the fine details of a pencil drawing.  The strokes should be consistent, primarily using hatching and cross-hatching to build up tones and textures.  Emphasize the texture of the wood planks on the dock, the individual blades of grass, and the subtle ripples on the water’s surface.  There should be a clear sense of depth and perspective.
+
+**Composition:** The image is horizontally oriented. The dock acts as a leading line drawing the eye towards the sunset. The grasses frame the central element – the sun and water – creating a balanced composition.  The overall mood should be peaceful and serene.  The signature "毛味" should be subtly placed in the lower right corner, in a simple, handwritten style, maintaining the overall monochrome aesthetic.

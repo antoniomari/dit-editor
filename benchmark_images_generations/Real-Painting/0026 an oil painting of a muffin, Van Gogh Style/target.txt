@@ -1,0 +1,24 @@
+Generate an image in the style of a naive or childlike painting, similar to that of a child's artwork. The background should depict a simple table setting with a green and white checkered tablecloth. 
+
+
+**Background Elements:**
+
+* Two wooden chairs are visible in the background, one blue and one a yellowish-brown.  They are simple in design, with visible slats and a slightly rough texture. They are positioned behind the table, taking up about a third of the vertical height of the image.
+* A purple teapot sits on the table, slightly off-center and to the left of the center. It's fairly simple in form, with a rounded body and a slightly curved spout and handle.  
+* A partially visible yellow mug is located to the left of the teapot and a bit behind a blue teacup and saucer.
+* The tabletop itself has a textured appearance, using blocks of green and off-white to mimic a checkered pattern. 
+
+
+**Foreground Element:**
+
+* A chocolate cupcake with chocolate frosting and chocolate shavings on top is placed in the bottom-right quadrant of the image. The frosting is swirled and has a slightly messy, realistic texture that contrasts with the painterly background. The cupcake sits on a pink and white patterned plate, slightly angled. A couple of light-blue objects (possibly utensils) are partially visible beneath and behind the cupcake.
+
+
+**Interaction and Placement:**
+
+The cupcake appears to have been digitally added to the scene.  It should look realistically positioned on the table, casting a soft shadow, but the style should remain consistent with the childlike quality of the background. The overall image should be cohesive, even though the foreground is distinct from the background in detail and style. The color palette remains consistent.
+
+
+**Overall Scene Changes:**
+
+The addition of the cupcake adds a focal point to the image. The overall scene is transformed from a simple tea setting into a more complete, appealing still life, implying a snack or a treat accompanying the tea. The cupcake's realistic rendering contrasts with the more impressionistic style of the background, creating a delightful visual tension.

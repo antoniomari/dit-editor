@@ -23,7 +23,7 @@ import re # Regular expression for finding bg number
 # IMPORTANT: Replace "YOUR_API_KEY" with your actual Google AI API key.
 # Keep your API key secure and avoid committing it directly into version control.
 # Consider using environment variables or secret management tools for production.
-API_KEY = "" # IMPORTANT: Replace with your actual key
+API_KEY = "AIzaSyAUQUkxxGl330LQoBEd0ay-ND_e4Mlk2UY" # IMPORTANT: Replace with your actual key
 
 # Select the Gemini model to use.
 # 'gemini-1.5-flash' is generally recommended for multimodal tasks balancing speed and capability.
@@ -47,7 +47,7 @@ except Exception as e:
 # --- Input Parameters ---
 
 # 1. Specify the path to the main folder containing the subfolders.
-main_input_folder_path = '../benchmark_images_generations/Real-Real' # Example: 'data/image_sets'
+main_input_folder_path = '../benchmark_images_generations/Real-Sketch' # Example: 'data/image_sets'
 
 # 2. Define the prompts to send to the Gemini API.
 #    One for the source (background) image and one for the target (composite) image.

@@ -506,6 +506,12 @@ if __name__ == "__main__":
     print(f"Found {len(sample_dirs)} potential sample directories.")
 
     for sample_dir in sample_dirs:
+        # if kvedit.jpg already exists, skip this directory
+        kvedit_path = os.path.join(sample_dir, "kvedit.jpg")
+        if os.path.exists(kvedit_path):
+            print(f"Skipping {sample_dir} as kvedit.jpg already exists.")
+            skipped_count += 1
+            continue
         # Find background image (bg*.jpg or bg*.png)
         bg_images = glob(os.path.join(sample_dir, 'bg*.jpg')) + \
             glob(os.path.join(sample_dir, 'bg*.png'))

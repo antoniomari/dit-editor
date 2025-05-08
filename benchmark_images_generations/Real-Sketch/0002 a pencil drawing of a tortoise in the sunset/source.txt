@@ -1,0 +1,28 @@
+Generate a grayscale image in a realistic pencil sketch style.  The scene depicts a tranquil sunset over a calm body of water, viewed from a wooden dock.
+
+**Scene:**
+
+* **Foreground:** A wooden dock dominates the foreground, composed of long, parallel planks rendered with detailed, slightly uneven pencil strokes to simulate wood grain. The planks run horizontally across the image.
+* **Midground:** Tall grasses, rendered with varying shades of gray to suggest depth and texture, line the edges of the calm water. The grasses are slightly taller on the right side of the image.  The water itself is relatively smooth, reflecting the setting sun in a subtle way with light grey shading.
+* **Background:** A large, partially obscured sun is setting near the horizon. The sky is filled with a textured pattern of subtle shading, suggesting clouds or a hazy atmosphere. Several small birds are silhouetted against the setting sun and sky. The horizon line is roughly one-third of the way up from the bottom of the image.
+
+**Lighting:**
+
+The lighting is soft and diffused, characteristic of a sunset.  The sun is the main light source, casting a gentle glow on the water and slightly illuminating the grasses. The overall scene is bathed in a warm, yet muted, light.  The shadows are soft and gradual, lacking harsh contrasts.
+
+**Style:**
+
+The style is highly realistic pencil sketching.  Emphasize the use of varying line weights and densities to create depth, texture, and contrast.  The shading should be smooth and blended, avoiding harsh lines where possible, except for the deliberate textural representation of the wood and grass. The overall aesthetic should feel serene and peaceful.  The image should have a slight overall cool tone, as is typical of early evening light.
+
+**Composition:**
+
+The composition is balanced and uses a clear vanishing point.  The dock creates a strong leading line that draws the viewer’s eye into the scene toward the setting sun and the calm water. The placement of the sun and grasses creates a natural and pleasing symmetry to the scene.  The birds add a sense of scale and movement without distracting from the overall calmness.
+
+
+**Additional Notes:**
+
+* The image should have a clean, crisp appearance, as if it were a high-resolution scan of a carefully crafted pencil drawing.
+* Include a small, unobtrusive signature (perhaps the kanji characters from the original image) in the bottom right corner.
+
+
+This detailed description should allow a text-to-image model to generate an image closely resembling the original pencil sketch.

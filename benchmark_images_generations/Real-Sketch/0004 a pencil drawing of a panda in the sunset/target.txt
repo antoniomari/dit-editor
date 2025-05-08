@@ -1,0 +1,12 @@
+Generate a grayscale image depicting a tranquil lakeside scene at sunset.  The style should be realistic pencil shading with a focus on creating depth and texture.  The scene should include:
+
+* **Background:** A wide, calm lake reflecting a large, low-hanging sun.  The sun should be rendered with subtle shading to suggest warmth and light.  The sky above is a gradient from dark gray at the top, gradually lightening towards the horizon.  Tall grasses and reeds line the edges of the lake, depicted with varying shades of gray to imply depth and movement in the vegetation. A few small birds are flying across the sky. The whole background is drawn with fine pencil strokes suggesting a detailed pencil sketch.
+
+* **Foreground:**  A photorealistic giant panda is positioned in the foreground, on what appears to be a wooden boardwalk. The boardwalk is rendered in the same pencil sketch style as the background, creating a continuous feel. The panda is lying down, facing towards the right of the frame, its head lowered.  Its fur should be detailed, exhibiting both light and dark shades to showcase its texture. Ensure there is a clear contrast between the photorealistic panda and the pencil-drawn background.
+
+* **Interaction:** The panda is placed in a way that it looks like it is part of the pencil sketch, but it is clearly a separate element – a photograph seamlessly integrated with the drawn scene. There should be no blending or warping of the panda to match the pencil style.  The panda partially obscures the bottom edge of the sketched boardwalk, creating a clear depth layering effect. The shadows cast by the panda should be minimal and blend somewhat with the shading of the boardwalk.
+
+* **Overall Changes:** The addition of the panda introduces a contrasting element of realism to an otherwise entirely stylized pencil sketch. The overall scene changes from a serene, purely illustrative landscape to one that introduces a surprising element of unexpected realism and wildlife.  In the bottom right corner, add a small, stylized signature in Japanese kanji that says "毛丹" (panda in Japanese).
+
+
+The final image should have a unified feel, despite the difference in styles between the panda and the background.  The overall tone should be calm and slightly melancholic, reflecting the sunset setting and the panda's resting posture.
