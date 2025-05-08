@@ -554,7 +554,7 @@ if __name__ == "__main__":
             # The process_image_pair function already prints error messages
             skipped_count += 1
         
-        if processed_count + skipped_count == 15:
+        if processed_count + skipped_count == 10**10:
             break
 
 
