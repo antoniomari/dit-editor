@@ -485,10 +485,12 @@ class TFICONAttnProcessor:
         # - background image (0)
         # - foreground image (1)
         # - composition(s) (2, 3, ...)
-        # TODO: instead of the above, use Q and K, creating them based on the mask
+        # Create the combined attention mask, by forming Q_comp and K_comp, taking the Q and K of the background image
+        # when outside of the mask, the one of the foreground image when inside the mask
         key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[0:1, :, start_idx:])
         query[2:, :, start_idx:] = torch.where(mask, query[1:2, :, start_idx:], query[0:1, :, start_idx:])
 
+        # Use the combined attention map to compute attention using V from the composition image
         hidden_states = F.scaled_dot_product_attention(
             query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
         )
