@@ -1,0 +1,11 @@
+Generate an image of a white plate holding several spring rolls and a small, white ramekin containing a dark brown sauce.  A slice of cornbread, showing its texture and flecks of herbs, is positioned in the center of the plate, slightly overlapping the spring rolls.
+
+**Foreground Element:** The slice of cornbread is the central foreground element. It is rectangular, golden-brown with visible flecks of herbs throughout, and has a slightly crumbly texture. The cut side faces the viewer.  It's placed slightly above and overlapping several of the spring rolls, almost seeming to rest on them.
+
+**Background Elements:** The background includes multiple golden-brown, crispy-looking spring rolls arranged somewhat haphazardly.  They are slightly darker in color than the cornbread, offering a contrast. A small, white ramekin filled with dark brown sauce is located near the top left of the spring rolls.  A garnish of shredded lettuce and grated carrots is present behind the ramekin and to the side of the spring rolls.  The plate is white and shows a slight reflection. The background should be slightly blurred to emphasize the foreground.
+
+
+**Interaction:** The cornbread is the focal point, and its placement slightly overlaps the spring rolls, suggesting a possible pairing or contrast of textures and flavors. The overall scene is one of a casual food presentation; the placement of the elements feels slightly informal but visually appealing.
+
+
+**Changes to Base Scene:** The base scene is of a plate of spring rolls and a dipping sauce. The addition of the cornbread changes the composition by adding a contrasting texture, color, and overall visual weight to the center. It introduces an element of surprise and makes the arrangement less predictable.  It's important to create a sense of depth with the slight blur in the background, focusing the attention on the cornbread.

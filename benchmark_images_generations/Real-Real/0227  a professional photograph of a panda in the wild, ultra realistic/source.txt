@@ -1,0 +1,11 @@
+Generate a landscape image in a slightly hazy, Impressionistic style.  The scene is a gently sloping hillside with a dirt path meandering from the midground to the foreground.
+
+**Scene:** The path is flanked by tall, vibrant green grass, interspersed with patches of wildflowers in various shades of yellow and orange.  The grasses are slightly longer and fuller closer to the hillside, becoming shorter and more even towards the bottom.  
+
+On the upper portion of the image, a densely wooded area forms the backdrop. The trees are mostly evergreen, appearing dark green and somewhat blurred, suggesting distance. In the mid-ground, between the path and the forest, are smaller deciduous trees and shrubs, predominantly shades of light to medium green with hints of reddish-brown in some foliage, creating a textured transition between the path and forest.  The overall feel should be one of a sunny day, with the light soft and diffused, not harsh or direct.
+
+**Lighting:** The lighting should be soft, diffused sunlight, suggesting a time of day around midday or early afternoon. The light should be gentle, casting few, if any, strong shadows, emphasizing the overall brightness and vibrancy of the scene.  There should be a slight hazy quality to the light, softening details slightly and enhancing the Impressionistic feel.
+
+**Style:** The style should be reminiscent of Impressionist painting, with slightly visible brushstrokes and a focus on capturing the overall mood and impression of light and color rather than hyperrealistic detail. The colors should be slightly muted and pastel-like, avoiding overly saturated tones.  The overall image should have a tranquil, peaceful feel.
+
+**Composition:** The composition should be arranged to lead the viewer's eye along the path towards the background. The path itself should be a key compositional element, curving gently as it leads up the hillside to the treeline. The distribution of the wildflowers and grasses should be relatively even, with subtle variations in density to add visual interest. The trees in the background should create a sense of depth and enclosure, without overwhelming the central focus of the path and wildflowers.

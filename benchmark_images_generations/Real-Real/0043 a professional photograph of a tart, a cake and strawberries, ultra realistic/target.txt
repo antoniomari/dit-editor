@@ -1,0 +1,12 @@
+Generate an image of a white plate containing a slice of layered cake and a single egg tart.  Surrounding both desserts are several fresh strawberries.
+
+**Background:** A white plate, slightly angled, occupies most of the frame. The plate's surface is subtly reflective.
+
+**Foreground Element 1:**  A slice of layered cake, positioned slightly off-center to the right and in the upper mid-section.  The cake consists of at least three distinct layers: a top layer of light-colored mousse or cream, a middle layer of dark brown cake, and a visible bottom layer of lighter-colored cake or sponge. The top layer is glossy and slightly translucent, with a visible dark speck (perhaps a coffee bean or chocolate) embedded in it.  The cake has a slightly rounded rectangular shape, with the upper edge angled slightly. The cake's texture should be soft and fluffy, contrasting with the crispness of the egg tart.
+
+**Foreground Element 2:** A single, golden-brown egg tart, positioned slightly off-center to the left, in the lower mid-section. The tart has a slightly flaky, textured crust with visible ridges, and a smooth, pale-yellow custard filling. The filling should appear slightly glossy and have a creamy texture, appearing less dense than the cake. It's placed closer to the viewer than the cake.
+
+**Interaction:** The egg tart and the cake slice are set on the plate with a cluster of fresh, bright red strawberries surrounding them.  The strawberries are placed casually, some overlapping, and varying in size. They are positioned around both desserts, forming a natural border without any specific arrangement. The strawberries appear ripe and juicy, providing a vibrant contrast against the creamy tones of the desserts and the white of the plate.
+
+
+**Overall Scene Changes:** The scene incorporates the two main foreground elements (egg tart and cake) into what appears to be a still-life dessert arrangement. The addition of the egg tart adds another element of texture and color, creating a more visually dynamic composition. The strawberries enhance the image's vibrancy and create a visually appealing contrast against the desserts. The placement of these items on a plain white plate ensures the desserts and strawberries are the focal point. The lighting is soft and diffused, minimizing harsh shadows and emphasizing the textures and colors of the food items.

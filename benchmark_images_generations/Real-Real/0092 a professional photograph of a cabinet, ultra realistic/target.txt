@@ -1,0 +1,11 @@
+Generate an image of a living room scene. The background should depict a modestly sized living room with light-colored walls and wood floors.  The room contains:
+
+* **Furnishings:** A tan couch situated near a large window draped with golden-yellow curtains. A bookcase filled with books and a guitar is visible in the corner. A dark-colored low table sits near the lower right.  A TV sits on a light wood stand.
+
+* **Lighting:** The lighting is soft and warm, suggesting either daytime light filtering through the curtains or evening indoor lighting.
+
+
+The foreground element is a beehive.  Specifically, a light-colored wooden beehive with a clear or translucent cover. It's a relatively small hive, about the size of a small coffee table.  This hive is positioned in the center of the living room floor, approximately halfway between the couch and the bookcase, such that it appears as if it's been carefully placed there. There should be no other elements obscuring the hive.
+
+
+The overall effect should be somewhat surreal, as if the beehive is a surprisingly ordinary object in an otherwise normal living room. The contrast between the domestic setting and the presence of the beehive should be subtly noticeable but not jarring. The color palette should be consistent with the warmth of the room's lighting. The hive should be in sharp focus, with a slight depth of field blurring the background details slightly.

@@ -1,0 +1,18 @@
+Generate an image of a white plate holding a slice of layered cake and a chocolate donut, surrounded by fresh strawberries.
+
+**Background:** A white, rectangular plate is the base.  It's slightly off-white or cream-colored, and it has a gentle curve to its edges. The lighting is soft and even, casting no harsh shadows.
+
+**Foreground Elements:**
+
+* **Cake Slice:** A large, triangular slice of layered cake sits prominently on the plate to the upper-right.  The cake has three distinct layers: a light, creamy top layer, a dark brown middle layer (possibly coffee or chocolate), and a lighter brown bottom layer. The top is glossy, almost like a glaze, and a single dark brown dot is visible near the top. The cake's texture should appear smooth and slightly airy.
+
+* **Donut:** A chocolate donut is placed near the bottom center of the plate, positioned slightly below and to the left of the cake slice. The donut is glazed with a dark chocolate icing and decorated with small, pale orange-peach colored decorative pieces arranged around its circumference, resembling small rosettes or flower petals. A small red detail is in the center of the donut. The donut's texture should look slightly glossy and moist.
+
+* **Strawberries:** Fresh, ripe strawberries are arranged around the cake and the donut on the plate.  They are arranged somewhat casually, not in a perfect pattern.  They vary in size and their color is a deep, vibrant red, with hints of green at the stems (visible or implied). The strawberries should appear juicy and slightly glossy.
+
+**Interaction and Placement:**
+
+The cake slice is the visual anchor point, with the donut placed at a significant distance to the lower-left. The strawberries surround the cake and donut, creating a border and separating them visually while also suggesting a dessert spread. The scene maintains a sense of balance despite the offset placement of the cake and the donut. There is no visual interaction between the cake and the donut; they are separate but share the same plate and setting.
+
+
+**Overall Scene Changes:** The overall scene contrasts the elegance of the cake with the casualness of the donut and the freshness of the strawberries. The combination creates a slightly whimsical and appealing presentation, unlike a plain display of only the cake.  The inclusion of the donut and strawberries adds a touch of playfulness and visual interest to the image.

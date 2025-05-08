@@ -1,0 +1,9 @@
+Generate an image of a white plate holding a slice of zucchini bread and several strawberries.
+
+The **foreground** element is a thick, rectangular slice of zucchini bread.  It is light brown with visible flecks of green throughout, suggesting zucchini. The texture appears moist and slightly crumbly. The crust is a slightly darker shade of brown. The slice is positioned slightly off-center, leaning slightly towards the lower right corner of the plate.  It is the focal point of the image.
+
+The **background** is a white, slightly reflective plate.  Arranged around the zucchini bread are approximately eight fresh strawberries.  These are a vibrant red color with visible seeds and a glossy sheen. They are arranged in a loose semi-circle, with some overlapping others, primarily around the base of the bread slice and towards the edges of the plate. The strawberries are slightly smaller than the slice of bread but are still prominent elements in the composition.  The overall arrangement gives a feeling of a simple, but appetizing dessert presentation.
+
+The **interaction** between the foreground and background is primarily one of contrast in color and texture. The warm tones of the bread contrast with the bright red of the strawberries, and the soft, slightly crumbly texture of the bread contrasts with the smooth, shiny surface of the strawberries.  The strawberries visually frame the bread slice, drawing the viewer's attention to it.
+
+The overall scene is one of simple elegance. There is no significant alteration to the background, the plate and lighting appear clean and uncluttered, focusing entirely on the presentation of the dessert and its accompanying fruit. The image should have realistic lighting and shadows to enhance the three-dimensionality of the bread and strawberries.

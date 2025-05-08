@@ -1,0 +1,10 @@
+Generate an image of a suburban backyard scene.  The background should depict a typical suburban house with a sizable lawn. Specifically:
+
+* **Background:** A single-story house, light beige or tan in color, is visible in the mid-ground.  It's partially obscured by lush green trees and a chain-link fence partially visible on the left and right sides. The lawn is a vibrant, even green, extending from the house towards the foreground.  There is a slightly bare patch of dirt near the bottom of the frame, suggesting a slightly less-manicured area. The trees are mature, leafy, and provide shade. The overall lighting suggests a somewhat overcast day.
+
+* **Foreground Element:** A giant panda is placed in the lower-right third of the foreground. It is positioned slightly off-center, facing towards the house. The panda is realistically rendered, with its fur showing clear black and white markings.  It appears relaxed, but alert, possibly walking slowly across the grass. It is situated slightly closer to the viewer than the house. The grass under the panda shows slightly more wear, implying its passage through.
+
+* **Interaction:** The panda's presence creates a stark contrast against the ordinary suburban scene.  It's an unexpected and surreal element, creating a sense of incongruity and whimsy. The panda's position subtly alters the focus of the image, drawing the viewer's eye towards it while still maintaining the suburban background as a recognizable setting.  The panda should appear seamlessly integrated with the background, as if it naturally belongs in the setting, rather than obviously pasted on top.
+
+
+The final image should maintain a photographic realism and consistent lighting across both the background and foreground element. The resolution should be high enough to clearly see the details of both the house and the panda.

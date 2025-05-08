@@ -1,0 +1,10 @@
+Generate a landscape image in a photorealistic style.  The scene should depict a gently sloping hillside, predominantly covered in a mix of tall grasses and wildflowers in varying shades of green and yellow. 
+
+
+A faint, barely visible path or trail meanders from the mid-ground to the foreground, curving slightly to the right.  The path is a light, dusty tan color, contrasting slightly with the surrounding vegetation.  The grasses are slightly taller and more lush along the sides of the path than in the middle. Scattered small wildflowers, mostly yellow, dot the grassy areas, most concentrated near the foreground.
+
+In the mid-ground, there's a small grouping of deciduous trees or shrubs, their leaves appearing reddish-brown, which creates a slight visual break in the monotony of the greens and yellows.
+
+The background features a hillside densely covered with evergreen trees, creating a dark, cool-toned backdrop that contrasts with the warmer tones of the foreground. The trees are various shades of green, darker near the top of the image, gradually getting lighter as they descend.
+
+The overall lighting should be bright and diffused, suggesting a sunny day but with soft light, minimizing harsh shadows. The light should be slightly brighter in the foreground, gradually softening as it moves toward the background trees. A slight atmospheric perspective should be applied, making the background slightly hazy and less detailed than the foreground. The overall mood should be peaceful and serene.  The resolution should be high, allowing for fine detail in the vegetation and texture of the path.
