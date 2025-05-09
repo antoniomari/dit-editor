@@ -20,7 +20,9 @@ from tqdm.notebook import tqdm
 from data.benchmark_data import BenchmarkExample
 
 
-def calculate_all_scores(images, num_samples=None, output_file="scores.csv"):
+def calculate_all_scores(images, num_samples=None,
+                        output_file="scores.csv",
+                        methods: list[str]=["naive", "tf-icon", "kv-edit"], ):
     """
     Calculate and save scores for benchmark images.
     
@@ -45,7 +47,7 @@ def calculate_all_scores(images, num_samples=None, output_file="scores.csv"):
     for i, image in tqdm(enumerate(images[:num_examples]), total=num_examples):
         try:
             # Get scores for this example
-            example_score_dict = get_scores_for_single_example(image)
+            example_score_dict = get_scores_for_single_example(image, methods=methods)
             
             # Unpack the nested dictionary
             for model_type, metrics in example_score_dict.items():
@@ -90,19 +92,21 @@ def calculate_all_scores(images, num_samples=None, output_file="scores.csv"):
     return df
 
 
-def get_scores_for_single_example(example: BenchmarkExample):
+def get_scores_for_single_example(example: BenchmarkExample,
+                                  methods: list[str]=[]) -> dict:
     """ function calculate all the scoring metrics given a single benchmark example.
     It will look through all created images (baselines and new methods) and calculate the scores for each of them.
     
     Args:
         example (BenchmarkExample): The benchmark example to score.
+        methods (list[str]): List of methods to score. 
     """
     # TODO: refactor function based on its final usage
 
     score_dict = defaultdict(dict)
     # check if all images are present
 
-    if example.result_image: # "Photoshop Baseline"
+    if example.result_image and "naive" in methods: # "Photoshop Baseline"
         # calculate the score
         hpsv2_score = compute_hpsv2_score(example.result_image, example.prompt)
         aesthetics_score = compute_aesthetics_score(example.result_image)
@@ -119,7 +123,7 @@ def get_scores_for_single_example(example: BenchmarkExample):
                             "clip_text_image": clip_text_image,
                             "dinov2_similarity": dinov2_similarity
                                         }
-    if example.tf_icon_image:
+    if example.tf_icon_image and "tf-icon" in methods:
         # calculate the score
         hpsv2_score = compute_hpsv2_score(example.tf_icon_image, example.prompt)
         aesthetics_score = compute_aesthetics_score(example.tf_icon_image)
@@ -129,6 +133,23 @@ def get_scores_for_single_example(example: BenchmarkExample):
         dinov2_similarity = compute_dinov2_similarity(example.tf_icon_image, example.fg_image, example.fg_mask)
 
         score_dict["TF-ICON"] = {
+                            "hpsv2_score": hpsv2_score,
+                            "aesthetics_score": aesthetics_score,
+                            "background_mse": background_mse,
+                            "clip_text_image": clip_text_image,
+                            "dinov2_similarity": dinov2_similarity
+                                        }
+        
+    if example.kvedit_image and "kv-edit" in methods:
+        # calculate the score
+        hpsv2_score = compute_hpsv2_score(example.kvedit_image, example.prompt)
+        aesthetics_score = compute_aesthetics_score(example.kvedit_image)
+        background_mse = compute_background_mse(example.bg_image, example.kvedit_image, example.target_mask)
+        clip_text_image = compute_clip_similarity(example.kvedit_image, example.prompt)
+        # TODO: how to compute dinov2 score for our purposes?
+        dinov2_similarity = compute_dinov2_similarity(example.kvedit_image, example.fg_image, example.fg_mask)
+
+        score_dict["KV-EDIT"] = {
                             "hpsv2_score": hpsv2_score,
                             "aesthetics_score": aesthetics_score,
                             "background_mse": background_mse,

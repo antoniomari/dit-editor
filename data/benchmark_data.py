@@ -45,6 +45,8 @@ class BenchmarkExample:
             
             elif img_file == 'tf-icon.png':
                 self.tf_icon_image = os.path.join(image_path, img_file)
+            elif img_file == "kvedit.jpg":
+                self.kvedit_image = os.path.join(image_path, img_file)
 
         # check if all images are present
         if not all([self.bg_image, self.fg_image, self.fg_mask, self.result_image, self.target_mask, self.final_mask]):
@@ -64,6 +66,7 @@ class BenchmarkExample:
                 missing_images.append('final_mask')
             print(f"Missing images in {image_path}: {', '.join(missing_images)}")
             raise ValueError(f"Not all images are present in {image_path}")
+            
         
         # load images
         self.bg_image = Image.open(self.bg_image).convert("RGB")
@@ -76,10 +79,57 @@ class BenchmarkExample:
         # load results
         if self.tf_icon_image:
             self.tf_icon_image = Image.open(self.tf_icon_image).convert("RGB")
+        if self.kvedit_image:
+            self.kvedit_image = Image.open(self.kvedit_image).convert("RGB")
 
         # TODO: Load more results if we have them
 
-    
+    def plot_results(self):
+        """ Plot background, foreground and all results in a single row. """
+
+        # Determine how many images we have (base images + results)
+        num_images = 3  # bg, fg, result, final_mask
+        if hasattr(self, 'tf_icon_image') and self.tf_icon_image:
+            num_images += 1
+        if hasattr(self, 'kvedit_image') and self.kvedit_image:
+            num_images += 1
+
+        # Create a new figure with a single row
+        fig, axes = plt.subplots(1, num_images, figsize=(num_images * 5, 5))
+
+        # Display base images
+        axes[0].imshow(self.bg_image)
+        axes[0].set_title("Background")
+        axes[0].axis("off")
+
+        axes[1].imshow(self.fg_image)
+        axes[1].set_title("Foreground")
+        axes[1].axis("off")
+
+        axes[2].imshow(self.result_image)
+        axes[2].set_title("Naive Composition")
+        axes[2].axis("off")
+
+        # Display additional results if available
+        idx = 3
+        if hasattr(self, 'tf_icon_image') and self.tf_icon_image:
+            axes[idx].imshow(self.tf_icon_image)
+            axes[idx].set_title("TF-Icon Result")
+            axes[idx].axis("off")
+            idx += 1
+
+        if hasattr(self, 'kvedit_image') and self.kvedit_image:
+            axes[idx].imshow(self.kvedit_image)
+            axes[idx].set_title("KVEdit Result")
+            axes[idx].axis("off")
+
+        # Set the title
+        fig.suptitle(f"Category: {self.category}, Image: {self.image_number}\nPrompt: {self.prompt}", fontsize=12)
+        plt.tight_layout()
+        plt.show()
+
+
+
     def plot_sample(self):
         """
         Plot a sample from the benchmark example with masks in a separate row.
