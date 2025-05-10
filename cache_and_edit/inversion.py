@@ -1,8 +1,10 @@
 from typing import Optional, Tuple
 import torch
 import torchvision.transforms.functional as TF
-
+from PIL import Image
 from cache_and_edit import CachedPipeline
+import numpy as np
+from IPython.display import display
 
 def image2latent(pipe, image, latent_nudging_scalar = 1.15):
     image = pipe.image_processor.preprocess(image).type(pipe.vae.dtype).to("cuda")
@@ -208,3 +210,295 @@ def place_image_in_bounding_box(
     new_mask_wh[paste_x_start:paste_x_end, paste_y_start:paste_y_end] = 1
 
     return output_image_whc, new_mask_wh
+
+
+
+### Function to cut image and put it in bounding box (either cut or not cut)
+def compose_noise_masks(cached_pipe,
+                  foreground_image: Image, 
+                  background_image: Image, 
+                  target_mask: torch.Tensor,
+                  foreground_mask: torch.Tensor,
+                  option: str = "bg", # bg, bg_fg, segmentation1, tf_icon
+                  photoshop_fg_noise: bool = False,
+                  num_inversion_steps: int = 100,
+                  ):
+    
+    """
+    Composes noise masks for image generation using different strategies.
+    This function composes noise masks for stable diffusion inversion, with several composition strategies:
+    - "bg": Uses only background noise
+    - "bg_fg": Combines background and foreground noise using a target mask
+    - "segmentation1": Uses segmentation mask to compose foreground and background noise
+    - "segmentation2": Implements advanced composition with additional boundary noise
+    Parameters:
+    ----------
+    cached_pipe : object
+        The cached stable diffusion pipeline used for noise inversion
+    foreground_image : PIL.Image
+        The foreground image to be placed in the background
+    background_image : PIL.Image
+        The background image
+    target_mask : torch.Tensor
+        Target mask indicating the position where the foreground should be placed
+    foreground_mask : torch.Tensor
+        Segmentation mask of the foreground object
+    option : str, default="bg"
+        Composition strategy: "bg", "bg_fg", "segmentation1", or "segmentation2"
+    photoshop_fg_noise : bool, default=False
+        Whether to generate noise from a photoshopped composition of foreground and background
+    num_inversion_steps : int, default=100
+        Number of steps for the inversion process
+    Returns:
+    -------
+    dict
+        A dictionary containing:
+        - "noise": Dictionary of generated noises (composed_noise, foreground_noise, background_noise)
+        - "latent_masks": Dictionary of latent masks used for composition
+    """
+    
+    # assert options
+    assert option in ["bg", "bg_fg", "segmentation1", "segmentation2"], f"Invalid option: {option}"
+    
+    # calculate size of latent noise for mask resizing
+    PATCH_SIZE = 16
+    latent_size = background_image.size[0] // PATCH_SIZE
+    latents = (latent_size, latent_size)
+
+    # process the options
+    if option == "bg":
+        # only background noise
+        bg_noise = get_inverted_input_noise(cached_pipe, background_image, num_steps=num_inversion_steps)
+        composed_noise = bg_noise
+
+        all_noise = {
+                "composed_noise": composed_noise,
+                "background_noise": bg_noise,
+                }
+        all_latent_masks = {}
+
+
+    elif option == "bg_fg":
+
+        # resize and scale the image to the bounding box
+        reframed_fg_img, resized_mask = place_image_in_bounding_box(
+        torch.from_numpy(np.array(foreground_image)),
+        (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
+        )
+
+        print("Placed Foreground Image")
+        reframed_fg_img = Image.fromarray(reframed_fg_img.numpy())
+        display(reframed_fg_img)
+
+        print("Placed Mask")
+        resized_mask_img = Image.fromarray((resized_mask.numpy() * 255).astype(np.uint8))
+        display(resized_mask_img)
+
+        # invert resized & padded image
+        if photoshop_fg_noise:
+            print("Photoshopping FG IMAGE")
+            photoshop_img = Image.fromarray(
+                (torch.tensor(np.array(background_image)) * ~resized_mask.cpu().unsqueeze(-1) + torch.tensor(np.array(reframed_fg_img)) * resized_mask.cpu().unsqueeze(-1)).numpy()
+            )
+            display(photoshop_img)
+            fg_noise = get_inverted_input_noise(cached_pipe, photoshop_img, num_steps=num_inversion_steps)
+        else:
+            fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
+        bg_noise = get_inverted_input_noise(cached_pipe, background_image, num_steps=num_inversion_steps)
+
+        # overwrite get masked in latent space
+        latent_mask = resize_bounding_box(
+            resized_mask,
+            target_size=latents,
+                ).flatten().unsqueeze(-1).to("cuda")
+
+        # compose the noise
+        composed_noise = bg_noise * (~latent_mask) + fg_noise * latent_mask
+        all_latent_masks = {
+            "latent_mask": latent_mask,
+                }
+        all_noise = {
+                "composed_noise": composed_noise,
+                "foreground_noise": fg_noise,
+                "background_noise": bg_noise,
+                    }
+        
+    elif option == "segmentation1":
+        # cut out the object and compose it with the background noise
+        
+        # segmented foreground image
+        segmented_fg_image = torch.tensor(
+        np.array(
+        foreground_mask.resize(foreground_image.size)
+        )).to(torch.bool).unsqueeze(-1) * torch.tensor(
+            np.array(foreground_image)
+            )
+        
+        # resize and scale the image to the bounding box
+        reframed_fg_img, resized_mask = place_image_in_bounding_box(
+        segmented_fg_image,
+        (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
+        )
+
+        print("Segmented and Palced FG Image")
+        reframed_fg_img = Image.fromarray(reframed_fg_img.numpy())
+        display(reframed_fg_img)
+
+        resized_mask_img = Image.fromarray((resized_mask.numpy() * 255).astype(np.uint8))
+
+        # resize and scale the mask itself
+        foreground_mask = foreground_mask.convert("RGB") # to avoid extraction of contours and make work with function
+        reframed_segmentation_mask, resized_mask = place_image_in_bounding_box(
+            torch.from_numpy(np.array(foreground_mask)),
+            (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
+        )
+
+        reframed_segmentation_mask = reframed_segmentation_mask.numpy()
+        reframed_segmentation_mask_img = Image.fromarray(reframed_segmentation_mask)
+        print("Placed Segmentation Mask")
+        display(reframed_segmentation_mask_img)
+
+        # invert resized & padded image 
+        # fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
+
+        if photoshop_fg_noise:
+            # temporarily convert to apply mask
+            print("Photoshopping FG IMAGE")
+            seg_mask_temp = torch.from_numpy(reframed_segmentation_mask).bool()
+            bg_temp = torch.tensor(np.array(background_image))
+            fg_temp = torch.tensor(np.array(reframed_fg_img))
+
+            photoshop_img = Image.fromarray(
+                (bg_temp * (~seg_mask_temp) + fg_temp * seg_mask_temp).numpy()
+            ).convert("RGB")
+            display(photoshop_img)
+            fg_noise = get_inverted_input_noise(cached_pipe, photoshop_img, num_steps=num_inversion_steps)
+        else:
+            fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
+
+
+        bg_noise = get_inverted_input_noise(cached_pipe, background_image, num_steps=num_inversion_steps)
+
+        # overwrite background in resized mask
+        # convert mask from 512x512x3 to 512x512 first
+        reframed_segmentation_mask = reframed_segmentation_mask[:, :, 0]
+        reframed_segmentation_mask = torch.from_numpy(reframed_segmentation_mask).to(dtype=bool)
+        latent_mask = resize_bounding_box(
+            reframed_segmentation_mask,
+            target_size=latents,
+        ).flatten().unsqueeze(-1).to("cuda")
+
+        # compose noise
+        composed_noise = bg_noise * (~latent_mask) + fg_noise * latent_mask
+
+        all_latent_masks = {
+            "latent_segmentation_mask": latent_mask,
+            }
+        all_noise = {
+                "composed_noise": composed_noise,
+                "foreground_noise": fg_noise,
+                "background_noise": bg_noise,
+                    }
+
+        
+    elif option == "segmentation2":
+        # add random noise in the background
+
+        # segmented foreground image
+        segmented_fg_image = torch.tensor(
+        np.array(
+        foreground_mask.resize(foreground_image.size)
+        )).to(torch.bool).unsqueeze(-1) * torch.tensor(
+            np.array(foreground_image)
+            )
+        
+        # resize and scale the image to the bounding box
+        reframed_fg_img, resized_mask = place_image_in_bounding_box(
+        segmented_fg_image,
+        (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
+        )
+
+        print("Segmented and Placed FG Image")
+        reframed_fg_img = Image.fromarray(reframed_fg_img.numpy())
+        display(reframed_fg_img)
+
+        # resize and scale the mask itself
+        foreground_mask = foreground_mask.convert("RGB")
+        reframed_segmentation_mask, resized_mask = place_image_in_bounding_box(
+            torch.from_numpy(np.array(foreground_mask)),
+            (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
+        )
+
+        reframed_segmentation_mask = reframed_segmentation_mask.numpy()
+        reframed_segmentation_mask_img = Image.fromarray(reframed_segmentation_mask)
+        print("Reframed Segmentation Mask")
+        display(reframed_segmentation_mask_img)
+
+        xor_mask = target_mask ^ np.array(reframed_segmentation_mask_img.convert("L"))
+        print("XOR Mask")
+        display(Image.fromarray(xor_mask))
+
+        # invert resized & padded image 
+        # fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
+        if photoshop_fg_noise:
+            print("Photoshopping FG IMAGE")
+            # temporarily convert to apply mask
+            seg_mask_temp = torch.from_numpy(reframed_segmentation_mask).bool()
+            bg_temp = torch.tensor(np.array(background_image))
+            fg_temp = torch.tensor(np.array(reframed_fg_img))
+
+            photoshop_img = Image.fromarray(
+                (bg_temp * (~seg_mask_temp) + fg_temp * seg_mask_temp).numpy()
+            ).convert("RGB")
+            display(photoshop_img)
+            fg_noise = get_inverted_input_noise(cached_pipe, photoshop_img, num_steps=num_inversion_steps)
+        else:
+            fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
+        bg_noise = get_inverted_input_noise(cached_pipe, background_image, num_steps=num_inversion_steps)
+
+        # overwrite background in resized mask
+        # convert mask from 512x512x3 to 512x512
+        reframed_segmentation_mask = reframed_segmentation_mask[:, :, 0]
+        reframed_segmentation_mask = torch.from_numpy(reframed_segmentation_mask).to(dtype=bool)
+
+        # get all masks in latents and move to device
+        latent_seg_mask = resize_bounding_box(
+            reframed_segmentation_mask,
+            target_size=latents,
+        ).flatten().unsqueeze(-1).to("cuda")
+        print(latent_seg_mask.shape)
+
+
+        latent_xor_mask = resize_bounding_box(
+            torch.from_numpy(xor_mask),
+            target_size=latents,
+        ).flatten().unsqueeze(-1).to("cuda")
+
+
+        print(resized_mask.shape)
+        latent_target_mask = resize_bounding_box(
+            resized_mask,
+            target_size=latents,
+        ).flatten().unsqueeze(-1).to("cuda")
+
+        # implement x∗T = xrT ⊙Mseg +xmT ⊙(1−Muser)+z⊙(Muser ⊕Mseg)
+        bg = bg_noise * (~latent_target_mask)
+        fg = fg_noise * latent_seg_mask
+        boundary = latent_xor_mask * torch.randn(latent_xor_mask.shape).to("cuda")
+        composed_noise = bg + fg + boundary
+
+        all_latent_masks = {
+            "latent_target_mask": latent_target_mask,
+            "latent_segmentation_mask": latent_seg_mask,
+            "latent_xor_mask": latent_xor_mask,
+                            }
+        all_noise = {
+                "composed_noise": composed_noise,
+                "foreground_noise": fg_noise,
+                "background_noise": bg_noise,
+                    }
+    # output 
+    return {
+        "noise": all_noise,
+        "latent_masks": all_latent_masks,
+            }
