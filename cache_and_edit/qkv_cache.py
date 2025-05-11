@@ -481,7 +481,7 @@ class TFICONAttnProcessor:
         # put mask on gpu
         mask = mask.to(key.device)
         # first check that we inject only kv in images:
-        if self.inject_kv != "image":
+        if self.inject_kv is not None and self.inject_kv != "image":
             raise NotImplementedError("Injecting is implemented only for images.")
         # the second element of the batch is the number of heads
         # The first element of the batch represents the background image, the second element of the batch
