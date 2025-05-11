@@ -3,11 +3,13 @@ from collections import defaultdict
 import gc
 import os, sys
 from pathlib import Path
+
+from cache_and_edit.flux_pipeline import EditedFluxPipeline
 parent_dir = Path.cwd().parent.resolve()
 if str(parent_dir) not in sys.path:
     sys.path.insert(0, str(parent_dir))
 
-from typing import Dict, List, Literal, Optional, TypedDict, Type
+from typing import Dict, List, Literal, Optional, TypedDict, Type, Union
 import torch
 from diffusers.models.attention_processor import Attention
 from diffusers.models.transformers import FluxTransformer2DModel
@@ -249,7 +251,7 @@ class CachedFluxAttnProcessor3_0:
         # put mask on gpu
         mask = mask.to(key.device)
         # first check that we inject only kv in images:
-        if self.inject_kv != "image":
+        if self.inject_kv is not None and self.inject_kv != "image":
             raise NotImplementedError("Injecting is implemented only for images.")
         # the second element of the batch is the number of heads
         # The first element of the batch represents the background image, the second element of the batch
@@ -264,25 +266,24 @@ class CachedFluxAttnProcessor3_0:
         # Get the index range after the text tokens
         start_idx = self.text_seq_length
 
-        key[2:, :, start_idx:] = key[:1, :, start_idx:]
-        value[2:, :, start_idx:] = value[:1, :, start_idx:]
+        if self.inject_kv_foreground and self.inject_kv == "image":
+            key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[:1, :, start_idx:])
+            value[2:, :, start_idx:] = torch.where(mask, value[1:2, :, start_idx:], value[:1, :, start_idx:])
+        elif self.inject_kv == "image" and not self.inject_kv_foreground:
+            key[2:, :, start_idx:] = torch.where(mask, key[2:, :, start_idx:], key[:1, :, start_idx:])
+            value[2:, :, start_idx:] = torch.where(mask, value[2:, :, start_idx:], value[:1, :, start_idx:])
+        elif self.inject_kv is None and self.inject_kv_foreground:
+            key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[2:, :, start_idx:])
+            value[2:, :, start_idx:] = torch.where(mask, value[1:2, :, start_idx:], value[2:, :, start_idx:])
 
-        hidden_states_bg = F.scaled_dot_product_attention(
-            query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
-        )
-
-        if self.inject_kv_foreground:
-            key[2:, :, start_idx:] = key[1:2, :, start_idx:]
-            value[2:, :, start_idx:] = value[1:2, :, start_idx:]
-
-        hidden_states_fg = F.scaled_dot_product_attention(
+        hidden_states = F.scaled_dot_product_attention(
             query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
         )
         # mask hidden states from bg:
-        hidden_states = hidden_states_fg[:, :, start_idx:] * mask + hidden_states_bg[:, :, start_idx:] * (~mask)
+        # hidden_states = hidden_states_fg[:, :, start_idx:] * mask + hidden_states_bg[:, :, start_idx:] * (~mask)
 
         # concatenate the text
-        hidden_states = torch.cat([hidden_states_bg[:, :, :start_idx], hidden_states], dim=2)
+        #hidden_states = torch.cat([hidden_states_bg[:, :, :start_idx], hidden_states], dim=2)
         hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
         hidden_states = hidden_states.to(query.dtype)
 
@@ -309,7 +310,7 @@ class QKVCacheFluxHandler:
     """Used to cache queries, keys and values of a FluxPipeline.
     """
 
-    def __init__(self, pipe: FluxPipeline, 
+    def __init__(self, pipe: Union[FluxPipeline, EditedFluxPipeline], 
                  positions_to_cache: List[str] = None,
                  positions_to_cache_foreground: List[str] = None,
                  inject_kv: Literal["image", "text", "both"] = None,
@@ -318,7 +319,8 @@ class QKVCacheFluxHandler:
                  processor_class: Optional[Type] = CachedFluxAttnProcessor3_0
                  ):
         
-        if not isinstance(pipe, FluxPipeline):
+        print(type(pipe))
+        if not isinstance(pipe, FluxPipeline) and not isinstance(pipe, EditedFluxPipeline):
             raise NotImplementedError(f"QKVCache not yet implemented for {type(pipe)}.")
     
         self.pipe = pipe
@@ -327,8 +329,7 @@ class QKVCacheFluxHandler:
             self.positions_to_cache = positions_to_cache
         else:
             # act on all transformer layers
-            self.positions_to_cache = [f"transformer.transformer_blocks.{i}" for i in range(19)] + \
-                [f"transformer.single_transformer_blocks.{i}" for i in range(38)]
+            self.positions_to_cache = []
         
         if positions_to_cache_foreground is not None:
             self.positions_to_cache_foreground = positions_to_cache_foreground
@@ -339,9 +340,14 @@ class QKVCacheFluxHandler:
 
         # Set Cached Processor to perform editing
 
-        for module_name in self.positions_to_cache:
+        all_layers = [f"transformer.transformer_blocks.{i}" for i in range(19)] + \
+                [f"transformer.single_transformer_blocks.{i}" for i in range(38)]
+        for module_name in all_layers:
 
+            inject_kv =  "image" if module_name in self.positions_to_cache else None
             inject_kv_foreground = module_name in self.positions_to_cache_foreground
+
+            print(module_name, inject_kv_foreground)
 
             module = locate_block(pipe, module_name)
             module.attn.set_processor(processor_class(external_cache=self._cache, 
@@ -378,11 +384,14 @@ class QKVCacheFluxHandler:
 class TFICONAttnProcessor:
     """Attention processor used typically in processing the SD3-like self-attention projections."""
 
-    def __init__(self, external_cache: QKVCache, 
+    def __init__(self, 
+                 external_cache: QKVCache, 
                  inject_kv: Literal["image", "text", "both"]= None,
                  inject_kv_foreground: bool = False,
                  text_seq_length: int = 512,
-                 q_mask: Optional[torch.Tensor] = None,):
+                 q_mask: Optional[torch.Tensor] = None,
+                 call_max_times = None
+                ):
         """Constructor for Cached attention processor.
 
         Args:
@@ -398,6 +407,12 @@ class TFICONAttnProcessor:
         self.inject_kv_foreground = inject_kv_foreground
         self.text_seq_length = text_seq_length
         self.q_mask = q_mask
+
+        self.call_max_times = call_max_times
+        if self.call_max_times is not None:
+            self.num_calls = call_max_times
+        else:
+            self.num_calls = None
         assert all((cache_key in external_cache) for cache_key in {"query", "key", "value"}), "Cache has to contain 'query', 'key' and 'value' keys."
 
     def __call__(
@@ -487,13 +502,28 @@ class TFICONAttnProcessor:
         # - composition(s) (2, 3, ...)
         # Create the combined attention mask, by forming Q_comp and K_comp, taking the Q and K of the background image
         # when outside of the mask, the one of the foreground image when inside the mask
-        key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[0:1, :, start_idx:])
-        query[2:, :, start_idx:] = torch.where(mask, query[1:2, :, start_idx:], query[0:1, :, start_idx:])
+
+        if self.num_calls is None or self.num_calls > 0:
+            if self.inject_kv_foreground:
+                key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[0:1, :, start_idx:])
+                query[2:, :, start_idx:] = torch.where(mask, query[1:2, :, start_idx:], query[0:1, :, start_idx:])
+                value[2:, :, start_idx:] = torch.where(mask, value[1:2, :, start_idx:], value[0:1, :, start_idx:])
+            else:
+                key[2:, :, start_idx:] = torch.where(mask, key[2:, :, start_idx:], key[0:1, :, start_idx:])
+                query[2:, :, start_idx:] = torch.where(mask, query[2:, :, start_idx:], query[0:1, :, start_idx:])
+                value[2:, :, start_idx:] = torch.where(mask, value[2:, :, start_idx:], value[0:1, :, start_idx:])
+            
+            if self.num_calls is not None:
+                print("Remaining calls: {}".format(self.num_calls))
+                self.num_calls -= 1
+
 
         # Use the combined attention map to compute attention using V from the composition image
         hidden_states = F.scaled_dot_product_attention(
             query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
         )
+
+        # hidden_states[2:, :, start_idx:] = torch.where(mask, weightage * hidden_states[1:2, :, start_idx:] + (1-weightage) * hidden_states[2:, :, start_idx:], hidden_states[2:, :, start_idx:])
 
         # concatenate the text
         hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)

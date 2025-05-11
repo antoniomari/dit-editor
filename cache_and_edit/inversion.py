@@ -6,6 +6,8 @@ from cache_and_edit import CachedPipeline
 import numpy as np
 from IPython.display import display
 
+from cache_and_edit.flux_pipeline import EditedFluxPipeline
+
 def image2latent(pipe, image, latent_nudging_scalar = 1.15):
     image = pipe.image_processor.preprocess(image).type(pipe.vae.dtype).to("cuda")
     latents = pipe.vae.encode(image)["latent_dist"].mean
@@ -23,7 +25,11 @@ def image2latent(pipe, image, latent_nudging_scalar = 1.15):
     return latents
 
 
-def get_inverted_input_noise(pipe: CachedPipeline, image, num_steps: int = 28):
+def get_inverted_input_noise(pipe: CachedPipeline, 
+                             image, 
+                             prompt: str = "",
+                             num_steps: int = 28,
+                             latent_nudging_scalar: int = 1.15):
     """_summary_
 
     Args:
@@ -36,20 +42,45 @@ def get_inverted_input_noise(pipe: CachedPipeline, image, num_steps: int = 28):
     """
 
     width, height = image.size 
+    inverted_latents_list = []
 
-    noise = pipe.run(
-        "",
-        num_inference_steps=num_steps,
-        seed=42,
-        guidance_scale=1.5,
-        output_type="latent",
-        latents=image2latent(pipe.pipe, image),
-        inverse=True,
-        width=width,
-        height=height
-    ).images[0]
+    if isinstance(pipe.pipe, EditedFluxPipeline):
 
-    return noise
+        _ = pipe.run(
+            prompt,
+            num_inference_steps=num_steps,
+            seed=42,
+            guidance_scale=1,
+            output_type="latent",
+            latents=image2latent(pipe.pipe, image, latent_nudging_scalar=latent_nudging_scalar),
+            empty_clip_embeddings=False,
+            inverse=True,
+            width=width,
+            height=height,
+            is_inverted_generation=True,
+            inverted_latents_list=inverted_latents_list
+        ).images[0]
+
+        return inverted_latents_list
+
+    
+    else:
+        noise = pipe.run(
+            prompt,
+            num_inference_steps=num_steps,
+            seed=42,
+            guidance_scale=1,
+            output_type="latent",
+            latents=image2latent(pipe.pipe, image, latent_nudging_scalar=latent_nudging_scalar),
+            empty_clip_embeddings=False,
+            inverse=True,
+            width=width,
+            height=height
+        ).images[0]
+
+        return noise
+    
+
 
 
 def resize_bounding_box(
@@ -378,6 +409,8 @@ def compose_noise_masks(cached_pipe,
 
 
         bg_noise = get_inverted_input_noise(cached_pipe, background_image, num_steps=num_inversion_steps)
+        bg_noise_init = bg_noise[-1].squeeze(0) if isinstance(bg_noise, list) else bg_noise
+        fg_noise_init = fg_noise[-1].squeeze(0) if isinstance(fg_noise, list) else fg_noise
 
         # overwrite background in resized mask
         # convert mask from 512x512x3 to 512x512 first
@@ -389,16 +422,18 @@ def compose_noise_masks(cached_pipe,
         ).flatten().unsqueeze(-1).to("cuda")
 
         # compose noise
-        composed_noise = bg_noise * (~latent_mask) + fg_noise * latent_mask
+        composed_noise = bg_noise_init * (~latent_mask) + fg_noise_init * latent_mask
 
         all_latent_masks = {
             "latent_segmentation_mask": latent_mask,
             }
         all_noise = {
                 "composed_noise": composed_noise,
-                "foreground_noise": fg_noise,
-                "background_noise": bg_noise,
-                    }
+                "foreground_noise": fg_noise_init,
+                "background_noise": bg_noise_init,
+                "foreground_noise_list": fg_noise if isinstance(fg_noise, list) else None,
+                "background_noise_list": bg_noise if isinstance(bg_noise, list) else None,
+        }
 
         
     elif option == "segmentation2":
@@ -482,8 +517,11 @@ def compose_noise_masks(cached_pipe,
         ).flatten().unsqueeze(-1).to("cuda")
 
         # implement x∗T = xrT ⊙Mseg +xmT ⊙(1−Muser)+z⊙(Muser ⊕Mseg)
-        bg = bg_noise * (~latent_target_mask)
-        fg = fg_noise * latent_seg_mask
+        bg_noise_init = bg_noise[-1].squeeze(0) if isinstance(bg_noise, list) else bg_noise
+        fg_noise_init = fg_noise[-1].squeeze(0) if isinstance(fg_noise, list) else fg_noise
+
+        bg = bg_noise_init[-1] * (~latent_target_mask)
+        fg = fg_noise_init[-1] * latent_seg_mask
         boundary = latent_xor_mask * torch.randn(latent_xor_mask.shape).to("cuda")
         composed_noise = bg + fg + boundary
 
@@ -494,8 +532,10 @@ def compose_noise_masks(cached_pipe,
                             }
         all_noise = {
                 "composed_noise": composed_noise,
-                "foreground_noise": fg_noise,
-                "background_noise": bg_noise,
+                "foreground_noise": fg_noise_init,
+                "background_noise": bg_noise_init,
+                "foreground_noise_list": fg_noise if isinstance(fg_noise, list) else None,
+                "background_noise_list": bg_noise if isinstance(bg_noise, list) else None,
                     }
     # output 
     return {
