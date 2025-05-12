@@ -19,6 +19,149 @@ from tqdm.notebook import tqdm
 
 from data.benchmark_data import BenchmarkExample
 
+from cache_and_edit.inversion import compose_noise_masks
+from cache_and_edit.qkv_cache import TFICONAttnProcessor
+from functools import partial
+
+### INFERENCE FOR OUR METHODS  ####
+import matplotlib.pyplot as plt
+
+def display_side_by_side(image1, image2, image3, titles=None):
+    """
+    Display three images side by side with optional titles
+    
+    Args:
+        image1, image2, image3: PIL Images to display
+        titles: List of titles for each image. If None, no titles are shown.
+    """
+    
+    
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    
+    # Display each image
+    axes[0].imshow(image1)
+    axes[1].imshow(image2)
+    axes[2].imshow(image3)
+    
+    # Set titles if provided
+    if titles is not None:
+        for i, title in enumerate(titles):
+            axes[i].set_title(title)
+    
+    # Remove axis ticks
+    for ax in axes:
+        ax.set_xticks([])
+        ax.set_yticks([])
+    
+    plt.tight_layout()
+    plt.show()
+    return None
+
+def inference_for_example(example, cached_pipe, settings_dict):
+
+    # invert images with requested settings
+    example_noise = compose_noise_masks(cached_pipe, 
+                example.fg_image, 
+                example.bg_image, 
+                example.target_mask, 
+                example.fg_mask, 
+                option=settings_dict["noise_generation_option"],
+                num_inversion_steps=settings_dict["num_inversion_steps"],
+                photoshop_fg_noise=settings_dict["photoshop_fg_noise"],
+                )
+    # compose latents
+    alpha_random = settings_dict["alpha_random"]
+    latents = torch.stack(
+                            [
+                            example_noise["noise"]["background_noise"],
+                            example_noise["noise"]["foreground_noise"],
+                            torch.where(
+                                example_noise["latent_masks"]["latent_segmentation_mask"] > 0,
+                                alpha_random * torch.randn_like(example_noise["noise"]["foreground_noise"]) + (1 - alpha_random) * example_noise["noise"]["foreground_noise"],
+                                example_noise["noise"]["background_noise"],
+                            ),
+                            ]
+                        )
+
+    # create prompts
+    if settings_dict["use_final_prompts"]:
+        prompts = ["", "", example.prompt]
+    else:
+        prompts = ["", "", ""]
+
+    images = cached_pipe.run_inject_qkv(
+        prompts,
+        num_inference_steps=settings_dict["num_inference_steps"],
+        seed=settings_dict["seed"],
+        guidance_scale=settings_dict["guidance_scale"],
+        positions_to_inject=settings_dict["positions_to_inject"],
+        positions_to_inject_foreground=settings_dict["positions_to_inject_foreground"],
+        empty_clip_embeddings=settings_dict["empty_clip_embeddings"],
+        q_mask=example_noise["latent_masks"]["latent_segmentation_mask"],
+        latents=latents,
+        processor_class=partial(TFICONAttnProcessor, call_max_times=int(settings_dict["tau_alpha"] * settings_dict["num_inference_steps"])),
+        width=512,
+        height=512,
+        inverted_latents_list = list(zip(example_noise["noise"]["background_noise_list"], example_noise["noise"]["foreground_noise_list"]))
+    )
+
+    return images[0][0], images[0][1], images[0][2]
+
+
+
+def inference_for_example_dict(example_dict, cached_pipe, settings_dict):
+    """
+    Run inference for a dictionary of examples.
+    
+    Args:
+        example_dict: Dictionary with categories as keys and lists of examples as values.
+        cached_pipe: The cached pipeline to use for inference.
+        settings_dict: Dictionary with settings for the inference.
+        
+    Returns:
+        results: Dictionary with categories as keys and lists of images as values.
+    """
+    
+    results = {}
+    
+    for category, examples in example_dict.items():
+        results[category] = []
+        for example in examples:
+            fg_restored, bg_restored, result_image = inference_for_example(example, cached_pipe, settings_dict)
+            
+            # display images
+            display_side_by_side(fg_restored, bg_restored, result_image, 
+                        titles=["Background", "Foreground", "Composed"])
+            # score it
+            hpsv2_score = compute_hpsv2_score(result_image, example.prompt)
+            aesthetics_score = compute_aesthetics_score(result_image)
+
+            background_mse = compute_background_mse(example.bg_image, result_image, example.target_mask)
+            clip_text_image = compute_clip_similarity(result_image, example.prompt)
+            
+            dinov2_similarity = compute_dinov2_similarity(result_image, example.fg_image, example.fg_mask) 
+            
+            scores =  {
+                    "hpsv2_score": hpsv2_score.item(),
+                    "aesthetics_score": aesthetics_score.item(),
+                    "background_mse": background_mse,
+                    "clip_text_image": clip_text_image,
+                    "dinov2_similarity": dinov2_similarity
+                        }
+            # nicely print all scores
+            print(scores)
+            results[category].append({
+                "fg_restored": fg_restored,
+                "bg_restored": bg_restored,
+                "result_image": result_image,
+                "scores": scores
+            })
+
+    return results
+
+
+
+#### SCORING FUNCTIONS ####
 
 def calculate_all_scores(images, num_samples=None,
                         output_file="scores.csv",
