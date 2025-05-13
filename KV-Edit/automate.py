@@ -508,10 +508,10 @@ if __name__ == "__main__":
     for sample_dir in sample_dirs:
         # if kvedit.jpg already exists, skip this directory
         kvedit_path = os.path.join(sample_dir, "kvedit.jpg")
-        if os.path.exists(kvedit_path):
-            print(f"Skipping {sample_dir} as kvedit.jpg already exists.")
-            skipped_count += 1
-            continue
+        # if os.path.exists(kvedit_path):
+        #     print(f"Skipping {sample_dir} as kvedit.jpg already exists.")
+        #     skipped_count += 1
+        #     continue
         # Find background image (bg*.jpg or bg*.png)
         bg_images = glob(os.path.join(sample_dir, 'bg*.jpg')) + \
             glob(os.path.join(sample_dir, 'bg*.png'))
@@ -560,7 +560,7 @@ if __name__ == "__main__":
             # The process_image_pair function already prints error messages
             skipped_count += 1
         
-        if processed_count + skipped_count == 10**10:
+        if processed_count + skipped_count == 1:
             break
 
 
