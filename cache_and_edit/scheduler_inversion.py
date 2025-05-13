@@ -11,23 +11,6 @@ class FlowMatchEulerDiscreteSchedulerForInversion(FlowMatchEulerDiscreteSchedule
         super().__init__(**kwargs)
         self.inverse = inverse
 
-    def set_timesteps(
-        self,
-        num_inference_steps: int = None,
-        device: Union[str, torch.device] = None,
-        sigmas: Optional[List[float]] = None,
-        mu: Optional[float] = None,
-    ):
-
-        super().set_timesteps(
-            num_inference_steps=num_inference_steps,
-            device=device,
-            sigmas=sigmas,
-            mu=mu,
-        )
-
-        if self.inverse:
-            self.timesteps = reversed(self.timesteps)
 
     def step(
         self,

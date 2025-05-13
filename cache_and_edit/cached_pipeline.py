@@ -1,23 +1,24 @@
 from collections import defaultdict
 from functools import partial
 import gc
-from typing import Callable, Dict, List, Literal, Union, Optional, Type
-from diffusers import FluxPipeline, PixArtSigmaPipeline, DiffusionPipeline
+from typing import Callable, Dict, List, Literal, Union, Optional, Type, Union
 import torch
 from cache_and_edit.activation_cache import FluxActivationCache, ModelActivationCache, PixartActivationCache, ActivationCacheHandler
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
 from cache_and_edit.hooks import locate_block, register_general_hook, fix_inf_values_hook, edit_streams_hook
 from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache, CachedFluxAttnProcessor3_0
 from cache_and_edit.scheduler_inversion import FlowMatchEulerDiscreteSchedulerForInversion
+from cache_and_edit.flux_pipeline import EditedFluxPipeline
 
-
-
+from diffusers.pipelines import FluxPipeline
 
 
 
 class CachedPipeline:
     
-    def __init__(self, pipe: DiffusionPipeline, text_seq_length: int = 512):
+    def __init__(self, pipe: EditedFluxPipeline, text_seq_length: int = 512):
+
+        assert isinstance(pipe, EditedFluxPipeline) or isinstance(pipe, FluxPipeline), "Use EditedFluxPipeline class in `cache_and_edit/flux_pipeline.py`"
         self.pipe = pipe
         self.text_seq_length = text_seq_length
 
@@ -44,10 +45,8 @@ class CachedPipeline:
         """
 
         if use_activation_cache:
-            if isinstance(self.pipe, FluxPipeline):
+            if isinstance(self.pipe, EditedFluxPipeline) or isinstance(self.pipe, FluxPipeline):
                 activation_cache = FluxActivationCache()
-            elif isinstance(self.pipe, PixArtSigmaPipeline):
-                activation_cache = PixartActivationCache()
             else:
                 raise AssertionError(f"activation cache not implemented for {type(self.pipe)}")
 
@@ -57,7 +56,7 @@ class CachedPipeline:
                             with_kwargs=True)
         
         if use_qkv_cache:
-            if isinstance(self.pipe, FluxPipeline):
+            if isinstance(self.pipe, EditedFluxPipeline) or isinstance(self.pipe, FluxPipeline):
                 self.qkv_cache_handler = QKVCacheFluxHandler(self.pipe, 
                                                              positions_to_cache, 
                                                              positions_to_cache_foreground,
@@ -308,13 +307,11 @@ class CachedPipeline:
 
         # Setup hooks for edit_fn at the specified layers
         # NOTE: edit_fn_hooks has to be Dict[str, List[Callable]]
-        if isinstance(self.pipe, FluxPipeline):
-            edit_fn_hooks = {f"transformer.transformer_blocks.{layer}": [lambda *args: edit_streams_hook(*args, recompute_fn=partial(edit_fn, layer=layer), stream=stream)]
-                             for layer in layers_for_edit_fn if layer < 19}
-            edit_fn_hooks.update({f"transformer.single_transformer_blocks.{layer - 19}": [lambda *args: edit_streams_hook(*args, recompute_fn=partial(edit_fn, layer=layer), stream=stream)]
-                                  for layer in layers_for_edit_fn if layer >= 19})
-        else:
-            raise NotImplementedError(f"Operation not implemented for {type(self.pipe)}")
+        edit_fn_hooks = {f"transformer.transformer_blocks.{layer}": [lambda *args: edit_streams_hook(*args, recompute_fn=partial(edit_fn, layer=layer), stream=stream)]
+                            for layer in layers_for_edit_fn if layer < 19}
+        edit_fn_hooks.update({f"transformer.single_transformer_blocks.{layer - 19}": [lambda *args: edit_streams_hook(*args, recompute_fn=partial(edit_fn, layer=layer), stream=stream)]
+                                for layer in layers_for_edit_fn if layer >= 19})
+
         
         # register hooks in the pipe
         self._set_hooks(position_hook_dict=edit_fn_hooks, with_kwargs=True)
