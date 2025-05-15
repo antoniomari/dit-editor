@@ -347,7 +347,6 @@ class QKVCacheFluxHandler:
             inject_kv =  "image" if module_name in self.positions_to_cache else None
             inject_kv_foreground = module_name in self.positions_to_cache_foreground
 
-            print(module_name, inject_kv_foreground)
 
             module = locate_block(pipe, module_name)
             module.attn.set_processor(processor_class(external_cache=self._cache, 
@@ -514,7 +513,6 @@ class TFICONAttnProcessor:
                 value[2:, :, start_idx:] = torch.where(mask, value[2:, :, start_idx:], value[0:1, :, start_idx:])
             
             if self.num_calls is not None:
-                print("Remaining calls: {}".format(self.num_calls))
                 self.num_calls -= 1
 
 

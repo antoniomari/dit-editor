@@ -4,7 +4,7 @@ Script to define our evaluation metrics and implement scoring of our outputs.
 
 
 """
-from typing import Union
+from typing import Union, List, Dict
 from collections import defaultdict
 
 import torch
@@ -21,6 +21,7 @@ from data.benchmark_data import BenchmarkExample
 
 from cache_and_edit.inversion import compose_noise_masks
 from cache_and_edit.qkv_cache import TFICONAttnProcessor
+from cache_and_edit.cached_pipeline import CachedPipeline
 from functools import partial
 
 ### INFERENCE FOR OUR METHODS  ####
@@ -103,13 +104,18 @@ def inference_for_example(example, cached_pipe, settings_dict):
         width=512,
         height=512,
         inverted_latents_list = list(zip(example_noise["noise"]["background_noise_list"], example_noise["noise"]["foreground_noise_list"]))
+        # FIXME: add here tau_b and mask for background consistency
     )
 
     return images[0][0], images[0][1], images[0][2]
 
 
 
-def inference_for_example_dict(example_dict, cached_pipe, settings_dict):
+def inference_for_example_dict(
+        example_dict: Dict[str, List[BenchmarkExample]],
+        cached_pipe: CachedPipeline,
+        settings_dict: Dict,
+    ):
     """
     Run inference for a dictionary of examples.
     
@@ -154,7 +160,11 @@ def inference_for_example_dict(example_dict, cached_pipe, settings_dict):
                 "fg_restored": fg_restored,
                 "bg_restored": bg_restored,
                 "result_image": result_image,
-                "scores": scores
+                "scores": scores,
+                "image_path": example.image_path,
+                "category": category,
+                "prompt": example.prompt,
+                "image_number": example.image_number
             })
 
     return results

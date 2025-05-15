@@ -659,7 +659,9 @@ class EditedFluxPipeline(
         callback_on_step_end_tensor_inputs: List[str] = ["latents"],
         max_sequence_length: int = 512,
         is_inverted_generation: bool = False,
-        inverted_latents_list: List[torch.Tensor] = None
+        inverted_latents_list: List[torch.Tensor] = None,
+        tau_b: Optional[float] = None,
+        bg_consistency_mask: Optional[torch.Tensor] = None,
     ):
         r"""
         Function invoked when calling the pipeline for generation.
@@ -733,6 +735,9 @@ class EditedFluxPipeline(
                 will be passed as `callback_kwargs` argument. You will only be able to include variables listed in the
                 `._callback_tensor_inputs` attribute of your pipeline class.
             max_sequence_length (`int` defaults to 512): Maximum sequence length to use with the `prompt`.
+            tau_b (`float`, *optional*): Proportion of steps during which the background consistency is applied.
+            bg_consistency_mask (`torch.Tensor`, *optional*): Mask to use when applying background consistency. The mask
+                background consistency will be applied to the areas outside of the mask.
 
         Examples:
 
@@ -925,6 +930,20 @@ class EditedFluxPipeline(
                 # compute the previous noisy sample x_t -> x_t-1
                 latents_dtype = latents.dtype
                 latents = self.scheduler.step(noise_pred, t, latents, return_dict=False)[0]
+
+                if tau_b:
+                    if bg_consistency_mask is None:
+                        raise ValueError("if tau_b is set, bg_consistency_mask must be provided for background consistency to work.")
+
+                    assert latents.shape[0] >= 3, "Three processes are required for background consistency injection (being background, foreground and composed process)."
+                    assert latents.shape[1] == bg_consistency_mask.shape[0], f"Latents and segmentation mask must have the same number of timesteps. Got {latents.shape[1]} and {bg_consistency_mask.shape[0]}."
+
+                    bg_consistency_mask = bg_consistency_mask.to(device=latents.device, dtype=torch.int32)
+
+                    # TF-ICON background consistency: if we're in the first tau_b part of the de-noising process,
+                    # overwrite the latents of the composed image with those of the background process (only outside the segmentation mask)
+                    if i <= tau_b * num_inference_steps:
+                        latents[2, :, :] = latents[0, :, :] * (1 - bg_consistency_mask) + latents[2, :, :] * bg_consistency_mask
 
                 # NOTE: this was the added part for inversion
                 if is_inverted_generation:

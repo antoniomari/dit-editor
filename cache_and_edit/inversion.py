@@ -420,12 +420,18 @@ def compose_noise_masks(cached_pipe,
             reframed_segmentation_mask,
             target_size=latents,
         ).flatten().unsqueeze(-1).to("cuda")
+        bb_mask = resize_bounding_box(
+            resized_mask,
+            target_size=latents,
+        ).flatten().unsqueeze(-1).to("cuda")
 
         # compose noise
         composed_noise = bg_noise_init * (~latent_mask) + fg_noise_init * latent_mask
 
         all_latent_masks = {
             "latent_segmentation_mask": latent_mask,
+            # FIXME: handle bounding box better (making sure shapes are correct, especially when bg and fg images have different sizes, e.g. test image 69)
+            "bb_mask": bb_mask,
             }
         all_noise = {
                 "composed_noise": composed_noise,
