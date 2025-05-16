@@ -90,6 +90,16 @@ def inference_for_example(example, cached_pipe, settings_dict):
     else:
         prompts = ["", "", ""]
 
+
+    # create background consistency mask
+    if settings_dict["use_background_consistency_mask"] == "segmentation":
+        # use segmentation mask
+        bg_consistency_mask = example_noise["latent_masks"]["latent_segmentation_mask"]
+    elif settings_dict["use_background_consistency_mask"] == "bbox":
+        bg_consistency_mask = example_noise["latent_masks"]["latent_bbox_mask"]
+    else:
+        raise ValueError("Invalid BG Consistency Mask Selected.")
+
     images = cached_pipe.run_inject_qkv(
         prompts,
         num_inference_steps=settings_dict["num_inference_steps"],
@@ -103,8 +113,9 @@ def inference_for_example(example, cached_pipe, settings_dict):
         processor_class=partial(TFICONAttnProcessor, call_max_times=int(settings_dict["tau_alpha"] * settings_dict["num_inference_steps"])),
         width=512,
         height=512,
-        inverted_latents_list = list(zip(example_noise["noise"]["background_noise_list"], example_noise["noise"]["foreground_noise_list"]))
-        # FIXME: add here tau_b and mask for background consistency
+        inverted_latents_list = list(zip(example_noise["noise"]["background_noise_list"], example_noise["noise"]["foreground_noise_list"])),
+        tau_b=settings_dict["tau_b"],
+        bg_consistency_mask=bg_consistency_mask,
     )
 
     return images[0][0], images[0][1], images[0][2]

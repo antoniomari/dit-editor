@@ -543,6 +543,25 @@ def compose_noise_masks(cached_pipe,
                 "foreground_noise_list": fg_noise if isinstance(fg_noise, list) else None,
                 "background_noise_list": bg_noise if isinstance(bg_noise, list) else None,
                     }
+    
+    # always add latent bbox mask (for bg consistency or any other future application)
+    latent_bbox_mask = resize_bounding_box(
+        torch.from_numpy(np.array(target_mask.resize(background_image.size))), # reseize just to be sure
+        target_size=latents,
+    ).flatten().unsqueeze(-1).to("cuda")
+    all_latent_masks["latent_bbox_mask"] = latent_bbox_mask
+    
+    # always add latent segmentation mkas
+    reframed_fg_img, resized_mask = place_image_in_bounding_box(
+        torch.from_numpy(np.array(foreground_image)),
+        (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
+        )
+    bb_mask = resize_bounding_box(
+            resized_mask,
+            target_size=latents,
+        ).flatten().unsqueeze(-1).to("cuda")
+    all_latent_masks["latent_segmentation_mask"] = bb_mask
+    
     # output 
     return {
         "noise": all_noise,
