@@ -186,7 +186,7 @@ def inference_for_example_dict(
 
 def calculate_all_scores(images, num_samples=None,
                         output_file="scores.csv",
-                        methods: list[str]=["naive", "tf-icon", "kv-edit"], ):
+                        methods: list[str]=["naive", "tf-icon", "kv-edit", "ours"], ):
     """
     Calculate and save scores for benchmark images.
     
@@ -314,6 +314,22 @@ def get_scores_for_single_example(example: BenchmarkExample,
         dinov2_similarity = compute_dinov2_similarity(example.kvedit_image, example.fg_image, example.fg_mask)
 
         score_dict["KV-EDIT"] = {
+                            "hpsv2_score": hpsv2_score,
+                            "aesthetics_score": aesthetics_score,
+                            "background_mse": background_mse,
+                            "clip_text_image": clip_text_image,
+                            "dinov2_similarity": dinov2_similarity
+                                        }
+        
+    if example.output and "ours" in methods:
+        # calculate the score
+        hpsv2_score = compute_hpsv2_score(example.output, example.prompt)
+        aesthetics_score = compute_aesthetics_score(example.output)
+        background_mse = compute_background_mse(example.bg_image, example.output, example.target_mask)
+        clip_text_image = compute_clip_similarity(example.output, example.prompt)
+        dinov2_similarity = compute_dinov2_similarity(example.output, example.fg_image, example.fg_mask)
+
+        score_dict["ours"] = {
                             "hpsv2_score": hpsv2_score,
                             "aesthetics_score": aesthetics_score,
                             "background_mse": background_mse,

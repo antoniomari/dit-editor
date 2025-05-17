@@ -389,7 +389,10 @@ class TFICONAttnProcessor:
                  inject_kv_foreground: bool = False,
                  text_seq_length: int = 512,
                  q_mask: Optional[torch.Tensor] = None,
-                 call_max_times = None
+                 call_max_times = None,
+                 inject_q = True,
+                 inject_k = True,
+                 inject_v = True,
                 ):
         """Constructor for Cached attention processor.
 
@@ -406,6 +409,9 @@ class TFICONAttnProcessor:
         self.inject_kv_foreground = inject_kv_foreground
         self.text_seq_length = text_seq_length
         self.q_mask = q_mask
+        self.inject_q = inject_q
+        self.inject_k = inject_k
+        self.inject_v = inject_v
 
         self.call_max_times = call_max_times
         if self.call_max_times is not None:
@@ -504,13 +510,19 @@ class TFICONAttnProcessor:
 
         if self.num_calls is None or self.num_calls > 0:
             if self.inject_kv_foreground:
-                key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[0:1, :, start_idx:])
-                query[2:, :, start_idx:] = torch.where(mask, query[1:2, :, start_idx:], query[0:1, :, start_idx:])
-                value[2:, :, start_idx:] = torch.where(mask, value[1:2, :, start_idx:], value[0:1, :, start_idx:])
+                if self.inject_k:
+                    key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[0:1, :, start_idx:])
+                if self.inject_q:
+                    query[2:, :, start_idx:] = torch.where(mask, query[1:2, :, start_idx:], query[0:1, :, start_idx:])
+                if self.inject_v:
+                    value[2:, :, start_idx:] = torch.where(mask, value[1:2, :, start_idx:], value[0:1, :, start_idx:])
             else:
-                key[2:, :, start_idx:] = torch.where(mask, key[2:, :, start_idx:], key[0:1, :, start_idx:])
-                query[2:, :, start_idx:] = torch.where(mask, query[2:, :, start_idx:], query[0:1, :, start_idx:])
-                value[2:, :, start_idx:] = torch.where(mask, value[2:, :, start_idx:], value[0:1, :, start_idx:])
+                if self.inject_k:
+                    key[2:, :, start_idx:] = torch.where(mask, key[2:, :, start_idx:], key[0:1, :, start_idx:])
+                if self.inject_q:
+                    query[2:, :, start_idx:] = torch.where(mask, query[2:, :, start_idx:], query[0:1, :, start_idx:])
+                if self.inject_v:
+                    value[2:, :, start_idx:] = torch.where(mask, value[2:, :, start_idx:], value[0:1, :, start_idx:])
             
             if self.num_calls is not None:
                 self.num_calls -= 1
