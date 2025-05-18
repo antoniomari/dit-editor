@@ -30,6 +30,20 @@ os.environ['HF_HOME'] = '/scratch/nevali'
 os.environ['TRANSFORMERS_CACHE'] = '/scratch/nevali'
 os.environ['HF_DATASETS_CACHE'] = '/scratch/nevali'
 
+# --- EXAMPLE OF USAGE ---
+# python your_script.py \
+#     --tau-alpha 0.6 \
+#     --tau-beta 0.4 \
+#     --guidance-scale 7.0 \
+#     --alpha-noise 0.3 \
+#     --timesteps 80 \
+#     --run-on-first 1 \
+#     --inject-k \
+#     --inject-v \
+#     --inject-q \
+#     --use-prompt \
+#     --save-output-images
+
 def clear_all_gpu_memory():
     # Run garbage collection
     gc.collect()
@@ -200,26 +214,18 @@ if __name__ == '__main__':
     parser.add_argument('--run-on-first', type=int, default=1,
                         help='Run on the first N images from each category (default: 1)')
 
-    # Boolean arguments for injection (True by default, flag disables)
-    parser.add_argument('--no-inject-k', dest='inject_k', action='store_false',
-                        help='Disable K injection (K is injected by default)')
-    parser.set_defaults(inject_k=True)
+    # Boolean flags (False by default, True if flag is present)
+    parser.add_argument('--inject-k', action='store_true',
+                        help='Enable K injection')
+    parser.add_argument('--inject-q', action='store_true',
+                        help='Enable Q injection')
+    parser.add_argument('--inject-v', action='store_true',
+                        help='Enable V injection')
+    parser.add_argument('--use-prompt', action='store_true',
+                        help='Use the prompt')
+    parser.add_argument('--save-output-images', action='store_true',
+                        help='Save the generated output images')
 
-    parser.add_argument('--no-inject-q', dest='inject_q', action='store_false',
-                        help='Disable Q injection (Q is injected by default)')
-    parser.set_defaults(inject_q=True)
-
-    parser.add_argument('--no-inject-v', dest='inject_v', action='store_false',
-                        help='Disable V injection (V is injected by default)')
-    parser.set_defaults(inject_v=True)
-
-    parser.add_argument('--no-use-prompt', dest='use_prompt', action='store_false',
-                        help='Disable using the prompt (prompt is used by default)')
-    parser.set_defaults(use_prompt=True)
-
-    # New arguments for saving outputs
-    parser.add_argument('--save-output-images', action='store_true', # Defaults to False
-                        help='Save the generated output images.')
 
     args = parser.parse_args()
     # It's good practice to clear GPU memory once at the start if issues are common
