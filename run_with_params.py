@@ -31,18 +31,7 @@ os.environ['TRANSFORMERS_CACHE'] = '/scratch/nevali'
 os.environ['HF_DATASETS_CACHE'] = '/scratch/nevali'
 
 # --- EXAMPLE OF USAGE ---
-# python your_script.py \
-#     --tau-alpha 0.6 \
-#     --tau-beta 0.4 \
-#     --guidance-scale 7.0 \
-#     --alpha-noise 0.3 \
-#     --timesteps 80 \
-#     --run-on-first 1 \
-#     --inject-k \
-#     --inject-v \
-#     --inject-q \
-#     --use-prompt \
-#     --save-output-images
+# python run_with_params.py  --tau-alpha 0.4  --tau-beta 0.8  --guidance-scale 3.0   --alpha-noise 0.05  --timesteps 50  --run-on-first 2  --inject-k  --inject-v  --inject-q  --use-prompt --save-output-images
 
 def clear_all_gpu_memory():
     # Run garbage collection
@@ -122,7 +111,7 @@ def main(args):
     for category in tqdm(all_images, desc="Categories"):
         metrics[category] = []
         # Ensure RUN_ON_FIRST is an integer for slicing
-        num_examples_to_run = int(RUN_ON_FIRST) if RUN_ON_FIRST is not None else len(all_images[category])
+        num_examples_to_run = int(RUN_ON_FIRST) if RUN_ON_FIRST >= 1 else len(all_images[category])
 
         for i, example in enumerate(tqdm(all_images[category][:num_examples_to_run], desc=f"Examples in {category}", leave=False)):
 
@@ -181,10 +170,9 @@ def main(args):
                 # Construct filename using all hyperparams passed in cli
                 img_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}.png"
                 output_dir = f"./benchmark_images_generations/{category}/{example.image_number} {example.prompt}"
-                category_output_dir = os.path.join(output_dir, category)
-                os.makedirs(category_output_dir, exist_ok=True)
+                os.makedirs(output_dir, exist_ok=True)
                 
-                save_path = os.path.join(category_output_dir, img_filename)
+                save_path = os.path.join(output_dir, img_filename)
                 try:
                     example.output.save(save_path)
                     print(f"Saved output image to {save_path}")
@@ -194,6 +182,7 @@ def main(args):
             metrics_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}.json"
             output_dir = f"./benchmark_images_generations/{category}/{example.image_number} {example.prompt}"
             metrics_filename = os.path.join(output_dir, metrics_filename)
+
             with open(metrics_filename, 'w') as f:
                 json.dump(scores, f, indent=4)
             
@@ -203,16 +192,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Script for cache and edit with configurable parameters.")
 
     # Float arguments
-    parser.add_argument('--tau-alpha', type=float, default=0.5, help='Value for TAU_ALPHA (default: 0.5)')
-    parser.add_argument('--tau-beta', type=float, default=0.5, help='Value for TAU_BETA (default: 0.5)')
-    parser.add_argument('--guidance-scale', type=float, default=0.5, help='Guidance scale factor (default: 0.5)')
-    parser.add_argument('--alpha-noise', type=float, default=0.5, help='Alpha noise parameter (default: 0.5)')
+    parser.add_argument('--tau-alpha', type=float, default=0.4, help='Value for TAU_ALPHA (default: 0.4)')
+    parser.add_argument('--tau-beta', type=float, default=0.8, help='Value for TAU_BETA (default: 0.8)')
+    parser.add_argument('--guidance-scale', type=float, default=3.0, help='Guidance scale factor (default: 3.0)')
+    parser.add_argument('--alpha-noise', type=float, default=0.05, help='Alpha noise parameter (default: 0.05)')
 
     # Integer arguments
     parser.add_argument('--timesteps', type=int, default=50, help='Number of timesteps (default: 50)')
     # Corrected --run-on-first to use type=int and default directly
-    parser.add_argument('--run-on-first', type=int, default=1,
-                        help='Run on the first N images from each category (default: 1)')
+    parser.add_argument('--run-on-first', type=int, default=-1,
+                        help='Run on the first N images from each category (default: -1 == run on all)')
 
     # Boolean flags (False by default, True if flag is present)
     parser.add_argument('--inject-k', action='store_true',
