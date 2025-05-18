@@ -127,6 +127,9 @@ def main(args):
                         num_inversion_steps=TIMESTEPS,
                         photoshop_fg_noise=True,)
             print('Running inject qkv...')
+
+            # Set seed
+            torch.manual_seed(42)
             current_images_output = cached_pipe.run_inject_qkv( # Renamed to avoid conflict
                 ["", "", example.prompt if USE_PROMPT else ""],
                 num_inference_steps=TIMESTEPS,
