@@ -529,7 +529,7 @@ def compute_hpsv2_score(composed_image: Image.Image, prompt):
             logits_per_image = image_features @ text_features.T
             hps_score = torch.diagonal(logits_per_image).cpu().numpy()
         
-    return hps_score[0]
+    return float(hps_score[0])
     
 
 def compute_aesthetics_score(composed_image: Image.Image):
@@ -570,4 +570,4 @@ def compute_aesthetics_score(composed_image: Image.Image):
     im_emb_arr = normalized(image_features.cpu().detach().numpy() )
     prediction = compute_aesthetics_score.model(torch.from_numpy(im_emb_arr).to(device).type(torch.cuda.FloatTensor))
 
-    return prediction
+    return prediction.item()
