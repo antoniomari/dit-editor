@@ -28,6 +28,7 @@ class BenchmarkExample:
         self.target_mask = None
         self.final_mask = None
         self.tf_icon_image = None
+        self.output = None
         
         for img_file in all_images:
             if img_file.startswith('bg'):
@@ -83,6 +84,12 @@ class BenchmarkExample:
             self.kvedit_image = Image.open(self.kvedit_image).convert("RGB")
 
         # TODO: Load more results if we have them
+    
+    def set_output(self, output: Image.Image):
+        """
+        Set the output image for the benchmark example.
+        """
+        self.output = output
 
     def plot_results(self):
         """ Plot background, foreground and all results in a single row. """
@@ -172,11 +179,12 @@ def gather_images(image_dir: str) -> List[BenchmarkExample]:
     """
     Gather all images in the given directory and return a list of BenchmarkExample objects.
     """
-    images = []
+    images = {}
     missing_image_counter = 0
 
     # Get all directories in the image_dir
     for category in os.listdir(image_dir):
+        images[category] = []
         category_path = os.path.join(image_dir, category)
 
         if not os.path.isdir(category_path): # skip .DS_Store
@@ -191,7 +199,7 @@ def gather_images(image_dir: str) -> List[BenchmarkExample]:
 
             # Check if the folder name is a valid image folder
             try:
-                images.append(BenchmarkExample(image_folder_path))
+                images[category].append(BenchmarkExample(image_folder_path))
             except ValueError as e:
                 print(f"Skipping {image_folder_path}: {e}")
                 missing_image_counter += 1

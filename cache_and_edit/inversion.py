@@ -317,21 +317,21 @@ def compose_noise_masks(cached_pipe,
         (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
         )
 
-        print("Placed Foreground Image")
+        #print("Placed Foreground Image")
         reframed_fg_img = Image.fromarray(reframed_fg_img.numpy())
-        display(reframed_fg_img)
+        #display(reframed_fg_img)
 
-        print("Placed Mask")
+        #print("Placed Mask")
         resized_mask_img = Image.fromarray((resized_mask.numpy() * 255).astype(np.uint8))
-        display(resized_mask_img)
+        #display(resized_mask_img)
 
         # invert resized & padded image
         if photoshop_fg_noise:
-            print("Photoshopping FG IMAGE")
+            #print("Photoshopping FG IMAGE")
             photoshop_img = Image.fromarray(
                 (torch.tensor(np.array(background_image)) * ~resized_mask.cpu().unsqueeze(-1) + torch.tensor(np.array(reframed_fg_img)) * resized_mask.cpu().unsqueeze(-1)).numpy()
             )
-            display(photoshop_img)
+            #display(photoshop_img)
             fg_noise = get_inverted_input_noise(cached_pipe, photoshop_img, num_steps=num_inversion_steps)
         else:
             fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
@@ -371,9 +371,8 @@ def compose_noise_masks(cached_pipe,
         (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
         )
 
-        print("Segmented and Palced FG Image")
         reframed_fg_img = Image.fromarray(reframed_fg_img.numpy())
-        display(reframed_fg_img)
+        #display(reframed_fg_img)
 
         resized_mask_img = Image.fromarray((resized_mask.numpy() * 255).astype(np.uint8))
 
@@ -386,15 +385,15 @@ def compose_noise_masks(cached_pipe,
 
         reframed_segmentation_mask = reframed_segmentation_mask.numpy()
         reframed_segmentation_mask_img = Image.fromarray(reframed_segmentation_mask)
-        print("Placed Segmentation Mask")
-        display(reframed_segmentation_mask_img)
+        #print("Placed Segmentation Mask")
+        #display(reframed_segmentation_mask_img)
 
         # invert resized & padded image 
         # fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
 
         if photoshop_fg_noise:
             # temporarily convert to apply mask
-            print("Photoshopping FG IMAGE")
+            #print("Photoshopping FG IMAGE")
             seg_mask_temp = torch.from_numpy(reframed_segmentation_mask).bool()
             bg_temp = torch.tensor(np.array(background_image))
             fg_temp = torch.tensor(np.array(reframed_fg_img))
@@ -402,7 +401,7 @@ def compose_noise_masks(cached_pipe,
             photoshop_img = Image.fromarray(
                 (bg_temp * (~seg_mask_temp) + fg_temp * seg_mask_temp).numpy()
             ).convert("RGB")
-            display(photoshop_img)
+            #display(photoshop_img)
             fg_noise = get_inverted_input_noise(cached_pipe, photoshop_img, num_steps=num_inversion_steps)
         else:
             fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
@@ -459,9 +458,9 @@ def compose_noise_masks(cached_pipe,
         (torch.from_numpy(np.array(target_mask)) / 255.0).to(dtype=bool)
         )
 
-        print("Segmented and Placed FG Image")
+        #print("Segmented and Placed FG Image")
         reframed_fg_img = Image.fromarray(reframed_fg_img.numpy())
-        display(reframed_fg_img)
+        #display(reframed_fg_img)
 
         # resize and scale the mask itself
         foreground_mask = foreground_mask.convert("RGB")
@@ -472,17 +471,17 @@ def compose_noise_masks(cached_pipe,
 
         reframed_segmentation_mask = reframed_segmentation_mask.numpy()
         reframed_segmentation_mask_img = Image.fromarray(reframed_segmentation_mask)
-        print("Reframed Segmentation Mask")
-        display(reframed_segmentation_mask_img)
+        #print("Reframed Segmentation Mask")
+        #display(reframed_segmentation_mask_img)
 
         xor_mask = target_mask ^ np.array(reframed_segmentation_mask_img.convert("L"))
-        print("XOR Mask")
-        display(Image.fromarray(xor_mask))
+        #print("XOR Mask")
+        #display(Image.fromarray(xor_mask))
 
         # invert resized & padded image 
         # fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
         if photoshop_fg_noise:
-            print("Photoshopping FG IMAGE")
+            #print("Photoshopping FG IMAGE")
             # temporarily convert to apply mask
             seg_mask_temp = torch.from_numpy(reframed_segmentation_mask).bool()
             bg_temp = torch.tensor(np.array(background_image))
@@ -491,7 +490,7 @@ def compose_noise_masks(cached_pipe,
             photoshop_img = Image.fromarray(
                 (bg_temp * (~seg_mask_temp) + fg_temp * seg_mask_temp).numpy()
             ).convert("RGB")
-            display(photoshop_img)
+            #display(photoshop_img)
             fg_noise = get_inverted_input_noise(cached_pipe, photoshop_img, num_steps=num_inversion_steps)
         else:
             fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
