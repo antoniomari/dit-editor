@@ -113,7 +113,7 @@ def main(args):
 
     for category in tqdm(all_images, desc="Categories"):
 
-        if category in ['Real-Painting', 'Real-Cartoon', 'Real-Real']:
+        if category in ['Real-Painting', 'Real-Cartoon', 'Real-Sketch']:
             print(f"Skipping category: {category}")
             continue
         metrics[category] = []
