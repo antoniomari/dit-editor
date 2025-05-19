@@ -56,6 +56,7 @@ def clear_all_gpu_memory():
 
 def main(args):
     # Use args from argparse
+    LAYERS_FOR_INJECTION = args.layers
     TAU_ALPHA = args.tau_alpha
     TAU_BETA = args.tau_beta
     GUIDANCE_SCALE = args.guidance_scale
@@ -69,6 +70,7 @@ def main(args):
     SAVE_OUTPUT_IMAGES = args.save_output_images
 
     print("Running with parameters:")
+    print(f"  LAYERS_FOR_INJECTION: {LAYERS_FOR_INJECTION}")
     print(f"  TAU_ALPHA: {TAU_ALPHA}")
     print(f"  TAU_BETA: {TAU_BETA}")
     print(f"  GUIDANCE_SCALE: {GUIDANCE_SCALE}")
@@ -128,6 +130,14 @@ def main(args):
                         photoshop_fg_noise=True,)
             print('Running inject qkv...')
 
+            # set the layers for injection based on the CLI argument
+            if LAYERS_FOR_INJECTION == "vital":
+                layers_for_injection = vital_layers
+            elif LAYERS_FOR_INJECTION == "all":
+                layers_for_injection = all_layers
+            else:
+                raise ValueError("Invalid value for --layers. Use 'vital' or 'all'.")
+            
             # Set seed
             torch.manual_seed(42)
             current_images_output = cached_pipe.run_inject_qkv( # Renamed to avoid conflict
@@ -136,7 +146,7 @@ def main(args):
                 seed=42, # Consider making this a CLI arg
                 guidance_scale=GUIDANCE_SCALE,
                 positions_to_inject=all_layers,
-                positions_to_inject_foreground=vital_layers,
+                positions_to_inject_foreground=layers_for_injection,
                 empty_clip_embeddings=False,
                 q_mask=example_noise["latent_masks"]["latent_segmentation_mask"],
                 latents=torch.stack(
@@ -171,7 +181,7 @@ def main(args):
             # Save the output image if flag is set
             if SAVE_OUTPUT_IMAGES:
                 # Construct filename using all hyperparams passed in cli
-                img_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}.png"
+                img_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}_{LAYERS_FOR_INJECTION}-layers.png"
                 output_dir = f"./benchmark_images_generations/{category}/{example.image_number} {example.prompt}"
                 os.makedirs(output_dir, exist_ok=True)
                 
@@ -182,7 +192,7 @@ def main(args):
                 except Exception as e:
                     print(f"Error saving image {save_path}: {e}")
             
-            metrics_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}.json"
+            metrics_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}_{LAYERS_FOR_INJECTION}-layers.json"
             output_dir = f"./benchmark_images_generations/{category}/{example.image_number} {example.prompt}"
             metrics_filename = os.path.join(output_dir, metrics_filename)
 
@@ -205,6 +215,7 @@ if __name__ == '__main__':
     # Corrected --run-on-first to use type=int and default directly
     parser.add_argument('--run-on-first', type=int, default=-1,
                         help='Run on the first N images from each category (default: -1 == run on all)')
+    parser.add_argument('--layers', type=str, default='vital', help='Layers where to perform injection. Can be either "all" or "vital" (default: vital)')
 
     # Boolean flags (False by default, True if flag is present)
     parser.add_argument('--inject-k', action='store_true',
