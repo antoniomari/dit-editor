@@ -31,7 +31,7 @@ os.environ['TRANSFORMERS_CACHE'] = '/scratch/nevali'
 os.environ['HF_DATASETS_CACHE'] = '/scratch/nevali'
 
 # --- EXAMPLE OF USAGE ---
-# python run_with_params.py  --tau-alpha 0.4  --tau-beta 0.8  --guidance-scale 3.0   --alpha-noise 0.05  --timesteps 50  --run-on-first 2  --inject-k  --inject-v  --inject-q  --use-prompt --save-output-images
+# python run_with_params.py  --tau-alpha 0.4  --tau-beta 0.8  --guidance-scale 3.0   --alpha-noise 0.05  --timesteps 50  --run-on-first -1  --inject-k  --inject-v  --inject-q  --use-prompt --save-output-images
 
 def clear_all_gpu_memory():
     # Run garbage collection
@@ -109,6 +109,10 @@ def main(args):
     image_counter = 0
 
     for category in tqdm(all_images, desc="Categories"):
+
+        if category in ['Real-Painting', 'Real-Cartoon', 'Real-Real']:
+            print(f"Skipping category: {category}")
+            continue
         metrics[category] = []
         # Ensure RUN_ON_FIRST is an integer for slicing
         num_examples_to_run = int(RUN_ON_FIRST) if RUN_ON_FIRST >= 1 else len(all_images[category])
@@ -157,8 +161,8 @@ def main(args):
                     inject_k=INJECT_K_CLI,
                     inject_v=INJECT_V_CLI,
                     ),
-                width=512,
-                height=512,
+                width=example.bg_image.size[0],
+                height=example.bg_image.size[1],
                 inverted_latents_list = list(zip(example_noise["noise"]["background_noise_list"], example_noise["noise"]["foreground_noise_list"])),
                 tau_b=TAU_BETA,
                 bg_consistency_mask=example_noise["latent_masks"]["latent_segmentation_mask"],
