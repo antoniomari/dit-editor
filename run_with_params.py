@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import torch
 from PIL import Image
@@ -56,6 +57,7 @@ def clear_all_gpu_memory():
 
 def main(args):
     # Use args from argparse
+    LAYERS_FOR_INJECTION = args.layers
     TAU_ALPHA = args.tau_alpha
     TAU_BETA = args.tau_beta
     GUIDANCE_SCALE = args.guidance_scale
@@ -69,6 +71,7 @@ def main(args):
     SAVE_OUTPUT_IMAGES = args.save_output_images
 
     print("Running with parameters:")
+    print(f"  LAYERS_FOR_INJECTION: {LAYERS_FOR_INJECTION}")
     print(f"  TAU_ALPHA: {TAU_ALPHA}")
     print(f"  TAU_BETA: {TAU_BETA}")
     print(f"  GUIDANCE_SCALE: {GUIDANCE_SCALE}")
@@ -116,8 +119,22 @@ def main(args):
         metrics[category] = []
         # Ensure RUN_ON_FIRST is an integer for slicing
         num_examples_to_run = int(RUN_ON_FIRST) if RUN_ON_FIRST >= 1 else len(all_images[category])
+        if args.random_samples and num_examples_to_run > 0:
+            print(f"Randomly sampling {num_examples_to_run} images from {category} with seed {args.random_samples_seed}")
+            random.seed(args.random_samples_seed or 42)
+            ids_examples_to_run = random.sample(range(len(all_images[category])), num_examples_to_run)
+        else:
+            ids_examples_to_run = range(num_examples_to_run)
 
-        for i, example in enumerate(tqdm(all_images[category][:num_examples_to_run], desc=f"Examples in {category}", leave=False)):
+        for i in tqdm(ids_examples_to_run, desc=f"Examples in {category}", leave=False):
+            example = all_images[category][i]
+
+            img_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}_{LAYERS_FOR_INJECTION}-layers.png"
+            metrics_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}_{LAYERS_FOR_INJECTION}-layers.json"
+            output_dir = f"./benchmark_images_generations/{category}/{example.image_number} {example.prompt}"
+            if os.path.exists(os.path.join(output_dir, img_filename)) and os.path.exists(os.path.join(output_dir, metrics_filename)):
+                print(f"Image and metrics already exist. Skipping...")
+                continue
 
             print(f"\nProcessing: Category='{category}', Example Index='{i}', Q={INJECT_Q_CLI}, K={INJECT_K_CLI}, V={INJECT_V_CLI}")
             print('Composing noise...')
@@ -132,6 +149,14 @@ def main(args):
                         photoshop_fg_noise=True,)
             print('Running inject qkv...')
 
+            # set the layers for injection based on the CLI argument
+            if LAYERS_FOR_INJECTION == "vital":
+                layers_for_injection = vital_layers
+            elif LAYERS_FOR_INJECTION == "all":
+                layers_for_injection = all_layers
+            else:
+                raise ValueError("Invalid value for --layers. Use 'vital' or 'all'.")
+            
             # Set seed
             torch.manual_seed(42)
             current_images_output = cached_pipe.run_inject_qkv( # Renamed to avoid conflict
@@ -140,7 +165,7 @@ def main(args):
                 seed=42, # Consider making this a CLI arg
                 guidance_scale=GUIDANCE_SCALE,
                 positions_to_inject=all_layers,
-                positions_to_inject_foreground=vital_layers,
+                positions_to_inject_foreground=layers_for_injection,
                 empty_clip_embeddings=False,
                 q_mask=example_noise["latent_masks"]["latent_segmentation_mask"],
                 latents=torch.stack(
@@ -173,12 +198,7 @@ def main(args):
             scores = get_scores_for_single_example(example, methods)
 
             # Save the output image if flag is set
-            if SAVE_OUTPUT_IMAGES:
-                # Construct filename using all hyperparams passed in cli
-                img_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}.png"
-                output_dir = f"./benchmark_images_generations/{category}/{example.image_number} {example.prompt}"
-                os.makedirs(output_dir, exist_ok=True)
-                
+            if SAVE_OUTPUT_IMAGES:                
                 save_path = os.path.join(output_dir, img_filename)
                 try:
                     example.output.save(save_path)
@@ -186,7 +206,7 @@ def main(args):
                 except Exception as e:
                     print(f"Error saving image {save_path}: {e}")
             
-            metrics_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}.json"
+            metrics_filename = f"alphanoise{ALPHA_NOISE}_timesteps{TIMESTEPS}_Q{INJECT_Q_CLI}_K{INJECT_K_CLI}_V{INJECT_V_CLI}_taua{TAU_ALPHA}_taub{TAU_BETA}_guidance{GUIDANCE_SCALE}_{LAYERS_FOR_INJECTION}-layers.json"
             output_dir = f"./benchmark_images_generations/{category}/{example.image_number} {example.prompt}"
             metrics_filename = os.path.join(output_dir, metrics_filename)
 
@@ -206,11 +226,14 @@ if __name__ == '__main__':
 
     # Integer arguments
     parser.add_argument('--timesteps', type=int, default=50, help='Number of timesteps (default: 50)')
+    parser.add_argument('--random-samples-seed', type=int, default=42, help='Seed for random sampling from benchmark data (default: 42)')
     # Corrected --run-on-first to use type=int and default directly
     parser.add_argument('--run-on-first', type=int, default=-1,
                         help='Run on the first N images from each category (default: -1 == run on all)')
+    parser.add_argument('--layers', type=str, default='vital', help='Layers where to perform injection. Can be either "all" or "vital" (default: vital)')
 
     # Boolean flags (False by default, True if flag is present)
+    parser.add_argument('--random-samples', action='store_true', help="If set together with a positive number of --run-on-first, it will randomly sample that number of images from each category.")
     parser.add_argument('--inject-k', action='store_true',
                         help='Enable K injection')
     parser.add_argument('--inject-q', action='store_true',
