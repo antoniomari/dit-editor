@@ -32,6 +32,8 @@ os.environ['HF_HOME'] = HUGGINGFACE_PATH
 os.environ['TRANSFORMERS_CACHE'] = HUGGINGFACE_PATH
 os.environ['HF_DATASETS_CACHE'] = HUGGINGFACE_PATH
 
+CATEGORIES_TO_SKIP = [] # ['Real-Painting', 'Real-Cartoon', 'Real-Sketch']
+
 # --- EXAMPLE OF USAGE ---
 # python run_with_params.py  --tau-alpha 0.4  --tau-beta 0.8  --guidance-scale 3.0   --alpha-noise 0.05  --timesteps 50  --run-on-first -1  --inject-k  --inject-v  --inject-q  --use-prompt --save-output-images
 
@@ -114,7 +116,7 @@ def main(args):
 
     for category in tqdm(all_images, desc="Categories"):
 
-        if category in ['Real-Painting', 'Real-Cartoon', 'Real-Sketch']:
+        if category in CATEGORIES_TO_SKIP:
             print(f"Skipping category: {category}")
             continue
         metrics[category] = []
