@@ -4,8 +4,10 @@ import os
 import statistics
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 # Define the methods and metrics based on your description
+SAVE_SUFFIX = "" # TODO: you might need to adjust this suffix
 METHODS = ["Photoshop", "TF-ICON", "KV-EDIT", "ours"]
 METRICS = [
     "hpsv2_score",
@@ -29,7 +31,7 @@ def load_and_process_data(args):
     Loads data from JSON files according to the specified structure and arguments.
     Returns a dictionary of aggregated scores and a dictionary of average scores.
     """
-    benchmark_root_dir = './benchmark_images_generations'
+    benchmark_root_dir = 'benchmark_images_generations' # TODO: you might need to adjust this path
     aggregated_scores = {}
     # { benchmark_type: { metric: { method: [scores] } } }
 
@@ -80,6 +82,19 @@ def load_and_process_data(args):
                     print(f"Error processing file {json_file_path}: {e}")
             else:
                 print(f"Warning: Metrics file not found: {json_file_path}")
+    
+    
+    print("Converting Scores to DATAFRAME and saving as", f'aggregated_scores_{SAVE_SUFFIX}.csv')
+
+    # Convert aggregated_scores to a DataFrame for better visualization
+    df = pd.DataFrame.from_dict({(i, j): aggregated_scores[i][j]
+                                 for i in aggregated_scores.keys()
+                                 for j in aggregated_scores[i].keys()},
+                                 orient='index')
+    df = df.explode(column=METHODS)
+    df.to_csv(f'aggregated_scores_{SAVE_SUFFIX}.csv', index=True)
+
+
 
     # Calculate averages
     average_scores = {}
