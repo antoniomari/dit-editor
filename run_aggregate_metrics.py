@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# python run_aggregate_metrics.py  --tau-alpha 0.4  --tau-beta 0.8  --guidance-scale 3.0   --alpha-noise 0.05  --timesteps 50  --inject-k  --inject-v  --inject-q --layers all
+
+
 # Define the methods and metrics based on your description
 SAVE_SUFFIX = "" # TODO: you might need to adjust this suffix
 METHODS = ["Photoshop", "TF-ICON", "KV-EDIT", "ours"]

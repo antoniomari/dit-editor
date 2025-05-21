@@ -29,6 +29,7 @@ class BenchmarkExample:
         self.final_mask = None
         self.tf_icon_image = None
         self.output = None
+        self.testing_image = None
         
         for img_file in all_images:
             if img_file.startswith('bg'):

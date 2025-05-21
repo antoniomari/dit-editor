@@ -7,10 +7,14 @@ Script to define our evaluation metrics and implement scoring of our outputs.
 from typing import Union, List, Dict
 from collections import defaultdict
 
+
+
 import torch
 import torch.nn.functional as F
 from transformers import AutoModel, AutoImageProcessor
 from transformers import CLIPProcessor, CLIPModel
+import torchvision.transforms as transforms
+import lpips
 
 from PIL import Image
 import numpy as np
@@ -273,84 +277,122 @@ def get_scores_for_single_example(example: BenchmarkExample,
     if example.result_image and "naive" in methods: # "Photoshop Baseline"
         # calculate the score
         hpsv2_score = compute_hpsv2_score(example.result_image, example.prompt)
+        hpsv2_score_fg = compute_hpsv2_score(example.result_image, example.prompt, example.fg_mask)
         aesthetics_score = compute_aesthetics_score(example.result_image)
-
+        aesthetics_score_fg = compute_aesthetics_score(example.result_image, example.fg_mask)
         background_mse = compute_background_mse(example.bg_image, example.result_image, example.target_mask)
         clip_text_image = compute_clip_similarity(example.result_image, example.prompt)
-        
+        clip_fg_image = compute_clip_similarity_images(example.result_image, example.fg_image, example.fg_mask)
         dinov2_similarity = compute_dinov2_similarity(example.result_image, example.fg_image, example.fg_mask) 
+        lpips = compute_lpips_score(example.result_image, example.fg_image, example.fg_mask)
 
         score_dict["Photoshop"] = {
                             "hpsv2_score": hpsv2_score,
+                            "hpsv2_score_fg": hpsv2_score_fg,
                             "aesthetics_score": aesthetics_score,
+                            "aesthetics_score_fg": aesthetics_score_fg,
                             "background_mse": background_mse,
                             "clip_text_image": clip_text_image,
-                            "dinov2_similarity": dinov2_similarity
+                            "clip_fg_image": clip_fg_image,
+                            "dinov2_similarity": dinov2_similarity,
+                            "lpips": compute_lpips_score(example.result_image, example.fg_image, example.fg_mask)
                                         }
     if example.tf_icon_image and "tf-icon" in methods:
         # calculate the score
         hpsv2_score = compute_hpsv2_score(example.tf_icon_image, example.prompt)
+        hpsv2_score_fg = compute_hpsv2_score(example.tf_icon_image, example.prompt, example.fg_mask)
         aesthetics_score = compute_aesthetics_score(example.tf_icon_image)
+        aesthetics_score_fg = compute_aesthetics_score(example.tf_icon_image, example.fg_mask)
         background_mse = compute_background_mse(example.bg_image, example.tf_icon_image, example.target_mask)
         clip_text_image = compute_clip_similarity(example.tf_icon_image, example.prompt)
+        clip_fg_image = compute_clip_similarity_images(example.tf_icon_image, example.fg_image, example.fg_mask)
         # TODO: how to compute dinov2 score for our purposes?
         dinov2_similarity = compute_dinov2_similarity(example.tf_icon_image, example.fg_image, example.fg_mask)
+        lpips = compute_lpips_score(example.tf_icon_image, example.fg_image, example.fg_mask)
 
         score_dict["TF-ICON"] = {
                             "hpsv2_score": hpsv2_score,
+                            "hpsv2_score_fg": hpsv2_score_fg,
                             "aesthetics_score": aesthetics_score,
+                            "aesthetics_score_fg": aesthetics_score_fg,
                             "background_mse": background_mse,
                             "clip_text_image": clip_text_image,
-                            "dinov2_similarity": dinov2_similarity
+                            "clip_fg_image": clip_fg_image,
+                            "dinov2_similarity": dinov2_similarity,
+                            "lpips": lpips
                                         }
         
     if example.kvedit_image and "kv-edit" in methods:
         # calculate the score
         hpsv2_score = compute_hpsv2_score(example.kvedit_image, example.prompt)
+        hpsv2_score_fg = compute_hpsv2_score(example.kvedit_image, example.prompt, example.fg_mask)
         aesthetics_score = compute_aesthetics_score(example.kvedit_image)
+        aesthetics_score_fg = compute_aesthetics_score(example.kvedit_image, example.fg_mask)
         background_mse = compute_background_mse(example.bg_image, example.kvedit_image, example.target_mask)
         clip_text_image = compute_clip_similarity(example.kvedit_image, example.prompt)
+        clip_fg_image = compute_clip_similarity_images(example.kvedit_image, example.fg_image, example.fg_mask)
         # TODO: how to compute dinov2 score for our purposes?
         dinov2_similarity = compute_dinov2_similarity(example.kvedit_image, example.fg_image, example.fg_mask)
+        lpips = compute_lpips_score(example.kvedit_image, example.fg_image, example.fg_mask)
 
         score_dict["KV-EDIT"] = {
                             "hpsv2_score": hpsv2_score,
+                            "hpsv2_score_fg": hpsv2_score_fg,
                             "aesthetics_score": aesthetics_score,
+                            "aesthetics_score_fg": aesthetics_score_fg,
                             "background_mse": background_mse,
                             "clip_text_image": clip_text_image,
-                            "dinov2_similarity": dinov2_similarity
+                            "clip_fg_image": clip_fg_image,
+                            "dinov2_similarity": dinov2_similarity,
+                            "lpips": lpips
                                         }
         
     if example.output and "ours" in methods:
         # calculate the score
         hpsv2_score = compute_hpsv2_score(example.output, example.prompt)
+        hpsv2_score_fg = compute_hpsv2_score(example.output, example.prompt, example.fg_mask)
         aesthetics_score = compute_aesthetics_score(example.output)
+        aesthetics_score_fg = compute_aesthetics_score(example.output, example.fg_mask)
         background_mse = compute_background_mse(example.bg_image, example.output, example.target_mask)
-        clip_text_image = compute_clip_similarity(example.output, example.prompt)
+        f_text_image = compute_clip_similarity(example.output, example.prompt)
+        clip_fg_image = compute_clip_similarity_images(example.output, example.fg_image, example.fg_mask)
         dinov2_similarity = compute_dinov2_similarity(example.output, example.fg_image, example.fg_mask)
+        lpips = compute_lpips_score(example.output, example.fg_image, example.fg_mask)
 
         score_dict["ours"] = {
                             "hpsv2_score": hpsv2_score,
+                            "hpsv2_score_fg": hpsv2_score_fg,
                             "aesthetics_score": aesthetics_score,
+                            "aesthetics_score_fg": aesthetics_score_fg,
                             "background_mse": background_mse,
                             "clip_text_image": clip_text_image,
-                            "dinov2_similarity": dinov2_similarity
+                            "clip_fg_image": clip_fg_image,
+                            "dinov2_similarity": dinov2_similarity,
+                            "lpips": lpips
                                         }
         
     if example.testing_image and "testing" in methods:
         # calculate the score
         hpsv2_score = compute_hpsv2_score(example.testing_image, example.prompt)
+        hpsv2_score_fg = compute_hpsv2_score(example.testing_image, example.prompt, example.fg_mask)
         aesthetics_score = compute_aesthetics_score(example.testing_image)
+        aesthetics_score_fg = compute_aesthetics_score(example.testing_image, example.fg_mask)
         background_mse = compute_background_mse(example.bg_image, example.testing_image, example.target_mask)
         clip_text_image = compute_clip_similarity(example.testing_image, example.prompt)
+        clip_fg_image = compute_clip_similarity_images(example.testing_image, example.fg_image, example.fg_mask)
         dinov2_similarity = compute_dinov2_similarity(example.testing_image, example.fg_image, example.fg_mask)
+        lpips = compute_lpips_score(example.testing_image, example.fg_image, example.fg_mask)
 
         score_dict["testing"] = {
                             "hpsv2_score": hpsv2_score,
+                            "hpsv2_score_fg": hpsv2_score_fg,
                             "aesthetics_score": aesthetics_score,
+                            "aesthetics_score_fg": aesthetics_score_fg,
                             "background_mse": background_mse,
                             "clip_text_image": clip_text_image,
-                            "dinov2_similarity": dinov2_similarity
+                            "clip_fg_image": clip_fg_image,
+                            "dinov2_similarity": dinov2_similarity,
+                            "lpips": lpips
                                         }
     example.score_dict = score_dict
 
@@ -432,6 +474,48 @@ def compute_clip_similarity(image: Image.Image, prompt: str) -> float:
     return similarity
 
 
+def compute_clip_similarity_images(image1: Image.Image, image2:  Image.Image, mask) -> float:
+    """
+    Compute CLIP similarity between a PIL image and a text prompt.
+    Loads CLIP model only once and caches it.
+    
+    Args:
+        image (PIL.Image.Image): Input image.
+        prompt (str): Text prompt.
+    
+    Returns:
+        float: Cosine similarity between image and text.
+    """
+    if not hasattr(compute_clip_similarity, "model"):
+        compute_clip_similarity.model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
+        compute_clip_similarity.processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
+        compute_clip_similarity.model.eval()
+
+    model = compute_clip_similarity.model
+    processor = compute_clip_similarity.processor
+
+    mask_binary = mask.convert("L").point(lambda p: p > 0 and 255)
+    bbox = mask_binary.getbbox()
+    if bbox is None:
+        raise ValueError("Mask contains no non-zero region to compare.")
+        # Crop the masked region and resize back to original size
+    image1 = image1.crop(bbox)
+
+    image1_inputs = processor(images=image1.convert("RGB"), return_tensors="pt")
+    image2_inputs = processor(images=image2.convert("RGB"), return_tensors="pt")
+
+
+    with torch.no_grad():
+        image1_features = model.get_image_features(**image1_inputs)
+        image2_features = model.get_image_features(**image2_inputs)
+
+        image1_features = F.normalize(image1_features, p=2, dim=-1)
+        image2_features = F.normalize(image2_features, p=2, dim=-1)
+
+        similarity = (image1_features @ image2_features.T).item()
+
+    return similarity
+
 def compute_dinov2_similarity(
     image1: Image.Image,
     image2: Image.Image,
@@ -491,7 +575,7 @@ def compute_dinov2_similarity(
     return similarity
 
 
-def compute_hpsv2_score(composed_image: Image.Image, prompt):
+def compute_hpsv2_score(composed_image: Image.Image, prompt, mask=None):
     """
     Calculate the HPSV2 score for the composed image.
     
@@ -533,6 +617,15 @@ def compute_hpsv2_score(composed_image: Image.Image, prompt):
 
     # Calculate the score for the given image and prompt
     with torch.no_grad():
+
+        if mask is not None:
+            mask_binary = mask.convert("L").point(lambda p: p > 0 and 255)
+            bbox = mask_binary.getbbox()
+            if bbox is None:
+                raise ValueError("Mask contains no non-zero region to compare.")
+            # Crop the masked region and resize back to original size
+            composed_image = composed_image.crop(bbox)
+
         # Process the image
         image = compute_hpsv2_score.preprocess_val(composed_image).unsqueeze(0).to(device=device, non_blocking=True)
         # Process the prompt
@@ -547,7 +640,7 @@ def compute_hpsv2_score(composed_image: Image.Image, prompt):
     return float(hps_score[0])
     
 
-def compute_aesthetics_score(composed_image: Image.Image):
+def compute_aesthetics_score(composed_image: Image.Image, mask=None):
     """
     Calculate the aesthetics score for the composed image.
     Based on https://github.com/christophschuhmann/improved-aesthetic-predictor/blob/main/simple_inference.py
@@ -572,6 +665,13 @@ def compute_aesthetics_score(composed_image: Image.Image):
 
     # load image.
     # pil_image = Image.open(img_path)
+    if mask is not None:
+        mask_binary = mask.convert("L").point(lambda p: p > 0 and 255)
+        bbox = mask_binary.getbbox()
+        if bbox is None:
+            raise ValueError("Mask contains no non-zero region to compare.")
+        # Crop the masked region and resize back to original size
+        composed_image = composed_image.crop(bbox)
     pil_image = composed_image # NOTE: put potential transofrmations here
 
     # preprocess image
@@ -586,3 +686,54 @@ def compute_aesthetics_score(composed_image: Image.Image):
     prediction = compute_aesthetics_score.model(torch.from_numpy(im_emb_arr).to(device).type(torch.cuda.FloatTensor))
 
     return prediction.item()
+
+
+def compute_lpips_score(
+    img1: Image.Image,
+    img2: Image.Image,
+    mask,
+    net: str = 'alex'
+) -> float:
+    """
+    Compute the LPIPS distance between two images, applying a mask only to img1.
+
+    Args:
+        img1:     PIL image to be masked.
+        img2:     Reference PIL image (full frame).
+        mask:     Binary mask selecting a region on img1.
+        net:      LPIPS backbone: 'alex', 'vgg', or 'squeeze'.
+
+    Returns:
+        float: LPIPS distance (lower = more perceptually similar).
+    """
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    # Load LPIPS model once
+    if not hasattr(compute_lpips_score, "model"):
+        compute_lpips_score.model = lpips.LPIPS(net=net).to(device)
+
+    # Get bounding box of masked region
+    mask_bin = mask.convert("L").point(lambda p: 255 if p > 0 else 0)
+    bbox = mask_bin.getbbox()
+    if bbox is None:
+        raise ValueError("Mask contains no non-zero region to compare.")
+
+    # Crop the masked region from img1, then resize back to full img1 size
+    region = img1.crop(bbox).resize(img1.size, resample=Image.BILINEAR)
+
+    # Helper: PIL → LPIPS tensor in [-1,1] without torchvision
+    def pil_to_lpips_tensor(x: Image.Image):
+        x = x.convert("RGB")
+        arr = np.array(x).astype(np.float32) / 255.0     # H x W x C
+        tensor = torch.from_numpy(arr).permute(2, 0, 1)  # C x H x W
+        tensor = tensor.unsqueeze(0)                    # 1 x C x H x W
+        return (tensor * 2.0 - 1.0).to(device)           # scale to [-1,1]
+
+    t1 = pil_to_lpips_tensor(region)
+    # Also resize img2 to match img1 size
+    t2 = pil_to_lpips_tensor(img2.resize(img1.size, resample=Image.BILINEAR))
+
+    with torch.no_grad():
+        dist = compute_lpips_score.model(t1, t2)
+
+    return dist.item()
