@@ -7,6 +7,7 @@ import numpy as np
 from IPython.display import display
 
 from cache_and_edit.flux_pipeline import EditedFluxPipeline
+from cache_and_edit.qkv_cache import CachedFluxAttnProcessor3_0
 
 def image2latent(pipe, image, latent_nudging_scalar = 1.15):
     image = pipe.image_processor.preprocess(image).type(pipe.vae.dtype).to("cuda")
@@ -29,7 +30,13 @@ def get_inverted_input_noise(pipe: CachedPipeline,
                              image, 
                              prompt: str = "",
                              num_steps: int = 28,
-                             latent_nudging_scalar: int = 1.15):
+                             latent_nudging_scalar: int = 1.15,
+                             positions_to_inject: Optional[torch.Tensor] = None,
+                             positions_to_inject_foreground: Optional[torch.Tensor] = None,
+                             inject_kv_mode: Optional[str] = None,
+                             q_mask: Optional[torch.Tensor] = None,
+                             processor_class: Optional[torch.nn.Module] = CachedFluxAttnProcessor3_0,
+                             cache_kv: bool = False):
     """_summary_
 
     Args:
@@ -43,6 +50,20 @@ def get_inverted_input_noise(pipe: CachedPipeline,
 
     width, height = image.size 
     inverted_latents_list = []
+
+    # if cache_kv:
+    #     # We need to setup the cache to change the processor for inversion for caching
+    #     pipe.setup_cache(
+    #         use_activation_cache=False,
+    #         use_qkv_cache=True,
+    #         positions_to_cache=positions_to_inject,
+    #         positions_to_cache_foreground=positions_to_inject_foreground,
+    #         inject_kv_mode=inject_kv_mode,
+    #         q_mask=q_mask,
+    #         processor_class=processor_class,
+    #     )
+    #     print("Empty cache setup", pipe.qkv_cache_handler)
+    #     assert hasattr(pipe, "qkv_cache_handler"), "Cache handler not set up correctly"
 
     if isinstance(pipe.pipe, EditedFluxPipeline):
 
@@ -58,14 +79,19 @@ def get_inverted_input_noise(pipe: CachedPipeline,
             width=width,
             height=height,
             is_inverted_generation=True,
-            inverted_latents_list=inverted_latents_list
-        ).images[0]
+            inverted_latents_list=inverted_latents_list,
+            cache_kv=cache_kv,
+            processor_class=processor_class,
+        )
 
-        return inverted_latents_list
-
+        if cache_kv:
+            # after the forward pass you can access the cache
+            return inverted_latents_list, _[1]
+        else:
+            return inverted_latents_list
     
     else:
-        noise = pipe.run(
+        stuff = pipe.run(
             prompt,
             num_inference_steps=num_steps,
             seed=42,
@@ -76,9 +102,18 @@ def get_inverted_input_noise(pipe: CachedPipeline,
             inverse=True,
             width=width,
             height=height
-        ).images[0]
+        )
 
-        return noise
+        
+
+        if cache_kv:
+            noise = stuff[0].images[0]
+            # after the forward pass you can access the cache
+            return noise, stuff[1]
+        else:
+            # in this case we are not returning a tuple
+            noise = stuff.images[0]
+            return noise
     
 
 
@@ -253,7 +288,8 @@ def compose_noise_masks(cached_pipe,
                   option: str = "bg", # bg, bg_fg, segmentation1, tf_icon
                   photoshop_fg_noise: bool = False,
                   num_inversion_steps: int = 100,
-                  ):
+                  inject_kv_mode: Optional[str] = None,
+                  processor_class: Optional[torch.nn.Module] = None):
     
     """
     Composes noise masks for image generation using different strategies.
@@ -403,12 +439,32 @@ def compose_noise_masks(cached_pipe,
                 (bg_temp * (~seg_mask_temp) + fg_temp * seg_mask_temp).numpy()
             ).convert("RGB")
             display(photoshop_img)
-            fg_noise = get_inverted_input_noise(cached_pipe, photoshop_img, num_steps=num_inversion_steps)
+            fg_noise = get_inverted_input_noise(
+                cached_pipe,
+                photoshop_img,
+                num_steps=num_inversion_steps,
+                cache_kv=False,
+            )
         else:
-            fg_noise = get_inverted_input_noise(cached_pipe, reframed_fg_img, num_steps=num_inversion_steps)
+            fg_noise = get_inverted_input_noise(cached_pipe,
+                                                reframed_fg_img,
+                                                num_steps=num_inversion_steps,
+                                                cache_kv=False,
+                                                )
 
 
-        bg_noise = get_inverted_input_noise(cached_pipe, background_image, num_steps=num_inversion_steps)
+        # so for the background we might want to setup a different processor if we want to cache kv so we pass it as kv argument
+
+        bg_noise, qkv_handler = get_inverted_input_noise(
+            cached_pipe,
+            background_image,
+            num_steps=num_inversion_steps,
+            inject_kv_mode=inject_kv_mode,
+            processor_class=processor_class,
+            cache_kv=True,
+        )
+        
+        
         bg_noise_init = bg_noise[-1].squeeze(0) if isinstance(bg_noise, list) else bg_noise
         fg_noise_init = fg_noise[-1].squeeze(0) if isinstance(fg_noise, list) else fg_noise
 
@@ -433,6 +489,7 @@ def compose_noise_masks(cached_pipe,
                 "background_noise": bg_noise_init,
                 "foreground_noise_list": fg_noise if isinstance(fg_noise, list) else None,
                 "background_noise_list": bg_noise if isinstance(bg_noise, list) else None,
+                "qkv_handler": qkv_handler,
         }
 
         

@@ -6,7 +6,7 @@ import torch
 from cache_and_edit.activation_cache import FluxActivationCache, ModelActivationCache, PixartActivationCache, ActivationCacheHandler
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
 from cache_and_edit.hooks import locate_block, register_general_hook, fix_inf_values_hook, edit_streams_hook
-from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache, CachedFluxAttnProcessor3_0
+from cache_and_edit.qkv_cache import FullQKVCacheFluxHandler, QKVCacheFluxHandler, QKVCache, CachedFluxAttnProcessor3_0
 from cache_and_edit.scheduler_inversion import FlowMatchEulerDiscreteSchedulerForInversion
 from cache_and_edit.flux_pipeline import EditedFluxPipeline
 
@@ -67,9 +67,51 @@ class CachedPipeline:
                                                              )
             else:
                 raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
-            
-            # qkv_cache does not use hooks
                 
+    def use_external_cache(self, use_activation_cache = True,
+                    external_cache: QKVCache = None,
+                    positions_to_cache: List[str] = None,
+                    positions_to_cache_foreground: List[str] = None,
+                    qkv_to_inject: QKVCache = None,
+                    inject_kv_mode: Literal["image", "text", "both"] = None,
+                    q_mask=None,
+                    processor_class: Optional[Type] = CachedFluxAttnProcessor3_0,
+                    denoising_steps: int = 0,
+                    ) -> None:
+        """
+            Sets up activation_cache and/or qkv_cache, setting the required hooks.
+            If positions_to_cache is None, then all modules will be cached.
+            If inject_kv_mode is None, then qkv cache will be stored, otherwise qkv_to_inject will be injected.
+        """
+
+        if use_activation_cache:
+            if isinstance(self.pipe, EditedFluxPipeline) or isinstance(self.pipe, FluxPipeline):
+                activation_cache = FluxActivationCache()
+            else:
+                raise AssertionError(f"activation cache not implemented for {type(self.pipe)}")
+
+            self.activation_cache_handler = ActivationCacheHandler(activation_cache, positions_to_cache)
+            # register hooks crated by activation_cache
+            self._set_hooks(position_hook_dict=self.activation_cache_handler.forward_hooks_dict,
+                            with_kwargs=True)
+        
+
+        if isinstance(self.pipe, EditedFluxPipeline) or isinstance(self.pipe, FluxPipeline):
+            self.qkv_cache_handler = FullQKVCacheFluxHandler(self.pipe,
+                                                            external_cache,
+                                                            positions_to_cache,
+                                                            positions_to_cache_foreground,
+                                                            inject_kv=inject_kv_mode, 
+                                                            text_seq_length=self.text_seq_length,
+                                                            q_mask=q_mask,
+                                                            processor_class=processor_class,
+                                                            denoising_steps=denoising_steps,
+                                                            )
+        else:
+            raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
+
+
+
 
     @property
     def activation_cache(self) -> ModelActivationCache:
@@ -94,6 +136,8 @@ class CachedPipeline:
             positions_to_cache: List[str] = None,
             empty_clip_embeddings: bool = True,
             inverse: bool = False,
+            cache_kv: bool = False,
+            processor_class: Optional[Type] = CachedFluxAttnProcessor3_0,
             **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
@@ -129,7 +173,17 @@ class CachedPipeline:
             torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
 
         # Setup cache again for the current inference pass
-        self.setup_cache(cache_activations, cache_qkv, positions_to_cache, inject_kv_mode=None)
+        if cache_kv:
+            # We need to setup the cache to change the processor for inversion for caching
+            self.setup_cache(
+                use_activation_cache=False,
+                use_qkv_cache=True,
+                positions_to_cache=positions_to_cache,
+                inject_kv_mode=None,
+                processor_class=processor_class,
+            )
+        else:
+            self.setup_cache(cache_activations, cache_qkv, positions_to_cache, inject_kv_mode=None)
 
         assert isinstance(seed, int)
 
@@ -167,7 +221,7 @@ class CachedPipeline:
         if inverse: 
             self.pipe.scheduler = self.og_scheduler
 
-        return output
+        return output if not cache_kv else output, self.qkv_cache_handler
     
     @torch.no_grad
     def run_inject_qkv(self, 
@@ -183,6 +237,8 @@ class CachedPipeline:
             width: int = 1024,
             height: int = 1024,
             processor_class: Optional[Type] = CachedFluxAttnProcessor3_0,
+            use_external_qkv_cache: bool = False,
+            denoising_steps: int = 0,
             **kwargs):
         """run the pipeline, possibly cachine activations or QKV.
 
@@ -202,24 +258,38 @@ class CachedPipeline:
         # First, clear all registered hooks 
         self.clear_all_hooks()
 
-        # Delete previous QKVCache
-        if hasattr(self, "qkv_cache_handler") and self.qkv_cache_handler is not None:
-            self.qkv_cache_handler.clear_cache()
-            del(self.qkv_cache_handler)
-            gc.collect()  # force Python to clean up unreachable objects            
-            torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
+        if not use_external_qkv_cache:
+            # Delete previous QKVCache
+            if hasattr(self, "qkv_cache_handler") and self.qkv_cache_handler is not None:
+                self.qkv_cache_handler.clear_cache()
+                del(self.qkv_cache_handler)
+                gc.collect()  # force Python to clean up unreachable objects            
+                torch.cuda.empty_cache()  # tell PyTorch to release unused GPU memory from its cache
 
-        # Will setup existing QKV cache to be injected
-        self.setup_cache(use_activation_cache=False, 
-                         use_qkv_cache=True, 
-                         positions_to_cache=positions_to_inject,
-                         positions_to_cache_foreground=positions_to_inject_foreground,
-                         inject_kv_mode=inject_kv_mode,
-                         q_mask=q_mask,
-                         processor_class=processor_class,
-                         )
+            # Will setup existing QKV cache to be injected
+            self.setup_cache(use_activation_cache=False, 
+                            use_qkv_cache=True, 
+                            positions_to_cache=positions_to_inject,
+                            positions_to_cache_foreground=positions_to_inject_foreground,
+                            inject_kv_mode=inject_kv_mode,
+                            q_mask=q_mask,
+                            processor_class=processor_class,
+                            )
+        else:
+            # Initialize the QKV cache handler
+            # Note that we cannot reuse the previous handler because it was
+            # intialized with a different processor class
+            self.use_external_cache(
+                use_activation_cache=False,
+                external_cache=self.qkv_cache_handler.cache,
+                positions_to_cache=positions_to_inject,
+                positions_to_cache_foreground=positions_to_inject_foreground,
+                inject_kv_mode=inject_kv_mode,
+                q_mask=q_mask,
+                processor_class=processor_class,
+                denoising_steps=denoising_steps,
+            )
         
-        self.qkv_cache_handler
 
         assert isinstance(seed, int)
 

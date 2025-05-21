@@ -316,10 +316,9 @@ class QKVCacheFluxHandler:
                  inject_kv: Literal["image", "text", "both"] = None,
                  text_seq_length: int = 512,
                  q_mask: Optional[torch.Tensor] = None,
-                 processor_class: Optional[Type] = CachedFluxAttnProcessor3_0
+                 processor_class: Optional[Type] = CachedFluxAttnProcessor2_0 # TODO: why this is default --> i change it to 2_0
                  ):
         
-        print(type(pipe))
         if not isinstance(pipe, FluxPipeline) and not isinstance(pipe, EditedFluxPipeline):
             raise NotImplementedError(f"QKVCache not yet implemented for {type(pipe)}.")
     
@@ -339,7 +338,6 @@ class QKVCacheFluxHandler:
         self._cache = {"query": [], "key": [], "value": []}
 
         # Set Cached Processor to perform editing
-
         all_layers = [f"transformer.transformer_blocks.{i}" for i in range(19)] + \
                 [f"transformer.single_transformer_blocks.{i}" for i in range(38)]
         for module_name in all_layers:
@@ -356,6 +354,8 @@ class QKVCacheFluxHandler:
                                                                     text_seq_length=text_seq_length,
                                                                     q_mask=q_mask,
                                                                     ))
+        
+        # we want to save the instance of the processor because we want to access its cache
 
 
     @property
@@ -379,6 +379,63 @@ class QKVCacheFluxHandler:
         for module_name in self.positions_to_cache:
                     module = locate_block(self.pipe, module_name)
                     module.attn.set_processor(FluxAttnProcessor2_0())
+
+
+class FullQKVCacheFluxHandler:
+    """Used to cache queries, keys and values of a FluxPipeline.
+    """
+
+    def __init__(self, pipe: Union[FluxPipeline, EditedFluxPipeline],
+                 external_cache: QKVCache,
+                 positions_to_cache: List[str] = None,
+                 positions_to_cache_foreground: List[str] = None,
+                 inject_kv: Literal["image", "text", "both"] = None,
+                 text_seq_length: int = 512,
+                 q_mask: Optional[torch.Tensor] = None,
+                 processor_class: Optional[Type] = CachedFluxAttnProcessor2_0,
+                 denoising_steps: Optional[int] = 0,
+                 ):
+        
+        if not isinstance(pipe, FluxPipeline) and not isinstance(pipe, EditedFluxPipeline):
+            raise NotImplementedError(f"QKVCache not yet implemented for {type(pipe)}.")
+    
+        assert external_cache is not None, "External cache must be provided."
+        
+        self.pipe = pipe
+        
+        if positions_to_cache is not None:
+            self.positions_to_cache = positions_to_cache
+        else:
+            # act on all transformer layers
+            self.positions_to_cache = []
+        
+        if positions_to_cache_foreground is not None:
+            self.positions_to_cache_foreground = positions_to_cache_foreground
+        else:
+            self.positions_to_cache_foreground = []
+
+        # Set Cached Processor to perform editing
+        all_layers = [f"transformer.transformer_blocks.{i}" for i in range(19)] + \
+                [f"transformer.single_transformer_blocks.{i}" for i in range(38)]
+        
+        if not issubclass(processor_class.func, TFICONAttnProcessorWithCacheDenoising):
+            raise ValueError(f"Processor class {processor_class.func.__name__} is not TFICONAttnProcessorWithCacheDenoising or a subclass thereof.")
+        for layer_num, module_name in enumerate(all_layers):
+
+            inject_kv =  "image" if module_name in self.positions_to_cache else None
+            inject_kv_foreground = module_name in self.positions_to_cache_foreground
+
+            module = locate_block(pipe, module_name)
+            module.attn.set_processor(processor_class(external_cache=external_cache, 
+                                                                    inject_kv=inject_kv,
+                                                                    inject_kv_foreground=inject_kv_foreground,
+                                                                    text_seq_length=text_seq_length,
+                                                                    q_mask=q_mask,
+                                                                    denoising_steps=denoising_steps,
+                                                                    layer_num=layer_num,
+                                                                    ))
+        
+        # we want to save the instance of the processor because we want to access its cache
 
 
 class TFICONAttnProcessor:
@@ -524,6 +581,335 @@ class TFICONAttnProcessor:
         )
 
         # hidden_states[2:, :, start_idx:] = torch.where(mask, weightage * hidden_states[1:2, :, start_idx:] + (1-weightage) * hidden_states[2:, :, start_idx:], hidden_states[2:, :, start_idx:])
+
+        # concatenate the text
+        hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
+        hidden_states = hidden_states.to(query.dtype)
+
+        if encoder_hidden_states is not None:
+            encoder_hidden_states, hidden_states = (
+                hidden_states[:, : encoder_hidden_states.shape[1]],
+                hidden_states[:, encoder_hidden_states.shape[1] :],
+            )
+
+            # linear proj
+            hidden_states = attn.to_out[0](hidden_states)
+            # dropout
+            hidden_states = attn.to_out[1](hidden_states)
+
+            encoder_hidden_states = attn.to_add_out(encoder_hidden_states)
+
+            return hidden_states, encoder_hidden_states
+        else:
+            return hidden_states
+        
+
+class TFICONAttnProcessorWithCacheInversion:
+    """Attention processor used typically in processing the SD3-like self-attention projections."""
+
+    def __init__(self, 
+                 external_cache: QKVCache, 
+                 inject_kv: Literal["image", "text", "both"]= None,
+                 inject_kv_foreground: bool = False,
+                 text_seq_length: int = 512,
+                 call_max_times = None,
+                 q_mask: Optional[torch.Tensor] = None,
+                ):
+        """Constructor for Cached attention processor.
+
+        Args:
+            external_cache (QKVCache): cache to store/inject values.
+            inject_kv (Literal[&quot;image&quot;, &quot;text&quot;, &quot;both&quot;], optional): whether to inject image, text or both streams KV. 
+                If None, it does not perform injection but the full cache is stored. Defaults to None.
+        """
+
+        if not hasattr(F, "scaled_dot_product_attention"):
+            raise ImportError("FluxAttnProcessor2_0 requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0.")
+        self.cache = external_cache
+        self.inject_kv = inject_kv
+        self.inject_kv_foreground = inject_kv_foreground
+        self.text_seq_length = text_seq_length
+        self.inversion_step = 0
+        self.denoising_step = 0
+
+        self.call_max_times = call_max_times
+        if self.call_max_times is not None:
+            self.num_calls = call_max_times
+        else:
+            self.num_calls = None
+        assert all((cache_key in external_cache) for cache_key in {"query", "key", "value"}), "Cache has to contain 'query', 'key' and 'value' keys."
+
+    def __call__(
+        self,
+        attn: Attention,
+        hidden_states: torch.FloatTensor,
+        encoder_hidden_states: torch.FloatTensor = None,
+        attention_mask: Optional[torch.FloatTensor] = None,
+        image_rotary_emb: Optional[torch.Tensor] = None,
+    ) -> torch.FloatTensor:
+        batch_size, _, _ = hidden_states.shape if encoder_hidden_states is None else encoder_hidden_states.shape
+
+        # `sample` projections.
+        query = attn.to_q(hidden_states)
+        key = attn.to_k(hidden_states)
+        value = attn.to_v(hidden_states)
+
+        inner_dim = key.shape[-1]
+        head_dim = inner_dim // attn.heads
+
+        query = query.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        key = key.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        value = value.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+
+        if attn.norm_q is not None:
+            query = attn.norm_q(query)
+        if attn.norm_k is not None:
+            key = attn.norm_k(key)
+
+        # hidden states are the image patches (B, 4096, hidden_dim)
+
+        # encoder_hidden_states are the text tokens (B, 512, hidden_dim)
+        
+        # the attention in FluxSingleTransformerBlock does not use `encoder_hidden_states`
+        if encoder_hidden_states is not None:
+            # `context` projections.
+            encoder_hidden_states_query_proj = attn.add_q_proj(encoder_hidden_states)
+            encoder_hidden_states_key_proj = attn.add_k_proj(encoder_hidden_states)
+            encoder_hidden_states_value_proj = attn.add_v_proj(encoder_hidden_states)
+
+            encoder_hidden_states_query_proj = encoder_hidden_states_query_proj.view(
+                batch_size, -1, attn.heads, head_dim
+            ).transpose(1, 2)
+            encoder_hidden_states_key_proj = encoder_hidden_states_key_proj.view(
+                batch_size, -1, attn.heads, head_dim
+            ).transpose(1, 2)
+            encoder_hidden_states_value_proj = encoder_hidden_states_value_proj.view(
+                batch_size, -1, attn.heads, head_dim
+            ).transpose(1, 2)
+
+            if attn.norm_added_q is not None:
+                encoder_hidden_states_query_proj = attn.norm_added_q(encoder_hidden_states_query_proj)
+            if attn.norm_added_k is not None:
+                encoder_hidden_states_key_proj = attn.norm_added_k(encoder_hidden_states_key_proj)
+
+            # concat inputs for attention -> (B, num_heads, 512 + 4096, head_dim)
+            query = torch.cat([encoder_hidden_states_query_proj, query], dim=2)
+            key = torch.cat([encoder_hidden_states_key_proj, key], dim=2)
+            value = torch.cat([encoder_hidden_states_value_proj, value], dim=2)
+
+        # Shape of mask is: (num_image_tokens, 1)
+        # mask = self.q_mask.permute(1, 0).unsqueeze(0).unsqueeze(-1) # Shape: (1, num_image_tokens, 1, 1)
+        # put mask on gpu
+        # mask = mask.to(key.device)
+        # first check that we inject only kv in images:
+        if self.inject_kv is not None and self.inject_kv != "image":
+            raise NotImplementedError("Injecting is implemented only for images.")
+        if image_rotary_emb is not None:
+            query = apply_rotary_emb(query, image_rotary_emb)
+            key = apply_rotary_emb(key, image_rotary_emb)
+
+        # Get the index range after the text tokens
+        start_idx = self.text_seq_length
+
+        #self.cache['query'].append(query[:, :, start_idx:, :].cpu())
+        self.cache['key'].append(key[:, :, start_idx:, :].cpu())
+        self.cache['value'].append(value[:, :, start_idx:, :].cpu())
+        self.inversion_step += 1
+
+        # print cache dimensions:
+        print("Cache dimensions: ", len(self.cache['key']), len(self.cache['value']))
+        # Use the combined attention map to compute attention using V from the composition image
+        hidden_states = F.scaled_dot_product_attention(
+            query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
+        )
+
+        # concatenate the text
+        hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
+        hidden_states = hidden_states.to(query.dtype)
+
+        if encoder_hidden_states is not None:
+            encoder_hidden_states, hidden_states = (
+                hidden_states[:, : encoder_hidden_states.shape[1]],
+                hidden_states[:, encoder_hidden_states.shape[1] :],
+            )
+
+            # linear proj
+            hidden_states = attn.to_out[0](hidden_states)
+            # dropout
+            hidden_states = attn.to_out[1](hidden_states)
+
+            encoder_hidden_states = attn.to_add_out(encoder_hidden_states)
+
+            return hidden_states, encoder_hidden_states
+        else:
+            return hidden_states
+
+
+class TFICONAttnProcessorWithCacheDenoising:
+    """Attention processor used typically in processing the SD3-like self-attention projections."""
+
+    def __init__(self, 
+                 external_cache: QKVCache, 
+                 inject_kv: Literal["image", "text", "both"]= None,
+                 inject_kv_foreground: bool = False,
+                 text_seq_length: int = 512,
+                 q_mask: Optional[torch.Tensor] = None,
+                 call_max_times = None,
+                 denoising_steps: int = None,
+                 layer_num: int = None,
+                ):
+        """Constructor for Cached attention processor.
+
+        Args:
+            external_cache (QKVCache): cache to store/inject values.
+            inject_kv (Literal[&quot;image&quot;, &quot;text&quot;, &quot;both&quot;], optional): whether to inject image, text or both streams KV. 
+                If None, it does not perform injection but the full cache is stored. Defaults to None.
+        """
+        assert layer_num is not None, "Layer number has to be provided."
+        assert denoising_steps is not None, "Denoising step has to be provided."
+        if not hasattr(F, "scaled_dot_product_attention"):
+            raise ImportError("FluxAttnProcessor2_0 requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0.")
+        
+        self.inject_kv = inject_kv
+        self.inject_kv_foreground = inject_kv_foreground
+        self.text_seq_length = text_seq_length
+        self.q_mask = q_mask
+        self.denoising_steps = denoising_steps # this is init to 50
+        self.layer_num = layer_num # this goes from 0 to 56
+        self.num_layers = 57 # this is the number of layers in the model
+        
+        self.cache = external_cache
+        print(len(self.cache['key']), len(self.cache['value']))
+        self.denoising_steps = denoising_steps
+        # check that the cache is not empty
+        if len(self.cache['key']) != self.denoising_steps * self.num_layers or len(self.cache['value']) != self.denoising_steps * self.num_layers:
+            raise ValueError(f"Cache mismatch, kv-cache has to contain {self.denoising_steps * self.num_layers} keys and values but it contains {len(self.cache['key'])} keys and {len(self.cache['value'])} values.")
+
+
+        # invertin cache: from [key_t1_l1, key_t1_l2, ...] --> [key_tN_l1, key_tN_l2, ...]
+        # self.chace_ordered = QKVCache()
+        # for i in range(self.denoising_steps, 0, -1):
+        #     for j in range(self.layers):
+        #         self.cache_ordered.key.append(self.cache['key'][i*57 + j])
+        #         self.cache_ordered.value.append(self.cache['value'][i*57 + j])
+
+        self.call_max_times = call_max_times
+        if self.call_max_times is not None:
+            self.num_calls = call_max_times
+        else:
+            self.num_calls = None
+        assert all((cache_key in external_cache) for cache_key in {"query", "key", "value"}), "Cache has to contain 'query', 'key' and 'value' keys."
+
+    def __call__(
+        self,
+        attn: Attention,
+        hidden_states: torch.FloatTensor,
+        encoder_hidden_states: torch.FloatTensor = None,
+        attention_mask: Optional[torch.FloatTensor] = None,
+        image_rotary_emb: Optional[torch.Tensor] = None,
+    ) -> torch.FloatTensor:
+        batch_size, _, _ = hidden_states.shape if encoder_hidden_states is None else encoder_hidden_states.shape
+
+        # `sample` projections.
+        query = attn.to_q(hidden_states)
+        key = attn.to_k(hidden_states)
+        value = attn.to_v(hidden_states)
+
+        inner_dim = key.shape[-1]
+        head_dim = inner_dim // attn.heads
+
+        query = query.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        key = key.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        value = value.view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+
+        if attn.norm_q is not None:
+            query = attn.norm_q(query)
+        if attn.norm_k is not None:
+            key = attn.norm_k(key)
+
+        # hidden states are the image patches (B, 4096, hidden_dim)
+
+        # encoder_hidden_states are the text tokens (B, 512, hidden_dim)
+        
+        # the attention in FluxSingleTransformerBlock does not use `encoder_hidden_states`
+        if encoder_hidden_states is not None:
+            # `context` projections.
+            encoder_hidden_states_query_proj = attn.add_q_proj(encoder_hidden_states)
+            encoder_hidden_states_key_proj = attn.add_k_proj(encoder_hidden_states)
+            encoder_hidden_states_value_proj = attn.add_v_proj(encoder_hidden_states)
+
+            encoder_hidden_states_query_proj = encoder_hidden_states_query_proj.view(
+                batch_size, -1, attn.heads, head_dim
+            ).transpose(1, 2)
+            encoder_hidden_states_key_proj = encoder_hidden_states_key_proj.view(
+                batch_size, -1, attn.heads, head_dim
+            ).transpose(1, 2)
+            encoder_hidden_states_value_proj = encoder_hidden_states_value_proj.view(
+                batch_size, -1, attn.heads, head_dim
+            ).transpose(1, 2)
+
+            if attn.norm_added_q is not None:
+                encoder_hidden_states_query_proj = attn.norm_added_q(encoder_hidden_states_query_proj)
+            if attn.norm_added_k is not None:
+                encoder_hidden_states_key_proj = attn.norm_added_k(encoder_hidden_states_key_proj)
+
+            # concat inputs for attention -> (B, num_heads, 512 + 4096, head_dim)
+            query = torch.cat([encoder_hidden_states_query_proj, query], dim=2)
+            key = torch.cat([encoder_hidden_states_key_proj, key], dim=2)
+            value = torch.cat([encoder_hidden_states_value_proj, value], dim=2)
+
+        # TODO: try first witout mask
+        # Cache Q, K, V
+        # extend the mask to match key and values dimension:
+    
+        # first check that we inject only kv in images:
+        if self.inject_kv is not None and self.inject_kv != "image":
+            raise NotImplementedError("Injecting is implemented only for images.")
+        # the second element of the batch is the number of heads
+        # The first element of the batch represents the background image, the second element of the batch
+        # represents the foreground image. The third element represents the image where we want to inject
+        # the key and value of the background image and foreground image according to the query mask.
+        # Inject from background (element 0) where mask is True
+
+        if image_rotary_emb is not None:
+            query = apply_rotary_emb(query, image_rotary_emb)
+            key = apply_rotary_emb(key, image_rotary_emb)
+
+        # Get the index range after the text tokens
+        start_idx = self.text_seq_length
+
+        # Shape of mask is: (num_image_tokens, 1)
+        mask = self.q_mask.permute(1, 0).unsqueeze(0).unsqueeze(-1).to(key.device) # Shape: (1, num_image_tokens, 1, 1)
+        
+        
+        # compute idexing based on this structure: [key_t1_l1, key_t1_l2, ...]
+        idx = (self.denoising_steps - 1) * self.num_layers + self.layer_num
+        self.denoising_steps -= 1 # getting ready for the next forward pass
+        bg_k = self.cache['key'][idx].to(key.device)
+        bg_v = self.cache['value'][idx].to(value.device)
+
+        # insert in the background the cached keys and values
+        key[0:1, :, start_idx:, :] = bg_k
+        value[0:1, :, start_idx:, :] = bg_v
+
+        if self.num_calls is None or self.num_calls > 0:
+            if self.inject_kv_foreground:
+                key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[0:1, :, start_idx:])
+                query[2:, :, start_idx:] = torch.where(mask, query[1:2, :, start_idx:], query[0:1, :, start_idx:])
+                value[2:, :, start_idx:] = torch.where(mask, value[1:2, :, start_idx:], value[0:1, :, start_idx:])
+            else:
+                key[2:, :, start_idx:] = torch.where(mask, key[2:, :, start_idx:], key[0:1, :, start_idx:])
+                query[2:, :, start_idx:] = torch.where(mask, query[2:, :, start_idx:], query[0:1, :, start_idx:])
+                value[2:, :, start_idx:] = torch.where(mask, value[2:, :, start_idx:], value[0:1, :, start_idx:])
+            
+            if self.num_calls is not None:
+                print("Remaining calls: {}".format(self.num_calls))
+                self.num_calls -= 1
+
+        # Use the combined attention map to compute attention using V from the composition image
+        hidden_states = F.scaled_dot_product_attention(
+            query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
+        )
 
         # concatenate the text
         hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
