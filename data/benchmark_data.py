@@ -48,6 +48,8 @@ class BenchmarkExample:
                 self.tf_icon_image = os.path.join(image_path, img_file)
             elif img_file == "kvedit.jpg":
                 self.kvedit_image = os.path.join(image_path, img_file)
+            elif img_file == "alphanoise0.05_timesteps50_QTrue_KTrue_VFalse_taua0.4_taub0.8_guidance3.0_all-layers.png":
+                self.testing_image = os.path.join(image_path, img_file)
 
         # check if all images are present
         if not all([self.bg_image, self.fg_image, self.fg_mask, self.result_image, self.target_mask, self.final_mask]):
@@ -82,6 +84,8 @@ class BenchmarkExample:
             self.tf_icon_image = Image.open(self.tf_icon_image).convert("RGB")
         if self.kvedit_image:
             self.kvedit_image = Image.open(self.kvedit_image).convert("RGB")
+        if self.testing_image:
+            self.testing_image = Image.open(self.testing_image).convert("RGB")
 
         # TODO: Load more results if we have them
     

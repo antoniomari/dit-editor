@@ -336,7 +336,22 @@ def get_scores_for_single_example(example: BenchmarkExample,
                             "clip_text_image": clip_text_image,
                             "dinov2_similarity": dinov2_similarity
                                         }
+        
+    if example.testing_image and "testing" in methods:
+        # calculate the score
+        hpsv2_score = compute_hpsv2_score(example.testing_image, example.prompt)
+        aesthetics_score = compute_aesthetics_score(example.testing_image)
+        background_mse = compute_background_mse(example.bg_image, example.testing_image, example.target_mask)
+        clip_text_image = compute_clip_similarity(example.testing_image, example.prompt)
+        dinov2_similarity = compute_dinov2_similarity(example.testing_image, example.fg_image, example.fg_mask)
 
+        score_dict["testing"] = {
+                            "hpsv2_score": hpsv2_score,
+                            "aesthetics_score": aesthetics_score,
+                            "background_mse": background_mse,
+                            "clip_text_image": clip_text_image,
+                            "dinov2_similarity": dinov2_similarity
+                                        }
     example.score_dict = score_dict
 
     return score_dict
