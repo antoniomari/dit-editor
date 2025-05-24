@@ -293,8 +293,12 @@ def compose_noise_masks(cached_pipe,
     
     # calculate size of latent noise for mask resizing
     PATCH_SIZE = 16
-    latent_size = background_image.size[0] // PATCH_SIZE
-    latents = (latent_size, latent_size)
+    if background_image.size[0] % PATCH_SIZE != 0 or background_image.size[1] % PATCH_SIZE != 0:
+        raise ValueError(
+            f"Background image size {background_image.size} is not divisible by {PATCH_SIZE}. "
+            "Please resize the image to a size that is divisible by 16."
+        )
+    target_size = (background_image.size[1] // PATCH_SIZE, background_image.size[0] // PATCH_SIZE)
 
     # process the options
     if option == "bg":
@@ -340,7 +344,7 @@ def compose_noise_masks(cached_pipe,
         # overwrite get masked in latent space
         latent_mask = resize_bounding_box(
             resized_mask,
-            target_size=latents,
+            target_size=target_size,
                 ).flatten().unsqueeze(-1).to("cuda")
 
         # compose the noise
@@ -417,11 +421,11 @@ def compose_noise_masks(cached_pipe,
         reframed_segmentation_mask = torch.from_numpy(reframed_segmentation_mask).to(dtype=bool)
         latent_mask = resize_bounding_box(
             reframed_segmentation_mask,
-            target_size=latents,
+            target_size=target_size,
         ).flatten().unsqueeze(-1).to("cuda")
         bb_mask = resize_bounding_box(
             resized_mask,
-            target_size=latents,
+            target_size=target_size,
         ).flatten().unsqueeze(-1).to("cuda")
 
         # compose noise
@@ -429,8 +433,6 @@ def compose_noise_masks(cached_pipe,
 
         all_latent_masks = {
             "latent_segmentation_mask": latent_mask,
-            # FIXME: handle bounding box better (making sure shapes are correct, especially when bg and fg images have different sizes, e.g. test image 69)
-            "bb_mask": bb_mask,
             }
         all_noise = {
                 "composed_noise": composed_noise,
@@ -504,21 +506,21 @@ def compose_noise_masks(cached_pipe,
         # get all masks in latents and move to device
         latent_seg_mask = resize_bounding_box(
             reframed_segmentation_mask,
-            target_size=latents,
+            target_size=target_size,
         ).flatten().unsqueeze(-1).to("cuda")
         print(latent_seg_mask.shape)
 
 
         latent_xor_mask = resize_bounding_box(
             torch.from_numpy(xor_mask),
-            target_size=latents,
+            target_size=target_size,
         ).flatten().unsqueeze(-1).to("cuda")
 
 
         print(resized_mask.shape)
         latent_target_mask = resize_bounding_box(
             resized_mask,
-            target_size=latents,
+            target_size=target_size,
         ).flatten().unsqueeze(-1).to("cuda")
 
         # implement x∗T = xrT ⊙Mseg +xmT ⊙(1−Muser)+z⊙(Muser ⊕Mseg)
@@ -546,7 +548,7 @@ def compose_noise_masks(cached_pipe,
     # always add latent bbox mask (for bg consistency or any other future application)
     latent_bbox_mask = resize_bounding_box(
         torch.from_numpy(np.array(target_mask.resize(background_image.size))), # reseize just to be sure
-        target_size=latents,
+        target_size=target_size,
     ).flatten().unsqueeze(-1).to("cuda")
     all_latent_masks["latent_bbox_mask"] = latent_bbox_mask
     
@@ -557,7 +559,7 @@ def compose_noise_masks(cached_pipe,
         )
     bb_mask = resize_bounding_box(
             resized_mask,
-            target_size=latents,
+            target_size=target_size,
         ).flatten().unsqueeze(-1).to("cuda")
     all_latent_masks["latent_segmentation_mask"] = bb_mask
     
