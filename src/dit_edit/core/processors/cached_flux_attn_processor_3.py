@@ -1,39 +1,44 @@
-from dit_edit.core.qkv_cache import QKVCache
-
+from typing import Literal, Optional
 
 import torch
 import torch.nn.functional as F
 from diffusers.models.attention_processor import Attention
 from diffusers.models.embeddings import apply_rotary_emb
 
-
-from typing import Literal, Optional
+from dit_edit.core.qkv_cache.cache import QKVCache
 
 
 class CachedFluxAttnProcessor3_0:
     """Attention processor used typically in processing the SD3-like self-attention projections."""
 
-    def __init__(self, external_cache: QKVCache,
-                 inject_kv: Literal["image", "text", "both"]= None,
-                 inject_kv_foreground: bool = False,
-                 text_seq_length: int = 512,
-                 q_mask: Optional[torch.Tensor] = None,):
+    def __init__(
+        self,
+        external_cache: QKVCache,
+        inject_kv: Literal["image", "text", "both"] = None,
+        inject_kv_foreground: bool = False,
+        text_seq_length: int = 512,
+        q_mask: Optional[torch.Tensor] = None,
+    ):
         """Constructor for Cached attention processor.
 
         Args:
             external_cache (QKVCache): cache to store/inject values.
-            inject_kv (Literal[&quot;image&quot;, &quot;text&quot;, &quot;both&quot;], optional): whether to inject image, text or both streams KV. 
+            inject_kv (Literal[&quot;image&quot;, &quot;text&quot;, &quot;both&quot;], optional): whether to inject image, text or both streams KV.
                 If None, it does not perform injection but the full cache is stored. Defaults to None.
         """
 
         if not hasattr(F, "scaled_dot_product_attention"):
-            raise ImportError("FluxAttnProcessor2_0 requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0.")
+            raise ImportError(
+                "FluxAttnProcessor2_0 requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0."
+            )
         self.cache = external_cache
         self.inject_kv = inject_kv
         self.inject_kv_foreground = inject_kv_foreground
         self.text_seq_length = text_seq_length
         self.q_mask = q_mask
-        assert all((cache_key in external_cache) for cache_key in {"query", "key", "value"}), "Cache has to contain 'query', 'key' and 'value' keys."
+        assert all(
+            (cache_key in external_cache) for cache_key in {"query", "key", "value"}
+        ), "Cache has to contain 'query', 'key' and 'value' keys."
 
     def __call__(
         self,
@@ -43,7 +48,11 @@ class CachedFluxAttnProcessor3_0:
         attention_mask: Optional[torch.FloatTensor] = None,
         image_rotary_emb: Optional[torch.Tensor] = None,
     ) -> torch.FloatTensor:
-        batch_size, _, _ = hidden_states.shape if encoder_hidden_states is None else encoder_hidden_states.shape
+        batch_size, _, _ = (
+            hidden_states.shape
+            if encoder_hidden_states is None
+            else encoder_hidden_states.shape
+        )
 
         # `sample` projections.
         query = attn.to_q(hidden_states)
@@ -80,15 +89,18 @@ class CachedFluxAttnProcessor3_0:
             ).transpose(1, 2)
 
             if attn.norm_added_q is not None:
-                encoder_hidden_states_query_proj = attn.norm_added_q(encoder_hidden_states_query_proj)
+                encoder_hidden_states_query_proj = attn.norm_added_q(
+                    encoder_hidden_states_query_proj
+                )
             if attn.norm_added_k is not None:
-                encoder_hidden_states_key_proj = attn.norm_added_k(encoder_hidden_states_key_proj)
+                encoder_hidden_states_key_proj = attn.norm_added_k(
+                    encoder_hidden_states_key_proj
+                )
 
             # attention
             query = torch.cat([encoder_hidden_states_query_proj, query], dim=2)
             key = torch.cat([encoder_hidden_states_key_proj, key], dim=2)
             value = torch.cat([encoder_hidden_states_value_proj, value], dim=2)
-
 
         # # Cache Q, K, V
         # if self.inject_kv == "image":
@@ -98,7 +110,7 @@ class CachedFluxAttnProcessor3_0:
         #     key[1:, :, self.text_seq_length:] = key[:1, :, self.text_seq_length:]
         #     value[1:, :, self.text_seq_length:] = value[:1, :, self.text_seq_length:]
         # elif self.inject_kv == "text":
-        #     key[1:, :, :self.text_seq_length] = key[:1, :, :self.text_seq_length] 
+        #     key[1:, :, :self.text_seq_length] = key[:1, :, :self.text_seq_length]
         #     value[1:, :, :self.text_seq_length] = value[:1, :, :self.text_seq_length]
         # elif self.inject_kv == "both":
         #     key[1:] = key[:1]
@@ -110,7 +122,9 @@ class CachedFluxAttnProcessor3_0:
 
         # extend the mask to match key and values dimension:
         # Shape of mask is: (num_image_tokens, 1)
-        mask = self.q_mask.permute(1, 0).unsqueeze(0).unsqueeze(-1) # Shape: (1, num_image_tokens, 1, 1)
+        mask = (
+            self.q_mask.permute(1, 0).unsqueeze(0).unsqueeze(-1)
+        )  # Shape: (1, num_image_tokens, 1, 1)
         # put mask on gpu
         mask = mask.to(key.device)
         # first check that we inject only kv in images:
@@ -130,14 +144,26 @@ class CachedFluxAttnProcessor3_0:
         start_idx = self.text_seq_length
 
         if self.inject_kv_foreground and self.inject_kv == "image":
-            key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[:1, :, start_idx:])
-            value[2:, :, start_idx:] = torch.where(mask, value[1:2, :, start_idx:], value[:1, :, start_idx:])
+            key[2:, :, start_idx:] = torch.where(
+                mask, key[1:2, :, start_idx:], key[:1, :, start_idx:]
+            )
+            value[2:, :, start_idx:] = torch.where(
+                mask, value[1:2, :, start_idx:], value[:1, :, start_idx:]
+            )
         elif self.inject_kv == "image" and not self.inject_kv_foreground:
-            key[2:, :, start_idx:] = torch.where(mask, key[2:, :, start_idx:], key[:1, :, start_idx:])
-            value[2:, :, start_idx:] = torch.where(mask, value[2:, :, start_idx:], value[:1, :, start_idx:])
+            key[2:, :, start_idx:] = torch.where(
+                mask, key[2:, :, start_idx:], key[:1, :, start_idx:]
+            )
+            value[2:, :, start_idx:] = torch.where(
+                mask, value[2:, :, start_idx:], value[:1, :, start_idx:]
+            )
         elif self.inject_kv is None and self.inject_kv_foreground:
-            key[2:, :, start_idx:] = torch.where(mask, key[1:2, :, start_idx:], key[2:, :, start_idx:])
-            value[2:, :, start_idx:] = torch.where(mask, value[1:2, :, start_idx:], value[2:, :, start_idx:])
+            key[2:, :, start_idx:] = torch.where(
+                mask, key[1:2, :, start_idx:], key[2:, :, start_idx:]
+            )
+            value[2:, :, start_idx:] = torch.where(
+                mask, value[1:2, :, start_idx:], value[2:, :, start_idx:]
+            )
 
         hidden_states = F.scaled_dot_product_attention(
             query, key, value, attn_mask=attention_mask, dropout_p=0.0, is_causal=False
@@ -146,10 +172,11 @@ class CachedFluxAttnProcessor3_0:
         # hidden_states = hidden_states_fg[:, :, start_idx:] * mask + hidden_states_bg[:, :, start_idx:] * (~mask)
 
         # concatenate the text
-        #hidden_states = torch.cat([hidden_states_bg[:, :, :start_idx], hidden_states], dim=2)
-        hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
+        # hidden_states = torch.cat([hidden_states_bg[:, :, :start_idx], hidden_states], dim=2)
+        hidden_states = hidden_states.transpose(1, 2).reshape(
+            batch_size, -1, attn.heads * head_dim
+        )
         hidden_states = hidden_states.to(query.dtype)
-
 
         if encoder_hidden_states is not None:
             encoder_hidden_states, hidden_states = (

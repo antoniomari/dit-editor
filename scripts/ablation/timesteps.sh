@@ -22,5 +22,5 @@ fixed_arguments=" \
 echo "Running with only vital layers"
 for num_steps in "${num_steps_list[@]}"; do
     echo "Running with num_steps: $num_steps"
-    python run_with_params.py --timesteps $num_steps $fixed_arguments
+    dit-run-benchmark --timesteps $num_steps $fixed_arguments
 done

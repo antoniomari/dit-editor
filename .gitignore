@@ -173,3 +173,6 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 logs/*
+new_venv/*
+sac+logos+ava1-l14-linearMSE.pth
+*/sac+logos+ava1-l14-linearMSE.pth

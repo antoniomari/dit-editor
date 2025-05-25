@@ -20,5 +20,5 @@ fixed_arguments=" \
 echo "Running with only vital layers"
 for tau_beta in "${tau_beta_list[@]}"; do
     echo "Running with tau_beta: $tau_beta"
-    python run_with_params.py  --tau-beta $tau_beta --layers vital $fixed_arguments
+    dit-run-benchmark --tau-beta $tau_beta --layers vital $fixed_arguments
 done

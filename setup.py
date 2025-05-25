@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="dit_edit",
@@ -19,7 +19,7 @@ setup(
         "accelerate",
         "scikit-image",
         "lpips",
-        "rembg",
+        "rembg[gpu]",
         "matplotlib",
         "sentencepiece",
         "jupyter",
@@ -28,6 +28,13 @@ setup(
         "seaborn",
         "hpsv2",
         "rembg",
+        "pre-commit",
     ],
+    entry_points={
+        "console_scripts": [
+            "dit-run-benchmark=dit_edit.run_on_benchmark:main",
+            "dit-run=dit_edit.run:main",
+        ],
+    },
     python_requires=">=3.10",
 )

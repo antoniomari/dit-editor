@@ -18,11 +18,11 @@ fixed_arguments=" \
 echo "Running with only injection in all layers"
 for tau_alpha in "${tau_alpha_list[@]}"; do
     echo "Running with tau_alpha: $tau_alpha"
-    python run_with_params.py  --tau-alpha $tau_alpha --layers all $fixed_arguments
+    dit-run-benchmark  --tau-alpha $tau_alpha --layers all $fixed_arguments
 done
 
 echo "Running with only vital layers"
 for tau_alpha in "${tau_alpha_list[@]}"; do
     echo "Running with tau_alpha: $tau_alpha"
-    python run_with_params.py  --tau-alpha $tau_alpha --layers vital $fixed_arguments
+    dit-run-benchmark  --tau-alpha $tau_alpha --layers vital $fixed_arguments
 done
