@@ -64,19 +64,6 @@ class FluxActivationCache(ModelActivationCache):
         return getattr(self, key)
 
 
-class PixartActivationCache(ModelActivationCache):
-    # Define number of blocks for the double transformer cache only
-    NUM_TRANSFORMER_BLOCKS = 28
-
-    def __init__(self):
-        super().__init__()
-
-    def get_cache_info(self):
-        return {
-            "double_transformer_blocks": self.NUM_TRANSFORMER_BLOCKS,
-        }
-
-
 class ActivationCacheHandler:
     """ Used to manage ModelActivationCache of a Diffusion Transformer.
     """

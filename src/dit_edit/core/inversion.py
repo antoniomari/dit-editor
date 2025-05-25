@@ -244,7 +244,6 @@ def place_image_in_bounding_box(
 
 
 
-### Function to cut image and put it in bounding box (either cut or not cut)
 def compose_noise_masks(cached_pipe,
                   foreground_image: Image, 
                   background_image: Image, 

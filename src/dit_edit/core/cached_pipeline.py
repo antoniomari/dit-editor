@@ -3,7 +3,7 @@ from functools import partial
 import gc
 from typing import Callable, Dict, List, Literal, Union, Optional, Type, Union
 import torch
-from cache_and_edit.activation_cache import FluxActivationCache, ModelActivationCache, PixartActivationCache, ActivationCacheHandler
+from cache_and_edit.activation_cache import FluxActivationCache, ModelActivationCache, ActivationCacheHandler
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
 from cache_and_edit.hooks import locate_block, register_general_hook, fix_inf_values_hook, edit_streams_hook
 from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache, CachedFluxAttnProcessor3_0
@@ -15,7 +15,6 @@ from diffusers.pipelines import FluxPipeline
 
 
 class CachedPipeline:
-    
     def __init__(self, pipe: EditedFluxPipeline, text_seq_length: int = 512):
 
         assert isinstance(pipe, EditedFluxPipeline) or isinstance(pipe, FluxPipeline), "Use EditedFluxPipeline class in `cache_and_edit/flux_pipeline.py`"
@@ -66,10 +65,7 @@ class CachedPipeline:
                                                              processor_class=processor_class,
                                                              )
             else:
-                raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")
-            
-            # qkv_cache does not use hooks
-                
+                raise AssertionError(f"QKV cache not implemented for {type(self.pipe)}")                
 
     @property
     def activation_cache(self) -> ModelActivationCache:
@@ -255,7 +251,7 @@ class CachedPipeline:
         self.registered_hooks = []
 
         # 2. Eventually clear other hooks registered in the pipeline but not present here
-        # TODO: make it general for other models
+        # TODO: make it general for other models (this works for Flux)
         for i in range(len(locate_block(self.pipe, "transformer.transformer_blocks"))):
             locate_block(self.pipe, f"transformer.transformer_blocks.{i}")._forward_hooks.clear()
             
