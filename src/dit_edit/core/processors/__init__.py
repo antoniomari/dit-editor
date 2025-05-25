@@ -1,3 +1,3 @@
-from .dit_edit_processor import DitEditProcessor
 from .cached_flux_attn_processor_2 import CachedFluxAttnProcessor2_0
 from .cached_flux_attn_processor_3 import CachedFluxAttnProcessor3_0
+from .dit_edit_processor import DitEditProcessor

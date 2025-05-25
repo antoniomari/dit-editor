@@ -1,12 +1,13 @@
 from typing import Optional
-from PIL import Image
+
 import numpy as np
+from PIL import Image
 
 
 def resize_image_to_max_side(image, max_side=1024, patch_size: Optional[int] = None):
     """
     Resizes an image so its longest side is at most max_side, maintaining aspect ratio.
-    Returns the resized image and the resize ratio. If a patch_size is provided, then the image is 
+    Returns the resized image and the resize ratio. If a patch_size is provided, then the image is
     resized so that both dimensions are multiples of patch_size.
     """
     w, h = image.size
@@ -39,19 +40,21 @@ def get_bbox_from_mask_image(mask_image_pil: Image.Image):
     The mask image should be black with a single white rectangle.
     Returns [x_min, y_min, x_max, y_max] (exclusive end coordinates).
     """
-    if mask_image_pil.mode != 'L' and mask_image_pil.mode != '1':
+    if mask_image_pil.mode != "L" and mask_image_pil.mode != "1":
         # Convert to grayscale if it's not already L or 1
-        mask_image_pil = mask_image_pil.convert('L')
+        mask_image_pil = mask_image_pil.convert("L")
 
     # Ensure it's a binary mask (0 or 255)
     mask_np = np.array(mask_image_pil)
     if not ((mask_np == 0) | (mask_np == 255)).all():
         # If not strictly 0 or 255, threshold it (e.g., common for L mode from various sources)
         # Assuming white is high value, black is low.
-        threshold = 128 # Common threshold
+        threshold = 128  # Common threshold
         mask_np = ((mask_np > threshold) * 255).astype(np.uint8)
 
-    if mask_np.ndim == 3: # Should be 2D, take first channel if it's grayscale but still 3D
+    if (
+        mask_np.ndim == 3
+    ):  # Should be 2D, take first channel if it's grayscale but still 3D
         mask_np = mask_np[:, :, 0]
 
     white_pixels = np.where(mask_np == 255)

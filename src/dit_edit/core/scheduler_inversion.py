@@ -1,16 +1,18 @@
 from typing import List, Optional, Tuple, Union
+
 import torch
 from diffusers.configuration_utils import register_to_config
-from diffusers.schedulers.scheduling_flow_match_euler_discrete import FlowMatchEulerDiscreteScheduler, FlowMatchEulerDiscreteSchedulerOutput
+from diffusers.schedulers.scheduling_flow_match_euler_discrete import (
+    FlowMatchEulerDiscreteScheduler,
+    FlowMatchEulerDiscreteSchedulerOutput,
+)
 
 
 class FlowMatchEulerDiscreteSchedulerForInversion(FlowMatchEulerDiscreteScheduler):
-
     @register_to_config
     def __init__(self, inverse: bool, **kwargs):
         super().__init__(**kwargs)
         self.inverse = inverse
-
 
     def step(
         self,

@@ -1,34 +1,41 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from typing import List
-from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
+
 import torch
+from diffusers.models.transformers.transformer_flux import (
+    FluxSingleTransformerBlock,
+    FluxTransformerBlock,
+)
 
 from dit_edit.core.hooks import fix_inf_values_hook
+
 
 class ModelActivationCache(ABC):
     """
     Cache for inference pass of a Diffusion Transformer.
     Used to cache residual-streams and activations.
     """
+
     def __init__(self):
-    
         # Initialize caches for "double transformer" blocks using the subclass-defined NUM_TRANSFORMER_BLOCKS
-        if hasattr(self, 'NUM_TRANSFORMER_BLOCKS'):
+        if hasattr(self, "NUM_TRANSFORMER_BLOCKS"):
             self.image_residual = []
             self.image_activation = []
             self.text_residual = []
             self.text_activation = []
 
         # Initialize caches for "single transformer" blocks if defined (using NUM_SINGLE_TRANSFORMER_BLOCKS)
-        if hasattr(self, 'NUM_SINGLE_TRANSFORMER_BLOCKS'):
+        if hasattr(self, "NUM_SINGLE_TRANSFORMER_BLOCKS"):
             self.text_image_residual = []
             self.text_image_activation = []
 
     def __str__(self):
         lines = [f"{self.__class__.__name__}:"]
         for attr_name, value in self.__dict__.items():
-            if isinstance(value, list) and all(isinstance(v, torch.Tensor) for v in value):
+            if isinstance(value, list) and all(
+                isinstance(v, torch.Tensor) for v in value
+            ):
                 shapes = value[0].shape
                 lines.append(f"  {attr_name}: len={len(value)}, shapes={shapes}")
             else:
@@ -60,21 +67,22 @@ class FluxActivationCache(ModelActivationCache):
             "transformer_blocks": self.NUM_TRANSFORMER_BLOCKS,
             "single_transformer_blocks": self.NUM_SINGLE_TRANSFORMER_BLOCKS,
         }
-    
+
     def __getitem__(self, key):
         return getattr(self, key)
 
 
 class ActivationCacheHandler:
-    """ Used to manage ModelActivationCache of a Diffusion Transformer.
-    """
+    """Used to manage ModelActivationCache of a Diffusion Transformer."""
 
-    def __init__(self, cache: ModelActivationCache, positions_to_cache: List[str] = None):
+    def __init__(
+        self, cache: ModelActivationCache, positions_to_cache: List[str] = None
+    ):
         """Constructor.
 
         Args:
             cache (ModelActivationCache): cache to be used to store tensors.
-            positions_to_cache (List[str], optional): name of modules to cached. 
+            positions_to_cache (List[str], optional): name of modules to cached.
                 If None, all modules as specified in `cache.get_cache_info()` will be cached. Defaults to None.
 
         Raises:
@@ -88,9 +96,9 @@ class ActivationCacheHandler:
 
     @torch.no_grad()
     def cache_residual_and_activation_hook(self, *args):
-        """ 
-            To be used as a forward hook on a Transformer Block.
-            It caches both residual_stream and activation (defined as output - residual_stream).
+        """
+        To be used as a forward hook on a Transformer Block.
+        It caches both residual_stream and activation (defined as output - residual_stream).
         """
 
         if len(args) == 3:
@@ -99,11 +107,13 @@ class ActivationCacheHandler:
             module, input, kwinput, output = args
 
         if isinstance(module, FluxTransformerBlock):
-            encoder_hidden_states = output[0]            
+            encoder_hidden_states = output[0]
             hidden_states = output[1]
 
             self.cache.image_activation.append(hidden_states - kwinput["hidden_states"])
-            self.cache.text_activation.append(encoder_hidden_states - kwinput["encoder_hidden_states"])
+            self.cache.text_activation.append(
+                encoder_hidden_states - kwinput["encoder_hidden_states"]
+            )
             self.cache.image_residual.append(kwinput["hidden_states"])
             self.cache.text_residual.append(kwinput["encoder_hidden_states"])
 
@@ -113,10 +123,8 @@ class ActivationCacheHandler:
         else:
             raise NotImplementedError(f"Caching not implemented for {type(module)}")
 
-
     @property
     def forward_hooks_dict(self):
-        
         # insert cache storing in dict
         hooks = defaultdict(list)
 
@@ -132,4 +140,3 @@ class ActivationCacheHandler:
                 hooks[module_name].append(self.cache_residual_and_activation_hook)
 
         return hooks
-        
