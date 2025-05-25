@@ -2,11 +2,10 @@ from typing import Optional, Tuple
 import torch
 import torchvision.transforms.functional as TF
 from PIL import Image
-from cache_and_edit import CachedPipeline
 import numpy as np
-from IPython.display import display
 
-from cache_and_edit.flux_pipeline import EditedFluxPipeline
+from dit_edit.core import CachedPipeline
+from dit_edit.core.flux_pipeline import EditedFluxPipeline
 
 def image2latent(pipe, image, latent_nudging_scalar = 1.15):
     image = pipe.image_processor.preprocess(image).type(pipe.vae.dtype).to("cuda")
@@ -82,7 +81,7 @@ def get_inverted_input_noise(pipe: CachedPipeline,
     
 
 
-
+# FIXME: move this stuff to utils
 def resize_bounding_box(
     bb_mask: torch.Tensor,
     target_size: Tuple[int, int] = (64, 64),

@@ -2,6 +2,7 @@ from typing import Optional
 from PIL import Image
 import numpy as np
 
+
 def resize_image_to_max_side(image, max_side=1024, patch_size: Optional[int] = None):
     """
     Resizes an image so its longest side is at most max_side, maintaining aspect ratio.
@@ -18,7 +19,7 @@ def resize_image_to_max_side(image, max_side=1024, patch_size: Optional[int] = N
     else:
         new_h = max_side
         new_w = int(w * (max_side / h))
-    
+
     resize_ratio = new_w / w if w > h else new_h / h
     resized_image = image.resize((new_w, new_h), Image.LANCZOS)
 
@@ -31,6 +32,7 @@ def resize_image_to_max_side(image, max_side=1024, patch_size: Optional[int] = N
 
     return resized_image, resize_ratio
 
+
 def get_bbox_from_mask_image(mask_image_pil: Image.Image):
     """
     Extracts bounding box coordinates from a mask image.
@@ -40,7 +42,7 @@ def get_bbox_from_mask_image(mask_image_pil: Image.Image):
     if mask_image_pil.mode != 'L' and mask_image_pil.mode != '1':
         # Convert to grayscale if it's not already L or 1
         mask_image_pil = mask_image_pil.convert('L')
-    
+
     # Ensure it's a binary mask (0 or 255)
     mask_np = np.array(mask_image_pil)
     if not ((mask_np == 0) | (mask_np == 255)).all():

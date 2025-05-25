@@ -1,8 +1,5 @@
 """
-
 Script to define our evaluation metrics and implement scoring of our outputs.
-
-
 """
 from typing import Union, List, Dict
 from collections import defaultdict
@@ -21,46 +18,14 @@ import numpy as np
 import pandas as pd
 from tqdm.notebook import tqdm
 
-from data.benchmark_data import BenchmarkExample
+from dit_edit.data.benchmark_data import BenchmarkExample
 
-from cache_and_edit.inversion import compose_noise_masks
-from cache_and_edit.qkv_cache import TFICONAttnProcessor
-from cache_and_edit.cached_pipeline import CachedPipeline
 from functools import partial
 
-### INFERENCE FOR OUR METHODS  ####
-import matplotlib.pyplot as plt
+from dit_edit.core.inversion import compose_noise_masks
+from dit_edit.core.processors.dit_edit_processor import DitEditProcessor
+from dit_edit.core.cached_pipeline import CachedPipeline
 
-def display_side_by_side(image1, image2, image3, titles=None):
-    """
-    Display three images side by side with optional titles
-    
-    Args:
-        image1, image2, image3: PIL Images to display
-        titles: List of titles for each image. If None, no titles are shown.
-    """
-    
-    
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-    
-    # Display each image
-    axes[0].imshow(image1)
-    axes[1].imshow(image2)
-    axes[2].imshow(image3)
-    
-    # Set titles if provided
-    if titles is not None:
-        for i, title in enumerate(titles):
-            axes[i].set_title(title)
-    
-    # Remove axis ticks
-    for ax in axes:
-        ax.set_xticks([])
-        ax.set_yticks([])
-    
-    plt.tight_layout()
-    plt.show()
-    return None
 
 def inference_for_example(example, cached_pipe, settings_dict):
 
@@ -114,7 +79,7 @@ def inference_for_example(example, cached_pipe, settings_dict):
         empty_clip_embeddings=settings_dict["empty_clip_embeddings"],
         q_mask=example_noise["latent_masks"]["latent_segmentation_mask"],
         latents=latents,
-        processor_class=partial(TFICONAttnProcessor, call_max_times=int(settings_dict["tau_alpha"] * settings_dict["num_inference_steps"])),
+        processor_class=partial(DitEditProcessor, call_max_times=int(settings_dict["tau_alpha"] * settings_dict["num_inference_steps"])),
         width=512,
         height=512,
         inverted_latents_list = list(zip(example_noise["noise"]["background_noise_list"], example_noise["noise"]["foreground_noise_list"])),
@@ -150,9 +115,6 @@ def inference_for_example_dict(
         for example in examples:
             fg_restored, bg_restored, result_image = inference_for_example(example, cached_pipe, settings_dict)
             
-            # display images
-            display_side_by_side(fg_restored, bg_restored, result_image, 
-                        titles=["Background", "Foreground", "Composed"])
             # score it
             hpsv2_score = compute_hpsv2_score(result_image, example.prompt)
             aesthetics_score = compute_aesthetics_score(result_image)

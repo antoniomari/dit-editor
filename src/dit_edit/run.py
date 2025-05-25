@@ -2,23 +2,23 @@ import argparse
 from functools import partial
 import logging
 import os
-import sys
 
 from PIL import Image, ImageDraw
 import numpy as np
 from rembg import remove, new_session
 import torch
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from inference.image_utils import (
-    resize_image_to_max_side,
+from dit_edit.utils.inference_utils import resize_image_to_max_side
+from dit_edit.utils.inference_utils import (
     get_bbox_from_mask_image
 )
-from cache_and_edit.cached_pipeline import CachedPipeline
-from cache_and_edit.inversion import compose_noise_masks
-from cache_and_edit.flux_pipeline import EditedFluxPipeline
-from cache_and_edit.qkv_cache import TFICONAttnProcessor
+from dit_edit.core.cached_pipeline import CachedPipeline
+from dit_edit.core.inversion import compose_noise_masks
+from dit_edit.core.flux_pipeline import EditedFluxPipeline
+from dit_edit.core.processors.dit_edit_processor import DitEditProcessor
+from dit_edit.utils.logging import setup_logger
+
+logger = setup_logger(logging.getLogger(__name__))
 
 # Define default hyperparameters
 DEFAULT_TAU_ALPHA = 0.4
@@ -34,8 +34,6 @@ DEFAULT_USE_PROMPT = True
 DEFAULT_MIN_MASK_AREA_RATIO = 0.1
 DEFAULT_SEED = 42
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def main(args):
     # Setup debug directory
@@ -174,7 +172,7 @@ def main(args):
             ),
         ]),
         processor_class=partial(
-            TFICONAttnProcessor,
+            DitEditProcessor,
             call_max_times=int(args.tau_alpha * args.timesteps),
             inject_q=args.inject_q,
             inject_k=args.inject_k,
@@ -195,14 +193,14 @@ def main(args):
         logger.error(f"Error saving output image: {e}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="End-to-end image composition script.")
+    parser = argparse.ArgumentParser(description="End-to-end image composition script for DiT-Edit.")
     parser.add_argument("--bg_path", type=str, required=True, help="Path to the background image.")
     parser.add_argument("--fg_path", type=str, required=True, help="Path to the foreground image.")
-    parser.add_argument("--bbox_path", type=str, required=True, help="Path to the bounding box mask image (black with a white rectangle).") # Changed from --bbox
+    parser.add_argument("--bbox_path", type=str, required=True, help="Path to the bounding box mask image (black with a white rectangle).")
     parser.add_argument("--output_path", type=str, default="output_composed_image.png", help="Path to save the composed image.")
     parser.add_argument("--prompt", type=str, default=None, help="Optional prompt for the image generation.")
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED, help=f"Random seed for generation (default: {DEFAULT_SEED}).")
-    parser.add_argument('--debug', action='store_true', help='Enable debug mode to save intermediate images.') # Added debug argument
+    parser.add_argument('--debug', action='store_true', help='Enable debug mode to save intermediate images.')
 
     # Hyperparameters
     parser.add_argument('--tau-alpha', type=float, default=DEFAULT_TAU_ALPHA, help=f'Value for TAU_ALPHA (default: {DEFAULT_TAU_ALPHA})')

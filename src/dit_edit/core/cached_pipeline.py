@@ -3,21 +3,21 @@ from functools import partial
 import gc
 from typing import Callable, Dict, List, Literal, Union, Optional, Type, Union
 import torch
-from cache_and_edit.activation_cache import FluxActivationCache, ModelActivationCache, ActivationCacheHandler
-from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
-from cache_and_edit.hooks import locate_block, register_general_hook, fix_inf_values_hook, edit_streams_hook
-from cache_and_edit.qkv_cache import QKVCacheFluxHandler, QKVCache, CachedFluxAttnProcessor3_0
-from cache_and_edit.scheduler_inversion import FlowMatchEulerDiscreteSchedulerForInversion
-from cache_and_edit.flux_pipeline import EditedFluxPipeline
 
 from diffusers.pipelines import FluxPipeline
 
+from dit_edit.core.activation_cache import FluxActivationCache, ModelActivationCache, ActivationCacheHandler
+from dit_edit.core.hooks import locate_block, register_general_hook, edit_streams_hook
+from dit_edit.core.processors.cached_flux_attn_processor_3 import CachedFluxAttnProcessor3_0
+from dit_edit.core.qkv_cache import QKVCacheFluxHandler, QKVCache
+from dit_edit.core.scheduler_inversion import FlowMatchEulerDiscreteSchedulerForInversion
+from dit_edit.core.flux_pipeline import EditedFluxPipeline
 
 
 class CachedPipeline:
     def __init__(self, pipe: EditedFluxPipeline, text_seq_length: int = 512):
 
-        assert isinstance(pipe, EditedFluxPipeline) or isinstance(pipe, FluxPipeline), "Use EditedFluxPipeline class in `cache_and_edit/flux_pipeline.py`"
+        assert isinstance(pipe, EditedFluxPipeline) or isinstance(pipe, FluxPipeline)
         self.pipe = pipe
         self.text_seq_length = text_seq_length
 

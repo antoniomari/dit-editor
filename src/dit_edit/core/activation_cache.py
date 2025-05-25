@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 from typing import List
 from diffusers.models.transformers.transformer_flux import FluxTransformerBlock, FluxSingleTransformerBlock
-from cache_and_edit.hooks import fix_inf_values_hook, register_general_hook
 import torch
+
+from dit_edit.core.hooks import fix_inf_values_hook
 
 class ModelActivationCache(ABC):
     """

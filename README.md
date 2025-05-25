@@ -1,6 +1,15 @@
 # Image editing with Diffusion Transformers
 
 
+### TODO:
+- [ ] TODO: test refactored code and installation
+- [ ] TODO: remove KV-Edit code
+- [ ] TODO: manage scripts folder better
+- [ ] TODO: Update README
+- [ ] TODO: Clean notebooks folder
+- [ ] TODO: Usa hydra configs for main scripts
+- [ ] TODO: Add pre-commit
+
 ## Installation
 First, create a python environment with python 3.9 or higher, and install the required packages:
     
