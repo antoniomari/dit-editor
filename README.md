@@ -61,9 +61,9 @@ wget https://github.com/christophschuhmann/improved-aesthetic-predictor/raw/refs
 ```
 
 #### Third Party Baselines
-To compare our results with other SoTA methods, we cloned their code and applied minor modifications for compatibility. The third-party code is located in the `third_party` folder, which contains submodules for each method. To initialize the submodules, run:
+To compare our results with other state-of-the-art methods, we cloned their code and applied minor modifications for compatibility. More information in [the `baselines/` readme file](baselines/README.md).
+To initialize the submodules, run:
 
-TODO: check this works and is correct once the submodules are added
 ```bash
 git submodule update --init --recursive
 ```
@@ -83,7 +83,7 @@ The project is organized as follows:
     - **`run_on_benchmark.py`**: Script for running DiT-Edit over the entire benchmark dataset or a subset of it.
 - **`notebooks/`**: Jupyter notebooks for experimentation, visualization, and examples.
 - **`scripts/`**: Utility scripts for data processing, aggregation, or specific tasks like ablation studies.
-- `KV-Edit/`, `third_party/`: (Potentially) Directories containing code for other methods for comparison.
+- **`baselines/`**: Directory containing code for other methods used for comparison.
 - **`assets/`**: Static assets including example images, ablation results, diagrams and other illustrations.
 
 ## Running the Main Scripts
