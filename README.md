@@ -1,56 +1,66 @@
-# DiT-Edit: Image and Text Guided Image Composition with Diffusion Transformers 🖼️✨
-### TODOs:
-- [ ] TODO: move KV-Edit and TF-ICON code into a separate folder with git submodules
-- [ ] TODO: Clean notebooks folder
+# DiT-Edit: Image Composition with Diffusion Transformers 🖼️🎨✨
 
-Welcome to **DiT-Edit**! This project explores cutting-edge techniques for **exemplary-based image editing**, also known as **image composition**, using the power of Diffusion Transformers (DiTs).
-
-Ever wanted to seamlessly transfer an object from one image into another, making it look like it truly belongs? That\'s exactly what DiT-Edit aims to achieve! 🎯
-
-**The Core Idea:**
-
-Given a background image (`bg`) and a foreground image (`fg`), DiT-Edit intelligently transfers a selected element from the `fg` image to a specific location in the `bg` image. The magic lies in its ability to:
-
-*   **Preserve Content**: Keep the original background intact.
-*   **Adapt Seamlessly**: Adjust the transferred element for differences in size, perspective, and style, making it blend naturally into the new scene.
-*   **Training-Free**: Achieve this without requiring model retraining, leveraging the capabilities of pre-trained DiT models like FLUX.
-*   **Text Guidance**: Optionally use text prompts to further guide and refine the composition.
+> #### **Overview**
+> - 🎯 **Exemplary-based:** transfer your object instead of generating a new one!
+> - ♻️ **Training-free:** leverage pre-trained SoTA Diffusion Transformers (DiTs) like FLUX.
+> - 💬 **Text-guided:** use text prompts to refine the composition or add new features.
+> - 🎚️ **Tunable parameters:** offers flexible control over the process, allowing
 
 ![Task Explanation](assets/task_explanation.png)
-*Fig 1: Visual explanation of the exemplary-based image editing task.*
 
-Our method builds upon the FLUX model family, one of the state-of-the-art Diffusion Transformers, and uses clever techniques like QKV (Query/Key/Value) injection and image inversion to achieve high-quality results.
+### TODOs:
+- [ ] Move KV-Edit and TF-ICON code into a separate folder with git submodules
+- [ ] Clean notebooks folder
+- [ ] Add a bit of evaluation in the README
 
-![Examples of DiT-Edit](assets/examples.png)
-*Fig 2: Examples showcasing the capabilities of DiT-Edit in various scenarios.*
 
-This repository contains the code for our DiT-Edit implementation, tools for benchmarking, and scripts to reproduce our experiments. Dive in to explore how we\'re pushing the boundaries of image editing! 🚀
+## Table of Contents
+- [Installation](#installation)
+    - [Core package](#core-package)
+    - [Setting Up Pre-Commit Hooks](#setting-up-pre-commit-hooks)
+    - [Download Scoring Models](#download-scoring-models)
+    - [Third Party Baselines](#third-party-baselines)
+- [Codebase Structure](#codebase-structure)
+- [Running DiT-Edit](#running-the-main-scripts)
+    - [Single Image Composition](#1-single-image-composition)
+    - [Benchmark Evaluation](#2-benchmark-evaluation)
+- [Some more examples](#some-more-examples)
+- [Running on izar cluster](#running-on-izar-cluster)
 
 
 ## Installation
-First, create a python environment with python 3.9 or higher, and install the required packages:
+### Core package
+First, create a python environment with python 3.9 or higher, and install the `dit_edit` package and its dependencies:
 
 ```bash
 python -m venv venv
 source venv/bin/activate
 pip install -e .
 ```
+The installed package will be available as `dit_edit` in your environment and it offers two entry points commands:
+- `dit-run`: for running DiT-Edit on a single pair of background/foreground images.
+- `dit-run-benchmark`: for running DiT-Edit over the entire benchmark dataset or a subset of it.
 
-### Setting Up Pre-Commit Hooks
+More about how to use these commands can be found in the [Running DiT-Edit](#running-the-main-scripts) section below.
+
+#### Benchmark Images
+For simplicity, the samples from the benchmark introduced by [TF-ICON](https://github.com/Shilin-LU/TF-ICON) are included in the repository, together with generations obtained with DiT-Edit, as well as other methods. Everything is under the `benchmark_images_generations/` directory.
+
+#### Setting Up Pre-Commit Hooks
 After cloning the repository and installing dependencies as described above (which includes `pre-commit` via `setup.py`), you need to install the git hooks:
 
 ```bash
 pre-commit install
 ```
 
-### Download Scoring Models
+#### Download Scoring Models
 If you want to run the quantitative benchmarking, you'll need to download the aesthetic score predictor and place it in the root of the directory.
 
 ```bash
 wget https://github.com/christophschuhmann/improved-aesthetic-predictor/raw/refs/heads/main/sac+logos+ava1-l14-linearMSE.pth
 ```
 
-### Third Party Baselines
+#### Third Party Baselines
 To compare our results with other SoTA methods, we cloned their code and applied minor modifications for compatibility. The third-party code is located in the `third_party` folder, which contains submodules for each method. To initialize the submodules, run:
 
 TODO: check this works and is correct once the submodules are added
@@ -62,31 +72,38 @@ git submodule update --init --recursive
 
 The project is organized as follows:
 
--   `src/dit_edit/`: Contains the core logic for the DiT-Edit method.
-    -   `core/`: Core components like the FLUX pipeline modifications (`flux_pipeline.py`), inversion logic (`inversion.py`), and attention/feature injection processors (`dit_edit_processor.py`).
-    -   `data/`: Data loading utilities, including benchmark data handling (`bulk_load.py`, `benchmark_data.py`).
-    -   `evaluation/`: Evaluation scripts and metrics (`eval.py`).
-    -   `utils/`: Utility functions for inference, logging, etc.
-    -   `config.py`: Centralized configuration management using a dataclass (`DitEditConfig`) for hyperparameters shared across scripts.
-    -   `run.py`: Script for running DiT-Edit on a single pair of background/foreground images with a bounding box.
-    -   `run_on_benchmark.py`: Script for running DiT-Edit over the entire benchmark dataset or a subset of it.
--   `notebooks/`: Jupyter notebooks for experimentation, visualization, and examples.
--   `scripts/`: Utility scripts, potentially for data processing, aggregation, or specific tasks like ablation studies.
--   `benchmark_images_generations/`: Default directory where samples from benchmark are stored, together with the output images and metrics from `run_on_benchmark.py`.
--   `KV-Edit/`, `third_party/`: (Potentially) Directories containing code for other methods for comparison.
--   `assets/`: Static assets, possibly including sample images or plots for the README.
--   `setup.py`: Python package setup script.
--   `README.md`: This file.
+- **`benchmark_images_generations/`**: Default directory where samples from benchmark are stored, together with the output images and metrics from `run_on_benchmark.py`.
+- **`src/dit_edit/`**: Contains the core logic for the DiT-Edit method.
+    - **`core/`**: Core components like the FLUX pipeline modifications (`flux_pipeline.py`), inversion logic (`inversion.py`), and attention/feature injection processors (`dit_edit_processor.py`).
+    - **`data/`**: Data loading utilities, including benchmark data handling.
+    - **`evaluation/`**: Evaluation scripts and metrics.
+    - **`utils/`**: Utility functions for inference, logging, etc.
+    - **`config.py`**: Centralized configuration management using a dataclass (`DitEditConfig`) for hyperparameters shared across scripts.
+    - **`run.py`**: Script for running DiT-Edit on a single pair of background/foreground images with a bounding box.
+    - **`run_on_benchmark.py`**: Script for running DiT-Edit over the entire benchmark dataset or a subset of it.
+- **`notebooks/`**: Jupyter notebooks for experimentation, visualization, and examples.
+- **`scripts/`**: Utility scripts for data processing, aggregation, or specific tasks like ablation studies.
+- `KV-Edit/`, `third_party/`: (Potentially) Directories containing code for other methods for comparison.
+- **`assets/`**: Static assets including example images, ablation results, diagrams and other illustrations.
 
 ## Running the Main Scripts
 
 The two primary scripts for using DiT-Edit are `src/dit_edit/run.py` and `src/dit_edit/run_on_benchmark.py`. Both scripts share a common set of hyperparameters defined in `src/dit_edit/config.py`, which can be overridden via command-line arguments.
 
-After installing the package with `pip install -e .`, you can also run these scripts as commands:
-- `dit-run` (equivalent to `python src/dit_edit/run.py`)
-- `dit-run-benchmark` (equivalent to `python src/dit_edit/run_on_benchmark.py`)
+After installing the package with `pip install -e .`, you can also run these scripts as commands: **`dit-run`** (equivalent to `python src/dit_edit/run.py`) and **`dit-run-benchmark`** (equivalent to `python src/dit_edit/run_on_benchmark.py`)
 
-### 1. Single Image Composition
+Both scripts use `DitEditConfig` for configuration management, allowing you to easily adjust hyperparameters and settings, therefore sharing the following arguments:
+- `--tau-alpha`: Controls blending vs. subject consistency in the foreground injection. Higher values lead to more exploration, perhaps leading to better blending while loosing fidelity to the foreground.
+- `--tau-beta`: Controls the strength of the background consistency. Higer values lead to more background consistency.
+- `--timesteps`: Number of diffusion steps. The more steps, the more refined the output, but also the longer the processing time.
+- `--guidance-scale`: Guidance scale for the diffusion model.
+- `--seed`: Random seed for reproducibility.
+- `--inject-(q|k|v)` or `--no-inject-(q|k|v)`: Allow controlling which attention layers are used for injection. By default, only Q and K are used.
+- `--layers-for-injection`: Specifies which layers to inject the foreground into (`all` or `vital`). Default is `all`.
+- `--alpha-noise`: Controls the amount of random noise added before starting the composition process.
+
+
+#### 1. Single Image Composition
 
 This script allows you to compose a foreground image onto a background image given a bounding box mask.
 
@@ -97,36 +114,11 @@ dit-run \
     --bg_path /path/to/your/background_image.jpg \
     --fg_path /path/to/your/foreground_image.png \
     --bbox_path /path/to/your/bounding_box_mask.png \
-    --output_path /path/to/save/output_composed_image.png \
+    --output_path /path/to/save/composed_image/ \
     --prompt "An optional text prompt describing the desired composition"
 ```
 
-**Key Arguments:**
-
-*   `--bg_path`: Path to the background image.
-*   `--fg_path`: Path to the foreground image (preferably with an alpha channel or a clear subject).
-*   `--bbox_path`: Path to a binary mask image (black with a white rectangle) indicating the target placement area for the foreground object in the background image's coordinate space.
-*   `--output_path`: Where to save the resulting composed image.
-*   `--prompt`: (Optional) A text prompt to guide the composition.
-*   `--debug`: Enable debug mode to save intermediate images.
-
-**Hyperparameters:**
-
-You can override the default hyperparameters defined in `DitEditConfig`. For a full list, run:
-Example of overriding hyperparameters:
-```bash
-dit-run \
-    --bg_path ... \
-    --fg_path ... \
-    --bbox_path ... \
-    --output_path ... \
-    --tau-alpha 0.3 \
-    --timesteps 40 \
-    --guidance-scale 2.5 \
-    --no-inject-v # Example of a boolean flag
-```
-
-### 2. Benchmark Evaluation
+#### 2. Benchmark Evaluation
 [This script](src/dit_edit/run_on_benchmark.py) runs the DiT-Edit method over a predefined benchmark dataset (expected to be in `benchmark_images_generations/`). It generates images and calculates evaluation metrics.
 
 **Basic Usage:**
@@ -138,27 +130,17 @@ python src/dit_edit/run_on_benchmark.py
 ```
 
 **Key Arguments:**
-
 *   `--run-on-first N`: Process only the first N images from each category in the benchmark. Set to -1 to run on all (default).
 *   `--random-samples`: If used with `--run-on-first N` (where N > 0), randomly sample N images from each category.
 *   `--random-samples-seed SEED`: Seed for the random sampling.
 *   `--skip-available`: If set, skips processing for image/parameter combinations where output files already exist.
-*   `--no-save-output-images`: Disable saving of the generated images (metrics will still be saved). By default, images are saved.
+*   `--save-output-images` or `--no-save-output-images`: Control whether to save the generated images (metrics will still be saved).
 
-**Hyperparameters:**
 
-Similar to `run.py`, you can override the default hyperparameters. For a full list, run:
-```
-Example of overriding hyperparameters:
-```bash
-dit-run-benchmark \
-    --tau-beta 0.7 \
-    --alpha-noise 0.03 \
-    --layers-for-injection vital \
-    --seed 123
-```
+## Some more examples
+![Examples of DiT-Edit](assets/examples.png)
+*Examples showcasing the capabilities of DiT-Edit across domains, compared to baselines.*
 
-This will run the benchmark evaluation using the specified hyperparameter values. Output images and JSON files with metrics will be saved in subdirectories within `benchmark_images_generations/`.
 
 
 ## Running on izar cluster
