@@ -4,7 +4,7 @@
 > - 🎯 **Exemplary-based:** transfer your object instead of generating a new one!
 > - ♻️ **Training-free:** leverage pre-trained SoTA Diffusion Transformers (DiTs) like FLUX.
 > - 💬 **Text-guided:** use text prompts to refine the composition or add new features.
-> - 🎚️ **Tunable parameters:** offers flexible control over the process, allowing
+> - 🎚️ **Tunable parameters:** offers flexible control over the process, providing knobs on aspects like background consistency or blending.
 
 ![Task Explanation](assets/task_explanation.png)
 
