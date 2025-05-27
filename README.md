@@ -43,7 +43,7 @@ The installed package will be available as `dit_edit` in your environment and it
 More about how to use these commands can be found in the [Running DiT-Edit](#running-the-main-scripts) section below.
 
 #### Benchmark Images
-For simplicity, the samples from the benchmark introduced by [TF-ICON](https://github.com/Shilin-LU/TF-ICON) are included in the repository, together with generations obtained with DiT-Edit, as well as other methods. Everything is under the `benchmark_images_generations/` directory.
+For simplicity, the samples from the benchmark introduced by [TF-ICON](https://github.com/Shilin-LU/TF-ICON) are included in the repository, together with generations obtained with DiT-Edit, as well as other methods. Everything is under the `data/` directory.
 
 #### Setting Up Pre-Commit Hooks
 After cloning the repository and installing dependencies as described above (which includes `pre-commit` via `setup.py`), you need to install the git hooks:
@@ -71,7 +71,7 @@ git submodule update --init --recursive
 
 The project is organized as follows:
 
-- **`benchmark_images_generations/`**: Default directory where samples from benchmark are stored, together with the output images and metrics from `run_on_benchmark.py`.
+- **`data/`**: Default directory where samples from benchmark are stored, together with the output images and metrics from `run_on_benchmark.py`.
 - **`src/dit_edit/`**: Contains the core logic for the DiT-Edit method.
     - **`core/`**: Core components like the FLUX pipeline modifications (`flux_pipeline.py`), inversion logic (`inversion.py`), and attention/feature injection processors (`dit_edit_processor.py`).
     - **`data/`**: Data loading utilities, including benchmark data handling.
@@ -118,7 +118,7 @@ dit-run \
 ```
 
 #### 2. Benchmark Evaluation
-[This script](src/dit_edit/run_on_benchmark.py) runs the DiT-Edit method over a predefined benchmark dataset (expected to be in `benchmark_images_generations/`). It generates images and calculates evaluation metrics.
+[This script](src/dit_edit/run_on_benchmark.py) runs the DiT-Edit method over a predefined benchmark dataset (expected to be in `data/`). It generates images and calculates evaluation metrics.
 
 **Basic Usage:**
 

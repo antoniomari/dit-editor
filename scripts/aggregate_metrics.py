@@ -38,7 +38,7 @@ def load_and_process_data(args):
     Returns a dictionary of aggregated scores and a dictionary of average scores.
     """
     benchmark_root_dir = (
-        "benchmark_images_generations"  # TODO: you might need to adjust this path
+        "data"  # TODO: you might need to adjust this path
     )
     aggregated_scores = {}
     # { benchmark_type: { metric: { method: [scores] } } }

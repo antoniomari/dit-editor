@@ -95,7 +95,7 @@ def main():
         )
         cached_pipe = pipe
 
-    os_path = "benchmark_images_generations/"
+    os_path = "data/"
     all_images = load_benchmark_data(os_path, logger=logger)
 
     vital_layers = [f"transformer.transformer_blocks.{i}" for i in [0, 1, 17, 18]] + [
@@ -130,7 +130,7 @@ def main():
 
                 img_filename = f"alphanoise{config.alpha_noise}_timesteps{config.timesteps}_Q{config.inject_q}_K{config.inject_k}_V{config.inject_v}_taua{config.tau_alpha}_taub{config.tau_beta}_guidance{config.guidance_scale}_{config.layers_for_injection}-layers.png"
                 metrics_filename = f"alphanoise{config.alpha_noise}_timesteps{config.timesteps}_Q{config.inject_q}_K{config.inject_k}_V{config.inject_v}_taua{config.tau_alpha}_taub{config.tau_beta}_guidance{config.guidance_scale}_{config.layers_for_injection}-layers.json"
-                output_dir = f"./benchmark_images_generations/{category}/{example.image_number} {example.prompt}"
+                output_dir = f"./data/{category}/{example.image_number} {example.prompt}"
                 if (
                     skip_available
                     and os.path.exists(os.path.join(output_dir, img_filename))
