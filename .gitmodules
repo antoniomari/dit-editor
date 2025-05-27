@@ -3,4 +3,4 @@
 	url = https://github.com/matteosantelmo/TF-ICON
 [submodule "baselines/KV-Edit"]
 	path = baselines/KV-Edit
-	url = git@github.com:matteosantelmo/KV-Edit.git
+	url = https://github.com/matteosantelmo/KV-Edit
