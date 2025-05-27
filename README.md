@@ -9,9 +9,8 @@
 ![Task Explanation](assets/task_explanation.png)
 
 ### TODOs:
-- [ ] Move KV-Edit and TF-ICON code into a separate folder with git submodules
 - [ ] Clean notebooks folder
-- [ ] Add a bit of evaluation in the README
+- [ ] Add evaluation in the README
 
 
 ## Table of Contents
