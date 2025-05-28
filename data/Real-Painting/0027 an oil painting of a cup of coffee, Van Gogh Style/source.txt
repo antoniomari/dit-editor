@@ -1,0 +1,23 @@
+Generate an image in a bold, stylized, slightly naive painterly style reminiscent of folk art.  The scene depicts a tabletop setting with a green and white checkered tablecloth.
+
+**Objects:**
+
+* **Teapot:** A purple teapot, slightly bulbous in shape, sits centrally but slightly off to the left.  Its handle is gracefully curved.  The paint application should be slightly uneven, showing brushstrokes.
+* **Teacup and Saucer:** A bright blue teacup, filled with dark brown tea, rests on a matching blue saucer.  The cup is slightly rounded and has a small handle. The saucer has a slightly uneven, textured appearance.
+* **Small Cake/Muffin:** A dark brown, almost burnt-looking small cake or muffin sits on a pink plate. It is slightly irregular in shape, giving it a homemade feel.
+* **Plate:** The cake sits on a vibrant pink plate with white and pink painted accents, suggesting a decorative, almost whimsical, design. A knife and fork are partially visible, lying on a light blue napkin or paper on the pink plate.
+* **Chairs (background):** Two simple wooden chairs are visible in the background. One is a bright blue, the other a mustard yellow/brown. They are rendered in a blocky, almost childlike fashion, with visible brushstrokes. Their design is simple, with straight lines and no intricate details.
+* **Small Yellow Mug:** A small, muted yellow mug is subtly present to the left of the teacup,  partially obscured.
+* **Table:** The table is a simple, flat surface, subtly suggesting depth through variations in the checkered tablecloth.
+
+**Lighting and Color:**
+
+The overall lighting is soft and diffused, possibly from a window not directly visible in the scene.  Colors are bold and slightly unrealistic – not photorealistic.  The green of the tablecloth is a slightly desaturated, grassy green with variations in tone. The shadows are slightly exaggerated, emphasizing the three-dimensionality of the objects. The whole scene is relatively bright, giving it a cheerful feel.
+
+**Style:**
+
+The style should emulate a combination of folk art and naive painting.  Visible brushstrokes, slightly uneven lines, and bold color choices should be prominent. The paint texture should be visible, and there should be a sense of childlike simplicity mixed with artistic expression. Avoid photorealism; embrace the imperfections and character of hand-painted art.
+
+**Composition:**
+
+The composition is relatively simple, focusing on the tabletop setting. The objects are arranged to create a sense of balance and calm.  The chairs in the background act as a frame, leading the eye to the central grouping of the teapot, cup, cake, and plate. The perspective is slightly elevated, looking down onto the table.

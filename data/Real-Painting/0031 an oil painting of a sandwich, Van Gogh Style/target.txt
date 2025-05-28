@@ -1,0 +1,13 @@
+Generate an image in the style of a naive or childlike painting, reminiscent of folk art.  The background depicts a simple scene of a green checkered table set for tea.  On the table are:
+
+* **Two chairs:** A light blue chair and a brown wooden chair sit in the background, slightly out of focus.  Their paint style should be blocky and somewhat uneven, with visible brushstrokes. The chairs are positioned slightly off-center, creating a balanced asymmetry.
+
+* **A teapot:** A purple teapot, painted in a similarly simplistic manner as the chairs, sits on the table. It's slightly more detailed than the background but still maintains the naive style. It has a slightly bulbous shape and a short, slightly curved spout.
+
+* **A cup and saucer:** A light blue teacup, filled with dark brown tea, sits on a matching light blue saucer. The cup and saucer are positioned to the left, slightly overlapping the edge of the table.  The cup and saucer have some shading to suggest depth, though still maintained in a simple way.
+
+The foreground element is:
+
+* **A toasted sandwich:** A golden-brown toasted sandwich, with visible egg filling, is placed centrally on a pink plate with whimsical swirls of pink and white paint. The sandwich appears to be slightly angled, adding dynamism.  The toasted sandwich should have clear crisp edges and a slightly glossy appearance. The egg should look creamy and yellowish. The plate is slightly larger than the sandwich.  It's placed in the foreground, overlapping slightly with the shadow of the teapot and the table’s edge.
+
+The overall effect should be a playful contrast between the somewhat muted background and the vibrant, sharply defined foreground element. The style should be consistent throughout, maintaining a childlike charm and a slight naivety in the rendering of objects and their shadows. The colors should be slightly muted but cheerful. The brushstrokes should be visible and fairly prominent throughout the entire image, without overly precise details.

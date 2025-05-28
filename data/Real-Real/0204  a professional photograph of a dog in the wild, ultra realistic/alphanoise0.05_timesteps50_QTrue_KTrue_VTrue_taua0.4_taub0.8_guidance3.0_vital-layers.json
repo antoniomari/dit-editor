@@ -1,0 +1,30 @@
+{
+    "Photoshop": {
+        "hpsv2_score": 0.3037823736667633,
+        "aesthetics_score": 4.824342250823975,
+        "background_mse": 0.0018280820880371097,
+        "clip_text_image": 0.22463390231132507,
+        "dinov2_similarity": 0.16912996768951416
+    },
+    "TF-ICON": {
+        "hpsv2_score": 0.2970331311225891,
+        "aesthetics_score": 5.887805461883545,
+        "background_mse": 0.011649781250888593,
+        "clip_text_image": 0.2468266636133194,
+        "dinov2_similarity": 0.1611817479133606
+    },
+    "KV-EDIT": {
+        "hpsv2_score": 0.30196601152420044,
+        "aesthetics_score": 5.618127346038818,
+        "background_mse": 0.004327896168045709,
+        "clip_text_image": 0.23741348087787628,
+        "dinov2_similarity": 0.17252004146575928
+    },
+    "ours": {
+        "hpsv2_score": 0.23879924416542053,
+        "aesthetics_score": 5.01936149597168,
+        "background_mse": 0.008137865974855983,
+        "clip_text_image": 0.21262936294078827,
+        "dinov2_similarity": 0.08005589991807938
+    }
+}

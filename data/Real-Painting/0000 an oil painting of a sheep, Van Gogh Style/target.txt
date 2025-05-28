@@ -1,0 +1,21 @@
+Generate an image in the style of Vincent van Gogh's "Wheat Field with Cypresses," but with a single sheep as the foreground element.
+
+
+**Background:**
+
+The background should be a recreation of a Van Gogh landscape, specifically emulating his impasto style and use of color.  The sky should be a vibrant blue, heavily textured with swirling clouds rendered in blues, purples, and whites.  The clouds should be dynamic, thick with brushstrokes, and evoke a sense of movement.  The lower portion of the background should depict a field of green grass with blossoming flowers, rendered with short, visible brushstrokes in varying shades of green and hints of other colors to simulate wildflowers.  Several cypress-like trees should be visible in the mid-ground, painted with visible brushstrokes and characterized by their dark, slender forms.  A hint of a building, perhaps a simple structure with an orange or red roof, could be included in the middle distance. The overall effect should be reminiscent of Van Gogh's expressive and emotionally charged landscapes.
+
+
+**Foreground:**
+
+A single sheep, predominantly light gray or off-white in color, should be placed in the lower center of the image. The sheep should be realistically rendered in contrast to the painterly background, having a fluffy coat with subtle variations in shading to suggest texture.  A small touch of light pink or purple may be subtly added to its fleece to create an interesting contrast in color, but it shouldn't dominate.  The sheep should be standing calmly, slightly angled towards the viewer, legs firmly planted on the ground. Its gaze should appear relaxed and peaceful. It should be of a breed that has a slightly unkempt appearance to its fleece, enhancing the contrast between its realistic details and the background.
+
+
+**Interaction:**
+
+The sheep appears peacefully within the Van Gogh-esque landscape. There should be no visible distortion or blending between the sheep and the background; the sheep should be clearly and sharply defined against the painterly, textured background.  The sheep’s presence adds a whimsical element, contrasting its relative realism with the expressiveness of the background. The scale of the sheep should be appropriate to the scale of the background elements; it shouldn't appear excessively large or small compared to the trees or other features.
+
+
+**Changes to the scene:**
+
+The addition of the sheep introduces a sense of serenity and unexpected juxtaposition.  The overall mood remains evocative, though the introduction of the creature adds a surprising element of calm and whimsy to Van Gogh's typically passionate style.  The realism of the sheep further emphasizes the contrasting styles between the foreground and the background, making the artistic choices of each section stand out more clearly.

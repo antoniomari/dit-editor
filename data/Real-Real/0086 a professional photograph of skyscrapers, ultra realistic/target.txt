@@ -1,0 +1,17 @@
+Generate an image of a serene park scene where a modern, multi-story building appears to be floating in the air above the middle-ground.
+
+**Background:**
+
+The background should depict a tranquil park on a clear, slightly overcast day. The park features a lush, short-cut green lawn, extending from the foreground to the mid-ground, where a paved pathway runs parallel to the lawn.  Mature, evenly spaced deciduous trees line the pathway, creating a leafy canopy.  In the far background, taller evergreen trees are visible on the right side of the frame, suggesting the edge of the park. The sky is a light blue with minimal cloud cover.
+
+**Foreground:**
+
+A man with short, dark hair sits on a tree stump in the lower right quadrant of the image, facing away from the viewer, toward the floating building. He is wearing a maroon or burgundy short-sleeved t-shirt and dark-colored pants. His posture is relaxed but attentive, as if observing the anomalous building.
+
+**Foreground Element (Building):**
+
+The foreground element is a modern, two-sectioned building that seems to levitate above the park. The building is primarily white and gray, with distinct sections. One section is predominantly white with several rows of yellow rectangular accents, representing windows or balconies, while the other, adjoining section is dark gray with a more muted window pattern. The building is slightly angled, as if rotating in mid-air.  Its position is roughly centered in the image horizontally, but is elevated significantly, creating a surreal effect.  It should look convincingly superimposed rather than simply pasted on.  The shadow should be minimal or absent, highlighting the floating effect. The building should be rendered with a realistic level of detail, including clear windows and distinct architectural features.
+
+**Interaction:**
+
+The man's posture and gaze direct the viewer's attention towards the floating building, implying a sense of wonder or disbelief. The building's placement creates an unusual juxtaposition between the ordinary park setting and an extraordinary architectural feature. There's no visible interaction between the building and the background elements apart from the perspective changes and the surreal effect of the building hovering.  The overall effect should be a whimsical, slightly unsettling, but intriguing scene.  The lighting should be consistent across the image, ensuring the floating building integrates naturally with the park's ambient light.

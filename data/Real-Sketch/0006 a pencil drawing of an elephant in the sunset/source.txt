@@ -1,0 +1,11 @@
+Generate a grayscale image in the style of a highly detailed pencil sketch. The scene depicts a serene lakeside sunset viewed from a wooden dock.
+
+**Scene:** The focal point is a large, low-hanging sun partially obscured by the horizon.  Its reflection is visible on the calm water of the lake. Tall grasses and reeds line the water's edge on both sides of the image, extending from the foreground almost to the sun. A few small birds are depicted in flight across the sky.  The dock is made of wide, evenly spaced planks running horizontally across the foreground, creating a strong leading line towards the sunset.
+
+**Lighting:** The lighting should be soft and diffused, characteristic of a sunset. The sun itself should be the brightest element, casting a gentle glow on the water and the tall grasses.  The sky should be rendered with subtle shading to suggest depth and a hazy atmosphere. The shadows under the grasses and on the water should be soft and gradual, avoiding harsh contrasts.
+
+**Style:** The style should mimic the meticulous detail of a graphite pencil drawing. This includes  using hatching and cross-hatching techniques to create depth and texture in the grasses, water, and wood planks.  The sky should be rendered with finely textured shading to depict clouds or haze.  The lines should be clean and consistent, conveying a sense of precision and skill.  Overall, the image should convey a sense of calm and tranquility.
+
+**Composition:** The composition should utilize the rule of thirds, with the sun positioned slightly off-center. The dock acts as a strong foreground element, leading the viewer's eye towards the sunset and the water. The grasses frame the sunset, creating a natural border. The birds add a small sense of movement and life to the otherwise static scene. The overall composition should be balanced and harmonious.
+
+**Additional notes:**  The text “毛丹” should appear unobtrusively at the bottom of the image, written in a simple, slightly stylized font appropriate to the overall style of the drawing. The paper texture should be subtle and barely perceptible, allowing the pencil strokes to dominate.  The perspective should be relatively straightforward, with a clear horizon line dividing the sky and water.

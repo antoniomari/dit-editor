@@ -1,0 +1,40 @@
+from setuptools import find_packages, setup
+
+setup(
+    name="dit_edit",
+    version="0.1.0",
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
+    install_requires=[
+        "torch>=2.4.0",
+        "gradio>=4.44.1",
+        "pip>=24.0.1",
+        "pillow",
+        "numpy",
+        "pandas",
+        "tqdm",
+        "diffusers",
+        "transformers",
+        "einops",
+        "accelerate",
+        "scikit-image",
+        "lpips",
+        "rembg[gpu]",
+        "matplotlib",
+        "sentencepiece",
+        "jupyter",
+        "ipykernel",
+        "scipy",
+        "seaborn",
+        "hpsv2",
+        "rembg",
+        "pre-commit",
+    ],
+    entry_points={
+        "console_scripts": [
+            "dit-run-benchmark=dit_edit.run_on_benchmark:main",
+            "dit-run=dit_edit.run:main",
+        ],
+    },
+    python_requires=">=3.10",
+)

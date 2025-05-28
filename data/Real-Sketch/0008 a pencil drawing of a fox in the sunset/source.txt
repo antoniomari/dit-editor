@@ -1,0 +1,16 @@
+Generate a grayscale image in a hyperrealistic pencil sketch style.  The scene depicts a tranquil lake at sunset.
+
+**Foreground:** A wide, wooden dock or boardwalk dominates the foreground.  Render the wood planks with highly detailed, parallel lines suggesting the texture of the wood grain. The planks should run horizontally across the entire width of the image, receding towards the lake.  The perspective should be from a slightly elevated viewpoint, looking out towards the water.
+
+**Midground:** Tall grasses, rendered with varying line weights and shading to depict texture and depth, flank the lake. These grasses should appear slightly wind-blown and extend from the edges of the dock towards the horizon.  The lake itself should be relatively calm, reflecting the setting sun.  Create subtle ripples on the water's surface.
+
+**Background:**  A large, low-hanging sun dominates the horizon, partially obscured by a subtle, hazy sky. The sky should be rendered with delicate, horizontal shading to suggest the atmosphere of twilight.  Several small birds are silhouetted against the setting sun, creating a sense of scale and tranquility.  The shading in the sky should gradually darken from the horizon to a slightly darker tone at the top of the image.
+
+
+**Lighting:** The primary light source is the setting sun, casting a warm, diffuse glow on the scene. The lighting should be soft and even, with subtle shadows to enhance the three-dimensionality of the elements. Use a chiaroscuro approach; the light contrasts sharply with the darker areas of the image to create a strong visual impact.
+
+
+**Style:** The style should mimic a highly detailed pencil sketch, with a focus on precise line work and subtle shading to create a photorealistic effect within the pencil sketch medium.  Emphasize the use of varying line weights and textures to render depth and detail throughout the image.  The overall impression should be one of serenity and realism.
+
+
+**Composition:** The composition should be balanced and harmonious, with the elements arranged to lead the viewer's eye from the foreground dock, across the lake, and towards the setting sun.  The rule of thirds can be used to guide the placement of elements within the image.  Ensure a distinct sense of depth and perspective, making the scene feel inviting and expansive.

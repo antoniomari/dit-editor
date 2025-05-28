@@ -1,0 +1,10 @@
+Generate an image of a pastoral scene, reminiscent of a sun-drenched hillside in a temperate climate.
+
+**Scene:** The main focus is a gently sloping grassy path, light brown-beige in color, winding from the mid-ground to the bottom right corner.  This path is bordered on either side by tall, slightly overgrown, vibrant green grass, dotted with wildflowers. These wildflowers are primarily yellows and oranges in hue, scattered naturally, with concentrations closer to the bottom of the frame.  To the left of the path, the grass is taller and slightly more uneven.  A darker, more dense patch of vegetation borders the path's left side in the mid-ground, then gives way to a more open, slightly uneven grassy area. In the far background, there is a lush hillside covered with a dense forest of dark green coniferous trees. The trees vary in height, creating a textured, undulating silhouette against the sky.
+
+**Lighting:** The scene is bathed in soft, diffused sunlight.  There are no harsh shadows. The light suggests it's likely midday or early afternoon on a sunny day.  The overall tone is bright and cheerful, with a soft, almost hazy quality to the distant background, suggesting atmospheric perspective.
+
+
+**Style:** The style should be realistic but with a slightly painterly or impressionistic quality.  The colors should be natural and vibrant but not overly saturated. The overall feel should be peaceful, tranquil, and idyllic, akin to a classic landscape painting. The image should have a moderate depth of field, with the path and wildflowers in sharp focus and the background slightly softer.  A subtle, warm light haze can be added to enhance the atmosphere.
+
+**Composition:** The path acts as a leading line, drawing the eye from the mid-ground down towards the bottom right corner. The composition is asymmetrical, with the heavier concentration of elements on the left side balanced by the open space on the right, guiding the viewer's gaze along the path.  The distant forest provides a strong backdrop, enhancing the sense of depth and scale. The overall framing should be a wide shot capturing the breadth of the landscape.

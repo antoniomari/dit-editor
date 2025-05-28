@@ -1,0 +1,11 @@
+Generate an image of a suburban backyard scene on a slightly overcast day.
+
+**Scene:** The main focus is a large, verdant lawn stretching from the foreground to a mid-ground where a single-story house sits.  The house is a light brownish-grey, with a simple rectangular design.  It has several windows, and a slightly visible  roof. Behind the house, there is a line of mature deciduous trees in full leaf, suggesting springtime or early summer. To the left of the house, partly obscured by a chain-link fence, is another smaller structure, perhaps a shed or workshop. A chain-link fence runs along the left side of the yard. In the background, partially visible through trees, is another house. The foreground is a patch of light brown, sandy earth, possibly a pathway or driveway.
+
+**Lighting:** The lighting is soft and diffused, characteristic of an overcast day. There are no harsh shadows, and the overall tone is even and relatively bright, but not intensely sunny.
+
+**Style:** The style should be realistic, aiming for a photorealistic depiction of a typical suburban backyard. The colors should be natural and muted, with greens dominating the lawn and trees, and browns and greys in the house and fence. The overall feeling should be peaceful and somewhat quiet.
+
+**Composition:** The image should be taken from a slightly low angle, looking towards the house and the lawn. The lawn should occupy a significant portion of the image, leading the eye towards the house in the mid-ground. The trees in the background add depth to the scene. The perspective should be relatively wide, capturing a panoramic view of the backyard.  The chain-link fence should run along the left edge, drawing the viewer's eye through the yard to the house and beyond.
+
+

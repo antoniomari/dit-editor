@@ -15,10 +15,10 @@ fixed_arguments=" \
     --inject-v  \
     --inject-q  \
     --use-prompt \
+    --layers all \
     --save-output-images"
 
-echo "Running with only vital layers"
 for tau_beta in "${tau_beta_list[@]}"; do
     echo "Running with tau_beta: $tau_beta"
-    python run_with_params.py  --tau-beta $tau_beta --layers vital $fixed_arguments
+    dit-run-benchmark --tau-beta $tau_beta $fixed_arguments --output-dir ./ablation_data/tau_beta/
 done

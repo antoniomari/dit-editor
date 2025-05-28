@@ -1,0 +1,15 @@
+Generate a grayscale image in the style of a realistic charcoal or graphite drawing.  The scene is a still life composition featuring the following objects arranged on a subtly textured, rumpled tablecloth:
+
+* **A wine glass:** A stemmed wine glass, slightly wider at the bowl than the stem, is positioned slightly off-center, toward the left. It's about half-full of a clear liquid, showing subtle reflections and refractions of light.  The glass should have a sense of weight and solidity; the glass itself needs to be highly reflective.
+
+* **A crushed aluminum can:** A slightly crushed aluminum can, possibly a soda can, lies on its side near the base of the wine glass, showing some wrinkles and dents in its metal surface.  The top is clearly visible, showing the opening and the tab.  The can should exhibit realistic texturing and metallic shading.
+
+* **A chocolate bar:** A rectangular chocolate bar, broken into several squares, rests on the tablecloth in the lower right quadrant.  The chocolate squares should have slight variations in tone and shading to indicate texture and depth.  There should be a visible, slight bite taken out of one end.
+
+* **An apple:** A single, red apple sits to the right of the wine glass, slightly behind it. It's a fairly realistic representation with subtle shading to highlight its round form and indicate a smooth skin. It's positioned to give a sense of contrast in texture against the other objects.
+
+**Lighting:** The lighting should be soft and diffused, appearing as though it's coming from an unseen light source, possibly from slightly above and to the left.  This should create subtle highlights and shadows on all the objects, enhancing their three-dimensionality.  The background should be dark and softly shaded, drawing attention to the objects in the foreground. The overall lighting should create strong chiaroscuro effects.
+
+**Style:** The style should mimic a highly detailed pencil or charcoal drawing. The emphasis should be on realistic rendering of texture, light, and shadow. Smoothing and blending techniques should be evident, especially on the curved surfaces like the apple and the wine glass. The overall style should exude a classical still-life feel, conveying a sense of stillness and contemplation.
+
+**Composition:** The arrangement should be balanced but not perfectly symmetrical. The objects are not too close together but are clustered enough to feel like a unified scene. The slightly rumpled tablecloth provides a foundation, subtly guiding the eye around the different objects and their variations in texture.  The overall composition should be naturally inviting and visually appealing.

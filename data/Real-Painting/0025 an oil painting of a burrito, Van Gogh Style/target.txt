@@ -1,0 +1,10 @@
+Generate an image in a painterly style reminiscent of a child's artwork, with visible brushstrokes and a somewhat naive perspective.  The background should depict a simple table setting:
+
+* **Background:** A green checkered tablecloth covers a table.  Two wooden chairs are visible in the background, one blue and one orange-brown.  The chairs are simply rendered, with visible brushstrokes outlining their shapes. The wall behind the table is painted with a mottled grey and white texture, suggesting a wall of a room. A purple teapot sits on the table, slightly off-center and towards the back.  A simple, yellow-orange mug is also present on the left side of the table. The overall lighting is soft and diffuse.
+
+**Foreground:**  The foreground element is a food item added to the scene:
+
+* **Foreground Element:**  A single, oblong piece of food, resembling a savory roll or pastry, is placed on a pink plate. This roll has a light beige base and is topped with visible flecks of green herbs.  It appears to be freshly baked. Part of a darker brown pastry/bun is also visible beneath or partially obscured by this foreground element. This plate is partially overlaid on a light blue plate underneath it, adding a slight three dimensional effect. This pink and partially blue plate is placed on the tablecloth to the right and slightly in front of the teapot. The foreground food is positioned slightly diagonally on the plate to make it more visually appealing. Utensils, possibly a knife and fork, are partially visible, beneath the pink plate, partially hidden under the roll. 
+
+
+**Interaction:** The foreground food item contrasts with the more subdued colors of the background table setting. The style of painting for the food should be slightly more detailed than the background, using more color variations and visible brushstrokes to emphasize its presence on the table. The overall feeling should be that the food has been added to the scene, with no significant alteration to the background's existing elements. The focus should subtly shift to include the food as an important part of the setting.

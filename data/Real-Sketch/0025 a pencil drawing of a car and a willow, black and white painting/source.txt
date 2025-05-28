@@ -1,0 +1,11 @@
+Generate a grayscale image in the style of a pencil sketch. The scene depicts a solitary, leafless tree situated on a gently sloping hill overlooking a calm body of water.  
+
+**The Tree:** The tree should be the focal point, occupying roughly the left third of the composition. Its branches are intricate and spindly, drawn with numerous fine lines suggesting a weathered, almost skeletal appearance.  The trunk is thick and gnarled, its texture implied through varying line density and direction. The overall shape of the tree's crown is rounded but irregular.  Focus on creating a sense of depth and volume within the branches.
+
+**The Hill:** The hill slopes gently downwards from the tree towards the water, exhibiting parallel, slightly curved lines suggesting cultivated fields or plowed earth. The lines should be less dense than those in the tree, creating a contrast in texture.  Add subtle indications of sparse, low-lying grass at the base of the tree and along the bottom edge of the hill using short, sketchy strokes.
+
+**The Water:** The water should appear calm and still, represented by long, horizontal lines that suggest ripples and reflections.  The lines should be relatively smooth and evenly spaced, creating a contrast to the rougher texture of the hill and tree. The water should extend across the right two-thirds of the composition, leading the eye to the background.
+
+**The Background:**  In the background, gently sloping hills are depicted using hatched lines, creating a sense of depth and distance. The lines should be more tightly packed at the bottom of the hills, gradually becoming more spaced out towards the top to suggest a receding perspective. The hills should have a smoother, less detailed texture than the tree and hill in the foreground.
+
+**Lighting:** The scene should be evenly lit, with no harsh shadows or highlights. The lighting should be soft and diffuse, lending the image a serene and peaceful atmosphere.  The grayscale should be predominantly in the mid-tones, with little extreme contrast. The style is minimalist and evocative rather than photorealistic. The overall effect should be evocative of a simple yet beautiful landscape drawing.

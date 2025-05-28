@@ -1,9 +1,0 @@
-Generate an image of a suburban backyard scene on an overcast day.  The style should be photorealistic, with a slightly muted color palette reflecting the diffused light.
-
-The scene features a large, relatively flat lawn of a light to medium green, occupying the majority of the foreground and middle ground. The lawn is slightly uneven in texture, suggesting it might be a bit sandy or compacted in places in the foreground. Scattered small weeds or tufts of grass are visible, particularly in the sandy patch at the very bottom.
-
-In the midground, there's a light brown ranch-style house partially visible behind a chain-link fence. The house is single-story with a simple, slightly gabled roof.  It shows some age; the paint isn't vibrant. The fence is a muted gray-brown, relatively unassuming.   Behind the house, mature deciduous trees are visible, their leaves a variety of greens, suggesting it's springtime or early summer. These trees have a natural, slightly unkempt appearance; branches reach out in various directions.  There's a hint of a taller, dark green evergreen tree to the right.
-
-The lighting should be soft and diffused, consistent with an overcast day. There should be no harsh shadows. The overall light should be cool and slightly muted, no bright sunlight.
-
-The composition should be a wide shot, with the house and trees in the background and the expansive lawn dominating the foreground. The viewpoint is from slightly below eye level looking towards the house. The overall mood should be quiet, peaceful, and slightly subdued.  A hint of a small object, possibly a child's toy or gardening tool, could be subtly included near the fence in the midground to add a tiny bit of detail and human presence. The image should have a realistic quality, avoiding any overly saturated colors or dramatic effects.

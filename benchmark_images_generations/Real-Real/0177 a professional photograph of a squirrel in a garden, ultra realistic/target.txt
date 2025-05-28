@@ -1,7 +1,0 @@
-Generate an image of a suburban backyard scene. The background should depict a typical suburban house with a well-maintained lawn.  Specifically:
-
-* **Background:** A single-story house with a light-colored exterior, possibly beige or light gray.  The house has several visible windows and a relatively simple architectural design.  The lawn is a vibrant, short-cut green. Large, mature deciduous trees frame the house and yard, some casting shadows.  A chain-link fence is partially visible along one side of the yard. The overall lighting suggests a day with soft, natural light.
-
-* **Foreground Element:** A gray squirrel is positioned in the lower-center of the image.  The squirrel should appear to be partially embedded into the ground, as if it is emerging from or disappearing into a hole in the relatively bare earth near the edge of the lawn. The squirrel should be detailed, showing its fur texture and features accurately. The squirrel appears relaxed, perhaps resting. The area of bare earth around the squirrel is small, only slightly disrupting the lawn.
-
-The foreground element interacts with the background by subtly altering the texture of the yard. The area directly around the squirrel is a different texture from the manicured lawn, suggesting possibly disturbed earth. The image should seamlessly blend the squirrel into the scene, making it appear natural and believable within the setting. The overall scene should remain predominantly calm and peaceful, consistent with the style of a typical residential area.

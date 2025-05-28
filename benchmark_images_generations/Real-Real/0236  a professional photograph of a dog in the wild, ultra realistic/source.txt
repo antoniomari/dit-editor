@@ -1,9 +1,0 @@
-Generate a landscape image in a photorealistic style.  The scene is a gently sloping hillside with a grassy path winding through it.  The path is light tan-colored dirt, edged with short, bright green grass, becoming slightly more overgrown with taller, lighter green grasses towards the edges.
-
-The hillside itself is covered in a mix of grasses and wildflowers.  The grasses are predominantly light to medium green, with variations in height and texture suggesting a natural, unkempt feel. Wildflowers are sparsely scattered throughout, mostly small and yellow, providing pops of color against the greens.
-
-In the mid-ground, a grove of small, leafy trees – predominantly a reddish-brown hue suggesting late spring or early summer – stands slightly elevated, partially obscuring the path's progression.  These trees should be slightly softer in focus compared to the foreground grasses and the path.
-
-Beyond the trees and slightly out of focus, the hillside continues, culminating in a backdrop of a dense forest of dark green evergreen trees that stretch across the top third of the image. This forest should have a slight haze or atmospheric perspective, suggesting depth and distance.
-
-The lighting should be soft, diffused sunlight, typical of an overcast day or early morning/late afternoon. Avoid harsh shadows; the overall scene should be bathed in a warm, even light. The colors should be naturalistic and slightly muted, avoiding overly saturated hues. The overall composition is a wide, panoramic shot with the path leading the eye from the foreground towards the background forest. The aspect ratio should be slightly wider than it is tall.  There should be a subtle feeling of calmness and tranquility.

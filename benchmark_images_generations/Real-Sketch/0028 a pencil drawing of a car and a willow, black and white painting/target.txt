@@ -1,9 +1,0 @@
-Generate an image depicting a stylized sketch of a landscape with a classic car added into the scene.
-
-The background should be a pencil sketch style landscape.  The style should mimic a slightly impressionistic drawing, using mostly shades of grey.  The hills should be rendered with long, slightly overlapping strokes suggesting rolling hills. The sky should be a light, almost blank grey.  There should be a suggestion of grass at the bottom using short, sketchy strokes.
-
-The foreground element is a dark-green vintage convertible car, specifically a Jaguar XK120,  placed in a valley-like area of the landscape. The car should be realistically rendered in contrast to the sketched background. It should be positioned slightly off-center, to the right, and near the bottom third of the image.  The car should appear as if it's parked and facing to the right, slightly angled towards the viewer.
-
-A large, bare, leafless tree, also rendered in a pencil sketch style, should be placed in the left portion of the foreground. The tree should be somewhat large and dominate the left side, with its branches extending outwards towards the center, partially obscuring the background hills. The tree should be drawn with thin, somewhat erratic lines to suggest its wintery or barren state.  The tree's style should match that of the hills in the background, using similar pencil strokes.
-
-The overall impression should be that of a composite image, with the realism of the car contrasting with the sketched background and tree, creating a slightly surreal yet visually appealing composition. The lighting should be soft and diffused, consistent with the muted tones of the pencil sketch style.

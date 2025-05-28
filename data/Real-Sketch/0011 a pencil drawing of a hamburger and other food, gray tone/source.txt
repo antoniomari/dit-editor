@@ -1,0 +1,16 @@
+Generate a grayscale image in the style of a realistic charcoal or graphite drawing.  The scene is a still life composition on a subtly textured, lightly rumpled tablecloth.
+
+The main objects are:
+
+* **A wine glass:** A stemmed wine glass, partially filled with a clear liquid (wine), sits slightly off-center.  The glass should reflect light realistically, showing highlights and subtle shadows on its surface and within the liquid.  The stem should be slender and elegant.
+
+* **A crushed aluminum can:** A discarded aluminum beverage can, lying on its side, is partially crushed and shows creases and dents. Detail the texture of the aluminum, showing the subtle reflections and shadows.
+
+* **A chocolate bar:** A rectangular chocolate bar, broken into squares, rests on the tablecloth near the bottom right. The squares should be clearly defined and show subtle texture.  A small piece should be broken off, showing a slightly uneven fracture.
+
+* **An apple:** A red apple, slightly shadowed, sits near the wine glass and subtly contributes to the composition. Show the smooth skin of the apple and the slight highlight on one side.
+
+
+**Lighting:** The lighting should be soft and diffused, possibly from an unseen light source slightly to the upper left.  This should create a chiaroscuro effect, with strong contrasts between light and shadow to enhance the three-dimensionality of the objects. The background should be a smooth gradient darkening towards the top.
+
+**Overall Composition:** The objects should be arranged naturally, with a sense of casual placement, yet thoughtfully composed to create visual interest and balance.   The composition should feel slightly asymmetrical and have a natural depth.  The focus should be on the interplay of light and shadow on the objects, showcasing realistic texture and form. The style should mimic a classic still-life drawing, exhibiting precise details and masterful shading.

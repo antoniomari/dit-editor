@@ -1,0 +1,15 @@
+Generate an image in the style of a naive or folk painting, featuring a still life scene on a checkered tablecloth.  The color palette should be vibrant and slightly unrealistic, leaning towards bold, flat areas of color rather than subtle shading.
+
+**Scene:** The central focus is a tabletop setting including a light blue teacup and saucer filled with dark brown tea, a purple teapot, and a brown baked good (similar to a pudding or cake) on a bright pink plate.  A yellow mug sits to the left, slightly out of focus. A simple silver knife or spoon rests on the pink plate near the baked good.
+
+
+**Tablecloth:** The tablecloth is a green and off-white checkered pattern, rendered with broad, visible brushstrokes giving it a slightly textured appearance. The colors are not perfectly aligned and have a slightly imperfect, handmade quality.
+
+**Background:** Two chairs are visible in the background, one blue and one yellow-brown. These chairs are simplified in design and also rendered with bold strokes and flat colors, suggesting a slightly blurred, out-of-focus background. The wall behind the chairs is a muted grey with hints of lighter and darker tones that give it a textured appearance, but are still quite flat in terms of shading.
+
+**Lighting:** The lighting is soft and even, with no harsh shadows.  The overall illumination should create a sense of calm and tranquility. The light source appears to be diffuse and from above, casting only minimal shadows.
+
+**Style:** The overall style should evoke a childlike innocence and simplicity, reminiscent of folk art or children's book illustrations.  Lines should be somewhat irregular, avoiding perfect symmetry or precision, to reinforce the naive aesthetic. The brushstrokes are visible and intentional, contributing to the hand-painted look.  Colors should be bold and slightly unrealistic in their saturation.
+
+
+**Composition:** The objects should be arranged in a slightly asymmetrical, yet balanced composition.  The tea set is the main focal point, with the chairs and wall forming a less defined background.  The elements are arranged to encourage a pleasant, slightly off-kilter balance.

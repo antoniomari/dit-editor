@@ -1,0 +1,20 @@
+Generate a cartoon-style cityscape illustration.  The scene should be a street view, focusing on a row of colorful, multi-story buildings.  The style should be reminiscent of a children's book or animated film, with clean lines, slightly exaggerated proportions, and bright, saturated colors.
+
+**Buildings:**
+
+* **Foreground:**  The immediate foreground features a row of buildings with varying heights and architectural styles.  Include at least three distinct buildings. One should be a three-story building with a teal pitched roof, white trim, and a small shop front. Another should be a taller, slim, reddish-orange building with several stories, slightly angled and leaning.  A smaller, red building could be placed near the teal building.  Add details like windows, doors, and some simple signage to suggest functionality.
+
+* **Background:**  Behind the foreground buildings, include a series of taller buildings to create a sense of depth. These background structures can be simplified, with less detail than the foreground buildings.  Include a variety of heights, including some skyscrapers. The skyscrapers should be stylized, not photorealistic. One should be a tall, slender tower, reminiscent of an Art Deco style.
+
+**Lighting:**
+
+The lighting should be bright and sunny, creating a cheerful atmosphere.  Use a soft, diffused light source to avoid harsh shadows.  The overall palette should be warm and inviting.  A slightly hazy, pastel-colored sky should be visible above the buildings.  The sky should feature some soft, puffy clouds, mainly light peach and white.
+
+**Street:**
+
+The street should be a simple, paved road, rendered with clean lines and a subtle texture. Include sidewalks, streetlamps (tall and thin, possibly with rounded tops), and a crosswalk with pedestrian markings. A small traffic light is present near the reddish-orange building.
+
+
+**Overall Composition:**
+
+The composition should be balanced, with the buildings arranged to create a visually appealing street scene. Use a perspective that draws the viewer's eye down the street towards the background skyscrapers. The buildings should not be perfectly aligned, adding a slight sense of irregularity to make the scene more dynamic.  The scene should be largely flat, with minimal use of perspective distortions or shading effects to maintain a simple, clean look.  The overall aspect ratio should be approximately a standard landscape format (wider than it is tall).

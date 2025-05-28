@@ -1,0 +1,11 @@
+Generate a grayscale image in the style of a realistic pencil sketch, emphasizing fine detailing and shading.  The scene depicts a tranquil lake or river at sunset.
+
+**Foreground:** The immediate foreground is a wooden dock or pier, rendered with meticulously drawn parallel lines suggesting the wood grain.  The lines should converge towards the vanishing point in the distance, creating a strong sense of perspective. The planks should appear smooth and slightly reflective.
+
+**Midground:**  Tall grasses or reeds border the water on both sides, extending from the foreground towards the setting sun.  Individual blades of grass should be visible and rendered with varying shades to convey depth and texture. The water's surface is relatively calm, reflecting the setting sun with subtle ripples or undulations.
+
+**Background:** The sky fills the upper portion of the image and is depicted using a multitude of short, parallel pencil strokes to create a textured effect that suggests a cloudy or hazy sunset.  A large, partially obscured sun sits near the horizon, with a few small birds silhouetted against its light.  The sun itself should be rendered with varying shading to show form and depth. The colors are all grayscale; no color is used.  The overall lighting is soft and diffused, characteristic of a sunset.  There should be a slight contrast between the lighter sky and the darker water and vegetation.
+
+**Overall Composition:** The image should have a horizontal orientation, with the focus on the calm water and setting sun. The lines of the dock and the grasses create leading lines that draw the viewer's eye to the center, where the sun is the focal point. The overall style should evoke a sense of serenity and peace. The image should have a signature in the bottom right corner, in a simple script font that reads "毛明".
+
+The level of detail should be high enough to create a hyperrealistic pencil sketch effect.  The use of shading and line weight variation is crucial to conveying depth and realism.

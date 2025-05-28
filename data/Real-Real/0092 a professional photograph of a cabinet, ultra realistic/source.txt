@@ -1,0 +1,11 @@
+Generate an image of a cozy, slightly dimly lit living room. The style should be photorealistic, aiming for a natural and slightly muted color palette.
+
+**Scene:** The room features light-colored hardwood flooring.  A large window occupies a significant portion of one wall, draped with golden-yellow curtains that are partially drawn.  Sunlight filters through the sheer curtains, creating a soft glow on the floor.  Against the opposite wall is a bookshelf overflowing with books, a guitar leaning against it.  Next to the bookshelf is a small, dark-colored rug, a dark brown/reddish color.  A dark-colored, low couch/ottoman-like seating piece is partially visible in the lower right corner. A low dark brown table sits next to the couch. Near the window is a smaller, plaid upholstered armchair or ottoman.  A vintage-style television sits on a light-wooden cabinet near the wall with an easel.  A simple table lamp illuminates the corner near the television. To the left, a wooden easel stands with what looks like a partially covered canvas.
+
+
+**Lighting:** The primary light source is natural light from the window, diffused by the sheer curtains.  The table lamp adds a warmer, localized light source in the corner. The overall lighting should be soft and subdued, with some areas slightly darker than others to create depth and mood.  Avoid harsh shadows.
+
+
+**Style:** The overall style should be that of a comfortable, lived-in space, slightly bohemian/eclectic.  The colors should be warm and inviting, with a focus on earth tones and muted yellows. The image should have a slightly nostalgic, possibly slightly vintage feel.
+
+**Composition:** The viewpoint should be from a position slightly below eye level, looking across the room toward the window.  The composition should be balanced, with the easel and furniture pieces leading the viewer's eye towards the window and the brighter area of the room.  The perspective should emphasize the depth of the room.  The focus should be clear enough to make each individual object discernible, but avoid excessive sharpness to maintain a cozy feel.

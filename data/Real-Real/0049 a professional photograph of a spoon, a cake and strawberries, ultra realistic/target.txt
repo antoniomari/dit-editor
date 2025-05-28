@@ -1,0 +1,17 @@
+Generate an image of a white square plate holding a slice of tiramisu cake and several fresh strawberries.
+
+**Foreground:**
+
+* **Tiramisu Slice:** A single, sizable slice of tiramisu cake takes center stage.  It's a two-layered cake with a visible layer of coffee-soaked ladyfingers between layers of creamy white mascarpone.  The top is covered with a glossy, almost translucent layer that shows slight marbling and has a dark speck (possibly a coffee bean) embedded. The cake appears moist and rich.
+
+* **Strawberries:** Several bright red strawberries are arranged around the tiramisu, slightly overlapping each other. They're fresh-looking and glossy. Some are whole, others might be partially cut, creating a natural and slightly haphazard arrangement.  They are not uniformly spaced; some clusters are closer together than others.
+
+* **Spoon:** A silver teaspoon is placed casually on the plate, leaning slightly against the strawberries, near the left side of the tiramisu slice. It's not perfectly positioned but appears natural and adds to the casual, home-style feel.
+
+**Background Interaction:**
+
+The foreground elements are placed on a plain white square plate which is the primary focus. The background is subtly blurred, suggesting a shallow depth of field, and it shows only a hint of a light-colored background. There's no strong contrast between the background and the plate. The focus is entirely on the food.
+
+**Overall Scene Changes:**
+
+Compared to a simple image of only the tiramisu, the addition of the strawberries and the spoon significantly enhances the image's appeal and suggests a setting of casual enjoyment. The overall mood is one of sweetness, freshness, and simple elegance. The strawberries and spoon add a complementary color and texture that contrasts and complements the richness of the tiramisu.  The image should appear bright, well-lit and emphasize the textures of the cake and the strawberries.

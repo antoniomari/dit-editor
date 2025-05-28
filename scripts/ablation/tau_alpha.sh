@@ -8,21 +8,17 @@ fixed_arguments=" \
     --guidance-scale 3.0   \
     --alpha-noise 0.05  \
     --timesteps 50  \
+    --random-samples \
+    --random-samples-seed 41 \
     --run-on-first 1  \
     --inject-k  \
     --inject-v  \
     --inject-q  \
+    --layers all \
     --use-prompt \
     --save-output-images"
 
-echo "Running with only injection in all layers"
 for tau_alpha in "${tau_alpha_list[@]}"; do
     echo "Running with tau_alpha: $tau_alpha"
-    python run_with_params.py  --tau-alpha $tau_alpha --layers all $fixed_arguments
-done
-
-echo "Running with only vital layers"
-for tau_alpha in "${tau_alpha_list[@]}"; do
-    echo "Running with tau_alpha: $tau_alpha"
-    python run_with_params.py  --tau-alpha $tau_alpha --layers vital $fixed_arguments
+    dit-run-benchmark  --tau-alpha $tau_alpha $fixed_arguments --output-dir ./ablation_data/tau_alpha
 done
