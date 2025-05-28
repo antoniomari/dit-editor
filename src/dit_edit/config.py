@@ -213,4 +213,10 @@ def parse_script_specific_args_benchmark(parser: argparse.ArgumentParser):
         help="Save the generated output images",
         default=True,
     )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=None,
+        help="Where to save the output images. If not passed, it will use the default output directory which is data/<domain>/<sample>",
+    )
     return parser

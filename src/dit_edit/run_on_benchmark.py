@@ -68,6 +68,7 @@ def main():
     random_samples: bool = args.random_samples
     random_samples_seed: int = args.random_samples_seed
     skip_available: bool = args.skip_available
+    output_root_dir: str = args.output_dir if args.output_dir is not None else "./data"
 
     # Log the parameters
     logger.info("DiT-Edit parameters:")
@@ -128,9 +129,14 @@ def main():
             try:
                 example: BenchmarkExample = all_images[category][i]
 
-                img_filename = f"alphanoise{config.alpha_noise}_timesteps{config.timesteps}_Q{config.inject_q}_K{config.inject_k}_V{config.inject_v}_taua{config.tau_alpha}_taub{config.tau_beta}_guidance{config.guidance_scale}_{config.layers_for_injection}-layers.png"
-                metrics_filename = f"alphanoise{config.alpha_noise}_timesteps{config.timesteps}_Q{config.inject_q}_K{config.inject_k}_V{config.inject_v}_taua{config.tau_alpha}_taub{config.tau_beta}_guidance{config.guidance_scale}_{config.layers_for_injection}-layers.json"
-                output_dir = f"./data/{category}/{example.image_number} {example.prompt}"
+                img_filename = f"alphanoise{config.alpha_noise}_timesteps{config.timesteps}_Q{config.inject_q}_K{config.inject_k}_V{config.inject_v}_taua{config.tau_alpha}_taub{config.tau_beta}_guidance{config.guidance_scale}_{config.layers_for_injection}-layers_useprompt-{config.use_prompt_in_generation}.png"
+                metrics_filename = f"alphanoise{config.alpha_noise}_timesteps{config.timesteps}_Q{config.inject_q}_K{config.inject_k}_V{config.inject_v}_taua{config.tau_alpha}_taub{config.tau_beta}_guidance{config.guidance_scale}_{config.layers_for_injection}-layers_useprompt-{config.use_prompt_in_generation}.json"
+                output_dir = os.path.join(
+                    output_root_dir,
+                    category,
+                    f"{example.image_number} {example.prompt}",
+                )
+                os.makedirs(output_dir, exist_ok=True)
                 if (
                     skip_available
                     and os.path.exists(os.path.join(output_dir, img_filename))
