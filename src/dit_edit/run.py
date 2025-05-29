@@ -1,6 +1,6 @@
 import argparse
-import logging
 import os
+from datetime import datetime
 from functools import partial
 
 import numpy as np
@@ -22,7 +22,7 @@ from dit_edit.utils.logging import setup_logger
 logger = setup_logger("dit_edit_run")
 
 
-def main(args, config: DitEditConfig):
+def main():
     # Set up argument parser
     parser = argparse.ArgumentParser(
         description="End-to-end image composition script for DiT-Edit."
@@ -41,6 +41,7 @@ def main(args, config: DitEditConfig):
     bbox_path = args.bbox_path
     prompt = args.prompt
     output_dir = args.output_path
+    segm_mask_path = args.segm_mask_path
 
     # Log the parameters
     logger.info("DiT-Edit parameters:")
@@ -52,6 +53,9 @@ def main(args, config: DitEditConfig):
     logger.info(f"\tBounding box mask path: {bbox_path}")
     logger.info(f"\tOutput image path: {output_dir}")
     logger.info(f"\tPrompt: {prompt if prompt else 'None'}")
+    logger.info(
+        f"\tSegmentation mask path: {segm_mask_path if segm_mask_path else 'None'}"
+    )
     logger.info(f"\tDebug mode: {'Enabled' if debug else 'Disabled'}")
 
     # Setup debug directory
@@ -118,34 +122,67 @@ def main(args, config: DitEditConfig):
     ##################################
     #    Create segmentation mask    #
     ##################################
-    logger.info("Generating segmentation mask...")
-    rembg_session = new_session()
-    fg_mask_pil = remove(
-        fg_image,
-        session=rembg_session,
-        only_mask=True,
-        alpha_matting=True,
-        alpha_matting_erode_size=0,
-        alpha_matting_foreground_threshold=100,
-    )
-    segm_mask = (np.array(fg_mask_pil) > 127).astype(int)
-
-    # Make sure the segmentation mask has selected enough area
-    mask_area = np.sum(segm_mask)
-    max_mask_area = segm_mask.shape[0] * segm_mask.shape[1]
-    if max_mask_area == 0:
-        logger.warning(
-            "Warning: Foreground image has zero area. Using a full mask for the (zero-sized) foreground."
+    logger.info("Handling segmentation mask...")
+    if segm_mask_path:
+        try:
+            logger.info(f"Loading segmentation mask from {segm_mask_path}...")
+            segm_mask_image = Image.open(segm_mask_path).convert("L")
+            # Ensure the loaded mask is the same size as the foreground image
+            if segm_mask_image.size != fg_image.size:
+                logger.info(
+                    f"Resizing provided segmentation mask from {segm_mask_image.size} to {fg_image.size} to match foreground image."
+                )
+                segm_mask_image = segm_mask_image.resize(fg_image.size, Image.NEAREST)
+            segm_mask = (np.array(segm_mask_image) > 127).astype(
+                int
+            )  # Assuming mask is grayscale, threshold to binary
+            if debug:
+                segm_mask_image.save(
+                    os.path.join(debug_dir, "segm_mask_image_generated.png")
+                )
+            logger.info("Successfully loaded provided segmentation mask.")
+        except FileNotFoundError:
+            logger.error(
+                f"Error: Provided segmentation mask file not found: {segm_mask_path}"
+            )
+            return
+        except Exception as e:
+            logger.error(f"Error loading provided segmentation mask: {e}")
+            return
+    else:
+        logger.info("Generating segmentation mask using rembg...")
+        rembg_session = new_session()
+        fg_mask_pil = remove(
+            fg_image,
+            session=rembg_session,
+            only_mask=True,
+            alpha_matting=True,
+            alpha_matting_erode_size=0,
+            alpha_matting_foreground_threshold=100,
         )
-        # fg_mask_np remains as is (likely all zeros if total_area is 0)
-    elif (mask_area / max_mask_area) < config.min_mask_area_ratio:
-        logger.info(
-            f"Generated mask area ({mask_area / max_mask_area:.2f}) is below threshold ({config.min_mask_area_ratio}). Using a full foreground mask."
-        )
-        segm_mask = np.ones((fg_image.height, fg_image.width), dtype=int)
+        segm_mask = (np.array(fg_mask_pil) > 127).astype(int)
 
-    # Convert the segmentation mask to PIL Image
-    segm_mask_image = Image.fromarray((segm_mask * 255).astype(np.uint8), mode="L")
+        # Make sure the segmentation mask has selected enough area
+        mask_area = np.sum(segm_mask)
+        max_mask_area = segm_mask.shape[0] * segm_mask.shape[1]
+        if max_mask_area == 0:
+            logger.warning(
+                "Warning: Foreground image has zero area. Using a full mask for the (zero-sized) foreground."
+            )
+            # segm_mask remains as is (likely all zeros if total_area is 0)
+        elif (mask_area / max_mask_area) < config.min_mask_area_ratio:
+            logger.info(
+                f"Generated mask area ({mask_area / max_mask_area:.2f}) is below threshold ({config.min_mask_area_ratio}). Using a full foreground mask."
+            )
+            segm_mask = np.ones((fg_image.height, fg_image.width), dtype=int)
+
+        # Convert the segmentation mask to PIL Image
+        segm_mask_image = Image.fromarray((segm_mask * 255).astype(np.uint8), mode="L")
+        if debug:
+            segm_mask_image.save(
+                os.path.join(debug_dir, "segm_mask_image_generated.png")
+            )
+        logger.info("Successfully generated segmentation mask.")
 
     ##################################
     #       Get starting noises      #
@@ -178,6 +215,9 @@ def main(args, config: DitEditConfig):
     #         Compose images         #
     ##################################
     logger.info("Running image composition...")
+    all_layers = [f"transformer.transformer_blocks.{i}" for i in range(19)] + [
+        f"transformer.single_transformer_blocks.{i-19}" for i in range(19, 57)
+    ]
     if config.layers_for_injection == "vital":
         vital_layers = [
             f"transformer.transformer_blocks.{i}" for i in [0, 1, 17, 18]
@@ -187,9 +227,7 @@ def main(args, config: DitEditConfig):
         ]
         layers_to_inject = vital_layers
     elif config.layers_for_injection == "all":
-        layers_to_inject = [
-            f"transformer.transformer_blocks.{i}" for i in range(19)
-        ] + [f"transformer.single_transformer_blocks.{i-19}" for i in range(19, 57)]
+        layers_to_inject = all_layers
     else:
         raise ValueError(
             "Invalid value for --layers-for-injection. Use 'vital' or 'all'."
@@ -204,7 +242,7 @@ def main(args, config: DitEditConfig):
         num_inference_steps=config.timesteps,
         seed=config.seed,
         guidance_scale=config.guidance_scale,
-        positions_to_inject=layers_to_inject,
+        positions_to_inject=all_layers,
         positions_to_inject_foreground=layers_to_inject,
         empty_clip_embeddings=False,
         q_mask=example_noise["latent_masks"]["latent_segmentation_mask"],
@@ -244,8 +282,24 @@ def main(args, config: DitEditConfig):
     try:
         final_image = output_image_data[0][2]
         os.makedirs(output_dir, exist_ok=True)
-        final_image.save(os.path.join(output_dir, "output_image.png"))
-        logger.info(f"Output image saved to {output_dir}")
+        output_path = os.path.join(
+            output_dir,
+            "alphanoise{}_timesteps{}_Q{}_K{}_V{}_taua{}_taub{}_guidance{}_{}-layers_useprompt-{}_{}.png".format(
+                config.alpha_noise,
+                config.timesteps,
+                config.inject_q,
+                config.inject_k,
+                config.inject_v,
+                config.tau_alpha,
+                config.tau_beta,
+                config.guidance_scale,
+                config.layers_for_injection,
+                config.use_prompt_in_generation,
+                datetime.now().strftime("%Y%m%d%H%M%S"),
+            ),
+        )
+        final_image.save(output_path)
+        logger.info(f"Output image saved to {output_path}")
     except Exception as e:
         logger.error(f"Error saving output image: {e}")
 

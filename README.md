@@ -1,10 +1,11 @@
-# DiT-Edit: Image Composition with Diffusion Transformers 🖼️🎨✨
+# DiT-Edit: A General Image Editing Framework on Diffusion Transformers 🖼️🎨✨
 
 > #### **Overview**
 > - 🎯 **Exemplary-based:** transfer your object instead of generating a new one!
 > - ♻️ **Training-free:** leverage pre-trained SoTA Diffusion Transformers (DiTs) like FLUX.
 > - 💬 **Text-guided:** use text prompts to refine the composition or add new features.
 > - 🎚️ **Tunable parameters:** offers flexible control over the process, providing knobs on aspects like background consistency or blending.
+> - 🔁 (_extra_) Open source and reproducible: our package is fully open source and we provide scripts for all our experiments!
 
 ![Task Explanation](assets/task_explanation.png)
 
@@ -92,8 +93,8 @@ The two primary scripts for using DiT-Edit are `src/dit_edit/run.py` and `src/di
 After installing the package with `pip install -e .`, you can also run these scripts as commands: **`dit-run`** (equivalent to `python src/dit_edit/run.py`) and **`dit-run-benchmark`** (equivalent to `python src/dit_edit/run_on_benchmark.py`)
 
 Both scripts use `DitEditConfig` for configuration management, allowing you to easily adjust hyperparameters and settings, therefore sharing the following arguments:
-- `--tau-alpha`: Controls blending vs. subject consistency in the foreground injection. Higher values lead to more exploration, perhaps leading to better blending while loosing fidelity to the foreground.
-- `--tau-beta`: Controls the strength of the background consistency. Higer values lead to more background consistency.
+- `--tau-alpha`: Controls blending vs. subject consistency in the foreground injection. Higher values lead to more exploration, perhaps leading to better blending while losing fidelity to the foreground.
+- `--tau-beta`: Controls the strength of the background consistency. Higher values lead to more background consistency.
 - `--timesteps`: Number of diffusion steps. The more steps, the more refined the output, but also the longer the processing time.
 - `--guidance-scale`: Guidance scale for the diffusion model.
 - `--seed`: Random seed for reproducibility.

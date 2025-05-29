@@ -176,6 +176,12 @@ def parse_script_specific_args_run(parser: argparse.ArgumentParser):
         help="Optional prompt for the image generation.",
     )
     parser.add_argument(
+        "--segm_mask_path",
+        type=str,
+        default=None,
+        help="Optional path to an existing segmentation mask image.",
+    )
+    parser.add_argument(
         "--debug",
         action="store_true",
         help="Enable debug mode to save intermediate images.",
