@@ -13,7 +13,7 @@
 📄 Read our detailed [final report here](assets/final_report.pdf) to know more about how DiT-Edit works<br>
 🥇 Selected as the best project for the Spring 2025 edition of [CS-503 @ EPFL](https://edu.epfl.ch/coursebook/en/visual-intelligence-CS-503)
 
-#### _Task_
+### _Task_
 ![Task Explanation](assets/task_explanation.png)
 <br><br>
 
@@ -27,9 +27,8 @@
 ![Task Explanation](assets/text-features.png)
 
 
-
+<br><br>
 ---
-
 
 ## Table of Contents
 - [Installation](#installation)
