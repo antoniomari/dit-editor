@@ -17,8 +17,11 @@
 ![Task Explanation](assets/task_explanation.png)
 <br><br>
 
-#### _Comparison with SoTA_
-![Task Explanation](assets/examples.png)
+#### _Comparison with SoTA (domains: real-cartoon, real-real, real-sketch, real-painting)_
+<p align="center">
+  <img src="assets/grid-1.png" alt="Image 1" width="45%" />
+  <img src="assets/grid-2.png" alt="Image 2" width="45%" />
+</p>
 
 #### _Examples with additional textual features_
 ![Task Explanation](assets/text-features.png)
@@ -152,7 +155,7 @@ python src/dit_edit/run_on_benchmark.py
 
 
 ## Some more examples
-![Examples of DiT-Edit](assets/grid-1.png)
+![Examples of DiT-Edit](assets/examples.png)
 *Examples showcasing the capabilities of DiT-Edit across domains, compared to baselines.*
 
 
