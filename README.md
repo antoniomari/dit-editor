@@ -1,6 +1,8 @@
 # DiT-Edit: A General Image Editing Framework on Diffusion Transformers 🖼️🎨✨
 
 ### **Overview**
+**Team:** _A. Mari, E. Nevali, M. Santelmo, L. Sbicego_
+
 > **Core features:**
 > - 🎯 **Exemplary-based:** transfer your object instead of generating a new one!
 > - ♻️ **Training-free:** leverage pre-trained SoTA Diffusion Transformers (DiTs) like FLUX.
@@ -8,8 +10,8 @@
 > - 🎚️ **Tunable parameters:** offers flexible control over the process, providing knobs on aspects like background consistency or blending.
 > - 🔁 (_extra_) Open source and reproducible: our package is fully open source and we provide scripts for all our experiments!
 
-📄 Read our [**report here**](assets/final_report.pdf)
-
+📄 Read our detailed [final report here](assets/final_report.pdf) to know more about how DiT-Edit works<br>
+🥇 Selected as the best project for the Spring 2025 edition of [CS-503 @ EPFL](https://edu.epfl.ch/coursebook/en/visual-intelligence-CS-503)
 
 #### _Task_
 ![Task Explanation](assets/task_explanation.png)
