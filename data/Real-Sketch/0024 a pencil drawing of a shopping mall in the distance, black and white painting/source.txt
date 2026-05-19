@@ -1,9 +1,0 @@
-Generate a grayscale image in a pencil sketch style. The scene depicts a serene rural landscape at either dawn or dusk.
-
-**Scene:** The main focus is a person sitting under a large, leafy tree, playing a flute. The tree is positioned slightly off-center, toward the left.  To the right, across a calm body of water, are two small, simple houses with pitched roofs.  In the foreground, near the person, are some tufts of grass.  Further along the water's edge are more tufts of grass, forming a gentle curve. A small boat with a person in it is visible on the water, moving toward the houses.  In the background, beyond the houses and water, are a few palm trees and slightly rolling hills or a low horizon line suggesting a wide open space.  The overall scene is peaceful and idyllic.
-
-**Lighting:** The lighting is soft and diffused, suggestive of early morning or late evening light. There's a subtle suggestion of a sun rising or setting behind the hills/horizon line; not harshly bright but providing a gentle glow.  The shading should emphasize the tranquility and soft light, with no harsh shadows.
-
-**Style:** The style should be reminiscent of a classic pencil sketch, with varying shades of gray to create depth and texture. The lines should be relatively smooth but with visible pencil strokes, especially in the tree and grass.  The houses, tree, and person should be detailed, though maintaining a slightly simplistic aesthetic. The overall texture should feel like a softly rendered pencil sketch.  Avoid any sharp, overly defined lines or highly detailed rendering; rather, aim for a soft, peaceful, almost nostalgic feel.
-
-**Composition:** The composition is arranged to guide the viewer's eye from the person under the tree across the water towards the houses, establishing depth within the scene. The curvature of the water and the placement of the elements maintain a balanced and calm composition.  The image should have a horizontal orientation.

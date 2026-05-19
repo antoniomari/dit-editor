@@ -1,9 +1,0 @@
-Generate an image of a light gray sheep standing in the center of a clearing in a cartoon forest.
-
-**Background:** The background should be a stylized cartoon forest scene.  The trees are tall and slender with brown trunks and lush green canopies.  The leaves are a simplified, slightly cartoonish style. The ground is a pale yellowish-tan, suggesting a sandy or dry earth path, and small tufts of green grass are scattered sparsely on the ground. The overall style should be reminiscent of children's book illustrations, with smooth lines and bright, slightly unrealistic colors.
-
-**Foreground:** The foreground element is a single, realistically rendered light gray sheep. Its wool appears thick and slightly unkempt.  The sheep should be centrally located in the clearing, slightly off-center towards the bottom of the image.  It's facing slightly to the left of the frame.  There should be a visible light pink or purplish hue in patches of its wool, providing slight variation in color.  The sheep should be realistic in its texture and details, contrasting with the cartoon style of the background. The sheep should appear to be standing naturally on the ground, its feet slightly apart.
-
-**Interaction:** The sheep is placed so that it is clearly the focal point of the image. Its realistic detail contrasts with the cartoonish background, creating a slightly surreal effect.  The lighting should be consistent between the sheep and the background;  the sheep should not appear overly shadowed or brightly lit compared to its surroundings.
-
-The overall scene should be peaceful and whimsical, with the realistic sheep placed in the seemingly fantastical forest. The contrast in styles between the sheep and the background will create a unique and interesting image.

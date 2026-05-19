@@ -1,7 +1,0 @@
-Generate an image in the style of a naive or childlike painting.  The background should depict a table setting in a simplistic, blocky style.  The table is covered with a green and yellow checkered tablecloth.  On the table are two simple wooden chairs, one blue and one brown-orange, their backs to the viewer. A purple teapot sits on the table, positioned slightly off-center.  To the left, a light blue teacup sits on a matching saucer, containing dark brown tea. A short, yellow mug is visible to the left of the teacup.
-
-
-The foreground element is a roasted chicken, realistically rendered but with slightly exaggerated features, placed on a pink and white plate with a bright-red base on the tablecloth near the center of the scene, between the tea set and the chairs. The chicken should appear freshly roasted, with a golden-brown sheen and slightly glistening skin.   The contrast between the naive style of the background and the more realistic depiction of the chicken should be pronounced. The chicken slightly overlaps the implied shadow of the teapot.
-
-
-The overall effect should be whimsical and slightly surreal, with the realistic chicken acting as an unexpected focal point in the otherwise simplistic, childlike scene. The lighting should be even and soft, casting gentle shadows that enhance the naive feel.  Colors should be slightly muted and pastel-like.

@@ -1,9 +1,0 @@
-Generate an image of a stylized cartoon park scene. The background should depict a calm river scene with rolling green hills, lush vegetation, and a bright blue sky with fluffy white clouds.  In the mid-ground, place a large, multi-story building in a somewhat Art Deco style, rendered in shades of gray and white, slightly reminiscent of a Chicago-style hotel. The building should appear to sit just beyond the river, creating a city-meets-nature contrast.
-
-The foreground will contain several elements:
-
-* **A wooden park bench:** A simple, brown wooden bench should be positioned centrally in the foreground, near the river's edge, on a sandy or light-colored path.  The bench should be detailed enough to show its wooden slats and a simple design.
-* **Two ornate lamp posts:** Place a pair of dark-colored, ornate lampposts flanking the bench, one on either side.  These posts should have decorative elements and should be of a style consistent with a classic park setting.  
-* **Autumnal foliage:**  Several brightly colored autumn leaves and bushes in shades of red, orange, and yellow should be artfully placed in the foreground on either side of the path, leading towards the river and subtly obscuring parts of the path. They are in the foreground near the bottom-right and bottom-left corners of the image.  The leaves should have a slightly cartoonish, exaggerated appearance.
-
-The overall lighting should be bright and cheerful, suggestive of a sunny day. The style should be consistent throughout, with a cartoonish, slightly whimsical aesthetic applied to both the city background and the park foreground. The colors should be vibrant and saturated, maintaining a harmonious balance between the natural elements of the park and the slightly more muted tones of the urban building.  The scene should feel peaceful and inviting, demonstrating a juxtaposition of urban and natural environments.

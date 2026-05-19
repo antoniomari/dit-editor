@@ -1,7 +1,0 @@
-Generate an image of a border collie puppy lying in a field, in the style of Vincent van Gogh.  
-
-The puppy should be in the foreground, positioned slightly off-center, lying down and looking directly at the viewer.  It should be a black and white border collie with a fluffy coat.  It should wear a light blue collar.  The puppy's fur should be rendered with visible brushstrokes, mimicking Van Gogh's impasto style.
-
-The background should be a landscape painting reminiscent of Van Gogh's style, featuring a field of grass with visible strokes of green, yellow, and white to represent flowers.   Several stylized, expressive trees with visible brushstrokes are present in the mid-ground. The sky should be a dramatic blue with large, swirling clouds rendered in shades of grey, purple, and blue. The clouds should have a thick, impasto texture.  The overall color palette should be vibrant yet slightly muted, to harmonize with the puppy.
-
-The style should be distinctly Van Gogh; the brushstrokes should be visible and textured, the colors should be rich and somewhat bold, and the overall composition should have the distinctive emotional energy characteristic of Van Gogh’s work. The puppy should appear naturally integrated into the style of the landscape, not looking like a separate photograph pasted onto the painting.  The lighting should be consistent, making the puppy and background look like they belong together.

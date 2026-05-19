@@ -1,9 +1,0 @@
-Generate an image of a plate of spring rolls and a glass of orange juice.
-
-**Background:**  A white plate holds several golden-brown spring rolls arranged somewhat haphazardly.  Some are slightly overlapping.  There's also a small white ramekin containing a dark reddish-brown sauce and a garnish of shredded carrots and green lettuce in the upper left quadrant of the plate.  The plate itself is slightly off-center, leaving some white space around it, implying a table setting.
-
-**Foreground element:** A tall, clear glass filled with bright, intensely yellow orange juice is positioned centrally, but slightly off to the right.  The juice appears to have ice cubes visible within.  The glass partially overlaps the spring rolls, creating a visual interaction where the juice appears to be placed next to the food, perhaps suggesting a beverage to accompany the meal.  The glass is slightly tilted, which adds a dynamic element.
-
-**Interaction:** The orange juice glass is digitally added to the original image of spring rolls and sauce. There is no physical interaction between the glass and the food; they simply coexist in the scene. The glass is placed in a way that it appears to be a part of the meal, but its addition does not alter the spring rolls' placement or the orientation of the plate.
-
-**Overall scene changes:** The original image was a plate of spring rolls and dipping sauce.  The addition of the bright yellow orange juice adds a pop of color and suggests a complete meal or a refreshing accompaniment to the savory spring rolls.  The overall feel becomes more vibrant and suggests a casual, perhaps lunch or snack-time setting.

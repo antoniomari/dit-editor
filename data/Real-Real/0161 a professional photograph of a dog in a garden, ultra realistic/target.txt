@@ -1,9 +1,0 @@
-Generate an image of a suburban backyard scene.  The background should depict a typical suburban house with a well-maintained lawn. Specifically:
-
-* **Background:** A single-story house, light-brown or beige in color, with visible windows and a standard suburban architectural style.  The house is situated behind a chain-link fence.  Mature, leafy trees surround the house, creating a shaded, lush backdrop. The lawn is primarily green, with a slightly lighter, drier patch of grass or dirt visible in the foreground, closest to the camera.
-
-* **Foreground Element:**  A fluffy, long-haired dog, appearing to be a Yorkshire Terrier mix, is positioned slightly off-center in the lower-right portion of the image. The dog is sitting on the lighter-colored section of the lawn. Its fur is predominantly light brown and tan, with darker accents.  The dog should appear relaxed and somewhat calmly looking towards the camera.   It’s fur should look somewhat soft and slightly unkempt. The dog should not cast a shadow.
-
-* **Interaction:** The dog is simply placed in the backyard scene; there's no significant interaction beyond its presence. The dog sits on the ground, unobtrusively added to the existing scene. The overall lighting and color scheme should remain consistent with the background image. The background should appear unaltered except for the addition of the dog.
-
-The composite should appear seamless, as if the dog naturally belongs in this backyard.  The lighting and shadows on the dog should be consistent with the overall ambient lighting of the background.  The overall feeling should be a tranquil suburban scene with the added element of a peaceful pet.
