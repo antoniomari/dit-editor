@@ -1,0 +1,9 @@
+Generate an image in the style of Vincent van Gogh, specifically evoking his impasto technique and expressive brushstrokes.
+
+The scene depicts a landscape under a dramatic sky. The sky dominates the upper two-thirds of the image, filled with large, swirling clouds rendered in shades of pale blue, lavender, grey, and deep purple.  The clouds are not realistically depicted, but rather as expressive, almost turbulent masses of paint, with visible brushstrokes indicating movement and energy.  Individual brushstrokes should vary in thickness and direction, creating a sense of depth and texture within the clouds.  Hint at a light rain falling from the clouds.
+
+The lower third of the image shows a flat, grassy field dotted with small wildflowers in a variety of muted colors including yellows, whites, and oranges. The grass itself is a vibrant yet slightly desaturated green, with short, visible brushstrokes suggesting its texture.
+
+In the middle ground, a line of trees stands between the field and the sky. These trees are stylized, with short, thick trunks and rounded, bushy crowns, rendered in greens, yellows, and hints of pink and blue, again with noticeable impasto brushwork.  Behind the trees, a low, rectangular building is partially visible.  Its color is a blend of orange and dark blue, consistent with Van Gogh's palette.
+
+The overall composition should feel balanced, with the dramatic sky contrasting with the calm field.  The color palette is muted yet rich, relying on earth tones and shades of blue and purple. The lighting should suggest a slightly overcast day, with diffused light illuminating the scene.  The entire piece should evoke a feeling of movement, both in the sky and in the brushstrokes themselves.  The style must capture Van Gogh’s unique energy and emotional intensity.

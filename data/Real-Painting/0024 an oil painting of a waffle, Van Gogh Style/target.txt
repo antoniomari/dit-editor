@@ -1,0 +1,13 @@
+Generate an image in a painterly style reminiscent of a child's artwork, featuring a table setting with a green checkered tablecloth.  The background shows two chairs, one blue and one brown-orange, depicted in a blocky, simplified manner with visible brushstrokes. The wall behind is rendered in muted grayish tones, also with noticeable brushstrokes, giving the impression of a textured surface. The background scene has a slightly blurry quality.
+
+The foreground contains several elements added to the base scene:
+
+* **A purple teapot:** Positioned centrally, slightly behind a cup and saucer, the teapot is a solid, slightly uneven shape with a simple spout and handle. Its color is a deep purple, almost lavender.
+
+* **A light blue teacup and saucer:** Situated to the left of the teapot, the teacup is filled with dark brown tea. The saucer sits beneath, slightly overlapping the tablecloth’s pattern. Both the cup and saucer are in a bright, slightly off-kilter, blue.
+
+* **A small yellow-orange mug:**  This sits in the background left, partially obscured by the teacup, adding a pop of color.
+
+* **A heart-shaped waffle:** This is the key foreground element. The waffle is a warm golden-brown,  with clearly defined grid-like squares, resting atop a muffin on a pink and white patterned plate. The plate is placed centrally, slightly overlapping the teapot's shadow. The waffle is positioned at a slight angle, giving a three-dimensional look.  The muffin beneath appears dark brown and slightly blurred. Utensils partially visible, implying a knife and fork, suggest the waffle is ready to be eaten.
+
+The interaction between the foreground and background is achieved by the layering. The foreground elements sit on the table; their shadows partially overlap those of the chairs and suggest a light source from above. The overall impression should be one of a slightly chaotic but charming table scene, as if painted by a child, with the emphasis on bright, bold colors and a playful composition. The heart-shaped waffle introduces a whimsical element that contrasts with the slightly subdued background. The brushstrokes should be consistent throughout, visible but not distracting from the overall composition.

@@ -1,0 +1,11 @@
+Generate an image of a white rectangular plate containing a slice of tiramisu cake, several strawberries, and a lemon wedge.
+
+**Foreground:** The foreground consists of a single, cut wedge of lemon, positioned slightly below and to the right of the cake.  The lemon wedge should be vibrant yellow, showing some texture in the peel, and slightly juicy-looking.  It appears to be freshly cut and sits somewhat apart from the other elements on the plate.  There are also several fresh, bright red strawberries arranged around the cake, some whole and some cut in half.  The strawberries appear ripe and glossy.  The strawberries are clustered near the cake and are mostly to the left and slightly behind it.  One particularly large strawberry is positioned below and to the left of the lemon wedge.
+
+**Background:** The background is a slice of tiramisu cake.  The cake has three distinct layers, with a top layer of light, creamy mousse, a middle layer of coffee-soaked ladyfingers, and a bottom layer of more cake.  The top layer has a glossy, almost gelatinous finish.  A visible coffee bean sits on the top of the mousse, close to the corner. The cake is positioned centrally in the background, slightly tilted towards the viewer, and appears to be slightly elevated on the plate.
+
+
+**Interaction:** The foreground elements, the lemon, and strawberries are arranged loosely around the tiramisu slice, creating a visual contrast between the dessert and the fresh fruit. The lemon and strawberries seem to complement the dessert, suggesting a fresh, slightly tart contrast to the richness of the tiramisu.  The arrangement is casual, implying a home-style plating rather than a formal presentation.
+
+
+**Changes to the scene:** The original image likely only had the cake and strawberries; the addition of the lemon significantly alters the image, introducing a bright citrusy color and suggesting a palate cleanser or a complementary ingredient.  The overall impression changes from one of simple elegance to something more playful and vibrant, indicating a possible dessert combination or a still life incorporating a variety of flavors and textures. The composition emphasizes the dessert but introduces a bright contrasting element and fresh fruit to add visual appeal and a potential flavor profile.

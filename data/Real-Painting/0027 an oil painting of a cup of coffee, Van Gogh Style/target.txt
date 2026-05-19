@@ -1,0 +1,23 @@
+Generate an image in a painterly style reminiscent of naive art or folk art.  The background should depict a scene of a simple cafe or kitchen interior.  The style should be characterized by bold, flat areas of color, visible brushstrokes, and a slightly abstracted representation of forms.
+
+**Background:**
+
+*   The background should feature two wooden chairs, one light blue and the other a warm brown-orange, positioned against a wall rendered in shades of gray and off-white, suggesting a textured surface like stone or tile.  The wall has visible brush strokes creating a mottled effect.
+*   The floor is suggested by a simplified pattern of alternating light and dark stripes/patches in muted beige, yellow, and grey.
+*   A green checkered tablecloth covers a table, forming the main plane of the scene. The checkers should be quite large and irregular, contributing to the folk art style.
+
+**Foreground Elements:**
+
+*   A purple teapot with a slightly bulbous body and a curved spout should be centrally placed on the table, but slightly off-center towards the left. It should appear slightly stylized, not perfectly realistic.
+*   To the left of the teapot, a bright blue teacup and saucer set should be placed. The teacup should be slightly smaller than the teapot and filled with a dark brown liquid suggesting tea or coffee.
+*   To the right of the teapot, and slightly more in the foreground, a smaller, off-white espresso cup with the word “Cubano” printed on its side should be placed. It should be filled with light brown espresso. The espresso cup should sit on a pink and red saucer with some folded napkins or a napkin ring subtly suggested underneath. The saucer should be a more vibrant color than the tablecloth to give it emphasis.
+*   To the far left, a slightly out-of-focus yellow mug is partially visible.
+
+**Interaction and Placement:**
+
+*   The foreground elements should be integrated seamlessly into the background scene with a smooth blend of the colors and painting style.  The lighting should be soft and diffused, without harsh shadows.
+*   The overall composition should maintain a balanced and slightly off-kilter feel, in line with the artistic style.  The foreground elements should not completely dominate the background, but should be prominent enough to draw the eye.
+
+**Overall Scene Changes:**
+
+The addition of the foreground elements transforms the background from a simple depiction of chairs and a wall into a cozy café scene, suggesting a moment of quiet contemplation or a break for a cup of coffee/tea. The contrast in color between the foreground elements and the background enhances the overall impact. The scene should convey a sense of calmness and rustic charm.

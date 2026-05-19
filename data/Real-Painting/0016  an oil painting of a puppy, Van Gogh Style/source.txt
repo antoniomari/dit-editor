@@ -1,0 +1,8 @@
+Generate an image in the style of Vincent van Gogh, specifically emulating his impasto technique and expressive brushstrokes.  The scene is a pastoral landscape dominated by a vibrant, green meadow in the foreground, speckled with small, brightly colored flowers suggesting wildflowers.
+
+The middle ground features a dark green hedge or low line of trees, behind which sits a small, rectangular building rendered in shades of orange and blue, painted with visible brushstrokes suggesting a rough texture.   Beyond the building, a line of slender, blossoming trees are depicted, their leaves rendered in pale greens and touches of pink and white, indicating springtime.  These trees are characterized by visible, slightly chaotic brushstrokes.
+
+The background is a dramatic sky filled with large, swirling clouds. These clouds are painted in shades of grey, purple, and light blue, with visible impasto texture showing the thickness of the paint. The clouds are rendered with dynamic, expressive brushstrokes, conveying a sense of movement and possibly impending weather.  There should be a suggestion of light filtering through the clouds, subtly illuminating the scene below.
+
+
+The overall composition should be slightly horizontal, with the meadow occupying a significant portion of the lower half. The color palette should be largely composed of greens, blues, purples, oranges and whites, with a slightly muted and earthy tone, yet vibrant and alive with texture.  The brushstrokes should be visible and expressive throughout, contributing to the overall feeling of dynamism and energy.  The perspective should be slightly elevated, looking down across the meadow towards the trees and building.

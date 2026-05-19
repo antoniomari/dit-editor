@@ -1,0 +1,13 @@
+Generate a grayscale image in the style of a realistic charcoal or graphite drawing.  The scene is a still life composition featuring the following objects arranged on a subtly textured, slightly rumpled tablecloth:
+
+* **A wine glass:** A stemmed wine glass, approximately ¾ full of a clear liquid, possibly white wine.  The liquid should reflect light subtly, showing the glass's curvature.  The glass itself should have realistic highlights and shadows, emphasizing its form.  The stem should be slender and elegant.
+
+* **A crushed aluminum can:** An empty or partially empty aluminum beverage can, lying on its side.  Show realistic texturing and wrinkles on the can, with highlights suggesting a metallic sheen. Part of the can should be crushed, adding a touch of realism and casualness.
+
+* **A chocolate bar:** A rectangular chocolate bar with individual squares clearly defined.  Show some slight break or crack in one area for realism. The texture of the chocolate should be apparent, with subtle highlights and shadows reflecting light.
+
+* **An apple:** A single, red apple, slightly shadowed, positioned near the wine glass. Pay attention to the form and subtle highlights and shadows of the apple's skin, creating a realistic three-dimensional effect.  Its stem should be clearly visible.
+
+**Lighting:**  The lighting should be soft and directional, coming from the upper left, casting subtle shadows to emphasize the three-dimensionality of the objects. The background should be a relatively even dark gray or charcoal background, gradually lightening towards the bottom center where the objects are positioned.  There should be a subtle gradation of light on the tablecloth, making it feel three-dimensional.
+
+**Overall Composition:** The objects should be arranged in a visually pleasing manner, slightly off-center, creating a sense of balance and realism. The overall feel should be that of a classical still life, quiet and contemplative.  The focus should be sharpest on the objects in the middle ground, with a soft blurring/shadowing towards the background.  The style is photorealistic graphite or charcoal drawing. The overall tone should be muted and naturalistic.

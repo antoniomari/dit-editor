@@ -1,0 +1,27 @@
+Generate a grayscale pencil sketch in the style of a realistic drawing.  The background should depict a tranquil riverside scene. 
+
+
+**Background:**
+
+* A calm, reflective river or lake forms a horizontal band across the lower half of the image.  The water should be relatively smooth, suggesting stillness.
+* The far bank of the river features a gently rolling, grassy or marshy shoreline with subtle undulations.
+* A few palm trees are sparsely placed along the far bank, conveying a tropical or subtropical setting. These should be drawn with a slightly stylized, almost painterly quality that doesn’t detract from the overall pencil sketch feel.
+* The sky is a light, hazy gray, suggesting a calm and overcast day. The sky is relatively featureless, with no strong clouds or sun.
+* The overall background should have a soft, slightly blurred quality to emphasize the focus on the foreground elements.
+
+
+**Foreground:**
+
+* A large, somewhat gnarled tree with a full, bushy crown dominates the left side of the foreground. Its branches spread widely, creating a sense of shade. The texture of the tree bark should be suggested by varying shades of gray.  Use darker values in the crevices and shadows of the branches and trunk.
+* Seated beneath this tree is a person, realistically drawn, playing a flute or similar wind instrument. They are positioned facing slightly away from the viewer, with their body and the instrument angled such that only one side of the person is clearly visible. The clothing should be simple and loose-fitting, with clear folds and wrinkles to show texture. The overall appearance suggests a peaceful and contemplative pose.
+* In the lower right of the foreground, there is a small boat or gondola with a single figure possibly operating it. The boat should be subtly depicted, less detailed than the person playing the flute.  The lines should be light and less defined to imply distance.
+
+**Composite Element:**
+
+* A large building, reminiscent of a grand hotel or palace, is superimposed onto the background scene across the river, sitting directly on the far bank. This building should be rendered in slightly sharper detail than the background, with distinct architectural features such as columns, windows, and a possibly visible roofline. It should be a lighter gray than the other elements. The building's placement needs to feel slightly unnatural, as if it has been pasted in, while still appearing to sit within the sketch’s style.
+
+**Interaction:**
+
+The building's placement disrupts the original peaceful, natural feel of the background sketch. It introduces a modern, contrasting element to the traditional, almost timeless feel of the hand drawn rest of the piece.  The person under the tree remains oblivious to the building’s intrusion into the scene; this lack of interaction is key.
+
+The overall image should maintain the consistent pencil sketch style, with variations in shading and line weight to create depth and texture.  The different shading of the building helps it stand out as slightly different from the hand drawn elements.  The contrast is essential to the image.

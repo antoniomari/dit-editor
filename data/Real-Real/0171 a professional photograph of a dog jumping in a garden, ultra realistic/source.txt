@@ -1,0 +1,13 @@
+Generate an image of a suburban backyard scene on a slightly overcast day.  The style should be photorealistic, with a focus on natural light and muted colors.
+
+**Scene:** The main focus is a large, verdant lawn occupying the majority of the foreground and middle ground.  This lawn is slightly uneven in texture, suggesting a natural, untamed look.  In the middle ground, a modest, single-story ranch-style house is visible. It's light-brown or beige with a simple design, showing a few windows and a dark roof. The house appears slightly weathered but well-maintained. Behind the house, there is a chain-link fence partially obscuring the view of neighboring properties and more lush greenery.  A small portion of another house or building is visible to the left, also somewhat obscured by trees.   In the foreground, there’s a patch of lighter-colored, sandy or dry soil near the bottom edge of the frame.
+
+
+**Lighting:** The lighting should mimic a slightly overcast day; soft, diffused light with no harsh shadows.  The overall tone should be relatively cool, with a slightly muted saturation. There shouldn't be any strong highlights or reflections.
+
+**Trees and Foliage:**  Mature deciduous trees, predominantly various shades of green, frame the scene, forming a border around the property. Their leaves are full and leafy, indicating it's likely spring or summer. Some leaf shadowing is present on the lawn, but this shadowing should be soft.  A few shrubs and bushes are visible near the fence line near the house.  
+
+**Composition:** The composition should be a wide shot, offering a sweeping view of the backyard. The camera's perspective should be from a slightly low angle, looking slightly upward toward the house. The lawn acts as a leading line drawing the viewer’s eye towards the house. A wire fence is visible along the left of the frame, partially separating the grass from the foreground.
+
+
+**Overall:** The image should evoke a feeling of calm and quiet suburban life.  The details should be realistic, not overly sharp or polished,  but rather have a slightly soft and natural feel.  The colors should be predominantly greens and muted browns with some subtle variations in shade. The overall mood should be serene and peaceful.

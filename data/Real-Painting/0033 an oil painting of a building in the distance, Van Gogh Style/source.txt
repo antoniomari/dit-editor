@@ -1,0 +1,13 @@
+Generate an image in the style of a loosely impressionistic oil painting.  The subject is a cityscape reminiscent of the New York City skyline, viewed from across a body of water.
+
+**Scene:** The main focus is a row of buildings of varying heights and colors, suggesting a dense urban area.  One prominent building, resembling the One World Trade Center, stands taller than the rest, with a sharp, pointed top.  Other buildings are depicted with less detail, using blocks of color and texture to represent their shapes.  There's a hint of greenery at the base of the buildings, suggesting a waterfront or shoreline.  A few small boats are subtly suggested on the water.
+
+**Lighting:** The overall lighting is soft and diffused, indicative of an overcast day or soft sunlight.  The sky is a pale, light blue, almost washed-out, with subtle hints of lighter and slightly darker tones to suggest a hazy atmosphere. The light reflects softly off the water, creating a calm and peaceful mood. There are no harsh shadows.
+
+
+**Style:** The style should evoke the feeling of an impressionistic painting, with visible brushstrokes and a textured effect.  Colors are slightly muted, with pastel shades dominating the palette.  The buildings are not rendered photorealistically; instead, they are depicted with bold, simplified shapes and color blocks, prioritizing the overall effect and mood over minute details.  The brushwork should be visible and expressive, contributing to the painting's texture and energy.  The edges of the buildings and elements are soft, not sharply defined.
+
+**Composition:** The composition is horizontal, with the cityscape forming a central band across the canvas.  The water is shown in the lower third of the painting, reflecting the cityscape in a hazy, indistinct way. The sky occupies the upper third, creating a balanced composition. The One World Trade Center-like building acts as a strong vertical element, leading the eye through the skyline.
+
+
+Overall, the image should convey a sense of calmness, serenity, and urban beauty, captured through a painterly and slightly abstract lens. The focus is on the overall impression and mood, rather than precise architectural detail.

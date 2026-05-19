@@ -1,0 +1,7 @@
+Generate a landscape image in a photorealistic style.  The scene is a gently sloping hillside, predominantly covered in tall, light-green grass, suggestive of a meadow or pasture.  A well-worn, light-brown dirt path snakes diagonally across the foreground from the midground to the bottom right corner. The path is not perfectly smooth; it shows some textural variation.
+
+The midground features a cluster of deciduous trees, mostly shades of light green and reddish-brown, grouped together around the path, creating a natural break in the meadow. The path leads the eye towards these trees and beyond.
+
+The background consists of a dense forest of evergreen trees, predominantly dark green with some lighter shades interspersed. The line between the meadow and forest is softly blended rather than sharply defined.  Patches of yellow wildflowers are scattered sparsely throughout the meadow, especially around the bottom of the image near the path.  The overall color palette is muted and naturalistic, with soft, warm light illuminating the scene. There is a slight haze or atmospheric perspective, making the background appear more distant and less sharp.
+
+The lighting should be soft, diffused sunlight, suggesting a bright but not harsh day. The overall composition is serene and pastoral, employing a shallow depth of field to emphasize the path and midground trees while subtly blurring the background forest. The image should have a calm, peaceful atmosphere. The style should resemble a high-quality nature photograph taken during the summer.

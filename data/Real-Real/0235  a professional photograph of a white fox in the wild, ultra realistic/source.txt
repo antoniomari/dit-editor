@@ -1,0 +1,11 @@
+Generate a landscape image in a photorealistic style.  The scene depicts a gently sloping hillside, predominantly covered in various shades of green grasses and wildflowers.
+
+**Foreground:** The immediate foreground shows a variety of wildflowers, predominantly yellow and orange hues, interspersed with taller, green grasses.  The wildflowers are not densely packed, but rather scattered in a natural, somewhat uneven distribution. The grass is slightly taller and wilder near the bottom of the frame.
+
+**Midground:**  A light, sandy-colored, grassy path winds from the bottom right to the center mid-ground, disappearing into a field of taller, lighter green grasses.  The path is slightly uneven in texture.  On either side of the path, the vegetation becomes slightly denser, showcasing a gradient in grass height.
+
+**Background:**  A line of deciduous trees and shrubs, mainly in various shades of green with hints of reddish-brown in some foliage, forms a darker, denser background line across the mid-to-upper part of the image. These trees are slightly more defined closer to the path and become softer and blurrier with distance, creating a sense of depth.  Beyond the trees, a darker green mass suggests a more densely forested hillside that slopes upward out of view.
+
+**Lighting:** The scene should be lit by soft, diffused sunlight, creating gentle shadows and avoiding harsh contrasts.  The light should be suggestive of a sunny day, but without harsh sunlight; a slightly hazy or overcast light would work well. The light should be warmer, with a slight yellow tint.
+
+**Overall Composition:** The composition should create a sense of depth and perspective, leading the viewer's eye along the path toward the background.  The color palette should be predominantly various shades of green, with pops of yellow and orange from the wildflowers.  The overall feel should be peaceful, tranquil, and idyllic, evoking a sense of calm.  The image should be slightly soft-focus, giving it a dreamlike, almost ethereal quality.  Avoid hard, sharp lines and favor natural, flowing forms.

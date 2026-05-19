@@ -1,0 +1,11 @@
+Generate an image of a suburban backyard scene on a slightly overcast day.  The style should be photorealistic, with a focus on natural light and soft shadows.
+
+**Scene:** The main focus is a large, verdant lawn stretching from the foreground to a single-story house in the mid-ground. The lawn is a vibrant, slightly uneven green, suggesting it's well-maintained but natural.  In the foreground, a strip of pale, sandy soil runs along the bottom, suggesting a pathway or less-grassy area. A chain-link fence runs along the left side of the lawn, partially obscuring a portion of a neighboring property. Behind the fence, there are mature deciduous trees, suggesting a quiet residential neighborhood.  There's a glimpse of another house partially visible to the left.  A teal-colored object (possibly a shed or storage unit) is partially visible behind the chain link fence, to the left of the main house.
+
+**House:** A ranch-style house is centrally located in the midground. It's a light brown or beige color with a gently sloping roof.  Details like windows and a door are subtle, but suggest a simple, comfortable home.
+
+**Lighting:** The lighting should be soft and diffuse, typical of an overcast day.  There should be no harsh shadows, creating an even illumination across the scene.  The overall mood should be calm and peaceful.
+
+**Trees and Foliage:**  Mature, leafy trees surround the house and fill the background. They are primarily deciduous, with lush green canopies. The leaves should show a slight variation in shade and texture.
+
+**Overall Composition:** The image should be a wide shot, emphasizing the expanse of the lawn and the sense of space. The house is positioned slightly off-center to create a more dynamic composition. The perspective is from a slightly low angle, looking slightly upwards toward the house and trees. The foreground's sandy patch adds a textural contrast to the green lawn, and helps ground the viewer in the scene.

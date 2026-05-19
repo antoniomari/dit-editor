@@ -1,0 +1,21 @@
+Generate an image depicting a stylized Impressionist landscape painting in the style of Vincent van Gogh, featuring a prominently placed, slightly blurry,  tri-colored corgi dog in the foreground.
+
+
+**Background:**
+
+The background is a landscape painting reminiscent of Van Gogh's work.  It features:
+
+* **Sky:** A turbulent sky filled with thick, swirling clouds rendered in shades of blue, grey, and purple. The brushstrokes are visible and expressive, characteristic of Impressionism, with a slightly textured appearance.
+* **Land:**  A gently sloping green field speckled with small, colorful flowers.  The style should mimic Van Gogh’s impasto technique, with visible, thick brushstrokes.
+* **Trees:**  Several stylized, dark green trees are scattered across the landscape, with blossoms possibly hinted at in some.  The trees exhibit characteristic Van Gogh brushwork and color palette.  They are slightly darker and more textured than the grass.
+* **Structures:** In the middle distance, there is a suggestion of small buildings, possibly a farmhouse or other structure, with a muted orange/brown hue.  Details are kept minimal and suggestive rather than precisely rendered.
+
+
+**Foreground:**
+
+* **Corgi:** A tri-colored corgi dog, predominantly brown and white with patches of black, stands in the middle of the lower third of the image, facing away from the viewer toward the Van Gogh-esque landscape. The dog is slightly out of focus, giving a sense that it's a superimposed element rather than fully integrated into the painting.  The dog's fur should have a slightly soft, realistic texture, in contrast to the painterly background.  It should be positioned slightly to the left of the center.
+
+
+**Interaction:**
+
+The corgi is placed as though it is observing or appreciating the landscape painting. The slight blur of the corgi suggests it's a separate image superimposed onto the painting, emphasizing the digital composite nature of the artwork.  The overall effect should be playful and whimsical, blending a realistic dog with a highly stylized landscape.  There's no direct interaction between the dog and the background elements; it simply occupies the foreground, framed by the landscape. The style of the dog is realistic compared to the painterly background, creating a juxtaposition of styles.  The background painting should be slightly brighter and more saturated in color than the dog, further separating them visually.

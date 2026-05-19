@@ -1,0 +1,16 @@
+Generate a grayscale image in the style of a realistic charcoal or graphite drawing.  The scene is a still life composition featuring the following elements arranged on a loosely crumpled, light-colored fabric tablecloth:
+
+* **A wine glass:** A stemmed wine glass, somewhat wide-bowled, partially filled with a clear liquid (wine or water). The glass should reflect light subtly, showcasing its transparency and the gentle curves of its form.  Pay close attention to the highlights and shadows to create a three-dimensional effect.  The stem should be slender and elegant.
+
+* **A crushed soda can:** An aluminum soda can lying on its side, slightly crushed and showing some dents.  Render the metallic texture accurately, capturing highlights and the subtle shadows in the creases.  The pull-tab should be clearly visible and detailed.
+
+* **A red apple:** A single, round red apple with a stem.  Focus on rendering the smooth skin texture of the apple, with subtle highlights and shadows indicating its form and roundness.  The apple should be realistically shaded to show depth and volume.  The stem should be thin and dark.
+
+* **A chocolate bar:** A broken chocolate bar, lying flat on the tablecloth.  Show the individual squares of the chocolate, with slightly darker shading in the crevices.  Render the texture and slight shine of the chocolate, emphasizing its smoothness. The break should look natural.
+
+
+**Lighting:** The lighting should be soft and diffused, coming from a slightly elevated source to the upper left.  This will create gentle shadows and highlights on all the objects, emphasizing their three-dimensional forms. Avoid harsh shadows or overly bright spots.  There should be a soft gradient in the background, darkening subtly towards the upper right.
+
+**Composition:** Arrange the objects in a visually appealing manner. The wine glass should be the central focus, but other items should be positioned naturally around it, not overcrowded, but rather suggesting an informal setting.  The broken chocolate bar should lie slightly diagonally and add a touch of asymmetry.  The whole scene needs a feeling of stillness and contemplation.
+
+The overall style should mimic a classic still life drawing, emphasizing realistic rendering, accurate value ranges, and the play of light and shadow.  The texture should be smooth in places, but also show the marks of graphite or charcoal for realism.  The background should be simple and unobtrusive, serving only to highlight the objects in the foreground.

@@ -1,0 +1,18 @@
+Generate an image of a rural roadside scene with a large modern city skyline superimposed in the distance.  The scene should include:
+
+**Background:**
+
+* A two-lane asphalt road stretching from the foreground to the horizon under a bright, sunny sky with some fluffy white clouds.
+* On either side of the road, there are grassy verges. The verge on the left side of the road has a field of tall, dry corn stalks immediately adjacent to the road, followed by more grass.  The verge on the right side is uniformly grassy.  In the far distance, there are gently rolling hills and flat fields.  The overall color palette should be warm and sunny, with shades of green, brown, and blue dominating.
+
+
+**Foreground:**
+
+* A fluffy, light beige teddy bear, positioned in the bottom left corner of the image.  The bear should be facing the viewer, with its head slightly tilted towards the road.  It's relatively large in the frame, taking up a significant portion of the lower left quadrant. The bear’s texture should be realistic, showing individual strands of fur, but still looking soft and cuddly.
+
+
+**Interaction:**
+
+* The most important element is a large, modern city skyline, seemingly floating in the air above the road, approximately at the one-third mark on the road, centered horizontally in the scene. The buildings should be predominantly glass and steel, with sharp lines and reflective surfaces. A mix of high-rise towers and shorter buildings are present. The style should suggest a modern, possibly Las Vegas-style cityscape. The city skyline should appear to be superimposed onto the background, subtly obscuring some of the background features (such as the horizon), yet still clearly sitting *above* the road and fields. It shouldn't look as if it is part of the field or landscape.
+
+The overall effect should be a surreal and slightly humorous juxtaposition of a rural setting with a surprisingly large cityscape floating above the road, with the teddy bear adding to the whimsical and unexpected nature of the scene. The image should have a high resolution and sharp focus, particularly on the teddy bear and the city skyline.

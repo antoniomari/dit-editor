@@ -1,0 +1,13 @@
+Generate a grayscale image in a realistic pencil sketch style.  The scene depicts a tranquil waterfront at sunset.
+
+**Foreground:**  A wooden boardwalk stretches across the bottom third of the image, composed of closely spaced, parallel planks rendered with meticulously detailed hatching and cross-hatching to show texture and depth.  The planks should appear slightly weathered.
+
+**Midground:** Tall grasses and reeds line the edge of a calm body of water. Render these with varying shades of gray to indicate depth and density.  Individual blades of grass should be visible, but grouped together to suggest the bulk of the vegetation. The water should be relatively still, reflecting a portion of the sunset.
+
+**Background:** A large, partially obscured sun sits low on the horizon, emitting a soft, diffused light. The sky is a gradient of grays, darker at the top, gradually lightening towards the horizon.  Several small birds are silhouetted against the sunset. The sky's texture should be achieved through fine, horizontal hatching.  The reflected light on the water near the horizon should be slightly lighter than the surrounding water.
+
+**Lighting:** The overall lighting should be soft and atmospheric, mimicking the subtle light of a setting sun.  The sun should be the primary light source, with shadows subtly defining the grasses and the texture of the boardwalk.
+
+**Style:** The entire image should emulate a highly detailed pencil sketch, with varying line weights and shading techniques used to create depth, texture, and a sense of realism.  The style should be precise and controlled, evocative of classical drawing techniques.  There is a small signature in the bottom right corner that needs to be included.  It is a simple Asian character.
+
+**Composition:** The image should be composed from a viewpoint that is slightly elevated, looking out towards the water and sunset.  The boardwalk acts as a strong leading line, drawing the viewer's eye towards the sun. The scene should be balanced, with the grasses and the boardwalk creating a sense of symmetry.

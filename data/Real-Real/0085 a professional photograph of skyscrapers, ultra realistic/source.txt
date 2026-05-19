@@ -1,0 +1,10 @@
+Generate a photorealistic image in a slightly muted, natural color palette.  The scene depicts a man sitting with his back to the camera on a tree stump in a park-like setting.
+
+**Scene:** The man is seated in the lower third of the frame, centrally positioned. He's wearing a dark maroon or burgundy t-shirt and dark pants, sitting cross-legged on a weathered tree stump.  The foreground is dominated by a vibrant, short-cut green lawn.  Beyond the lawn is a paved path or road that runs horizontally across the middle ground, flanked by rows of trees.  These trees are a mix of varieties:  taller, darker evergreens (pine-like) are interspersed with shorter, broader-leafed trees, creating a natural but somewhat ordered feel.  In the background, more trees and hints of buildings suggest a park or garden bordering a residential or urban area. The sky is a pale, almost cloudless, light blue-grey, indicating either early morning or late afternoon light.
+
+**Lighting:** The lighting is soft and diffuse, suggesting either early morning or late afternoon sun.  There are no harsh shadows, and the overall illumination is even and gentle across the scene. The light should be warm but not overly saturated.
+
+
+**Style:** The style should be photorealistic, aiming for a natural and serene feel.  The image should have a slightly documentary or observational style, rather than a highly stylized or artistic approach.  The focus should be on capturing the calm and peaceful atmosphere of the park.
+
+**Composition:** The image should be horizontally oriented.  The rule of thirds is subtly employed, with the man positioned slightly off-center, and the path and tree line creating leading lines towards the background. The overall composition should feel balanced and inviting.  The depth of field should be relatively shallow, with the man in relatively sharp focus and the background slightly softer, drawing the eye to the central figure.

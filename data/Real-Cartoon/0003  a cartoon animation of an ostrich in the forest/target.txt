@@ -1,0 +1,14 @@
+Generate an image of a cartoon-style forest clearing with a single, dark-colored rhea (a flightless bird similar to an ostrich, but smaller and with a bushier tail) in the foreground.
+
+**Background:**
+
+The background should depict a stylized cartoon forest scene.  The trees are thick-trunked, with rounded crowns of deep green foliage.  The trunks are brown with subtle texture. The ground is a light yellowish-tan, suggesting sandy soil or dry earth.  Patches of lighter green grass or low bushes are interspersed with the sandy area, providing contrast.  The style should be simple and slightly whimsical, evocative of a children’s book illustration.  Maintain a soft lighting effect, with no harsh shadows.
+
+
+**Foreground:**
+
+A single black rhea is positioned in the center of the lower third of the image. It should be walking on the sandy path, facing slightly to the right,  The rhea's feathers are a dark, almost black, color, with a slightly fluffy appearance.  The beak should be a neutral brownish-grey.  The rhea should appear somewhat realistically rendered compared to the stylized background, maintaining some detail in its plumage.   The bird should be proportionally sized relative to the background elements and the scale of the trees and clearing.
+
+**Interaction:**
+
+The rhea is placed on the sandy path of the clearing, slightly offset from the center to add a bit of asymmetry. The background elements extend fully to the image's edges; the rhea doesn't obscure or interact directly with any background element other than the ground. The rhea should not be casting any shadow, maintaining the overall cartoonish and lighthearted feel. The contrast between the dark rhea and the lighter background should be noticeable, making the bird stand out as the focus.

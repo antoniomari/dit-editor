@@ -1,0 +1,23 @@
+Generate a vibrant, cartoon-style image of a park scene nestled beside a cityscape.  The style should be reminiscent of children's book illustrations, with clean lines and bold colors.
+
+**Scene:** The foreground features a sandy path winding through a lush park.  A simple wooden bench sits invitingly on the path, near a small, calm, light-blue river or stream.  The path leads towards a background of modern, stylized city buildings, three tall buildings in particular, light teal in color with white detailing. The park itself is brimming with autumnal foliage.  Trees in varying shades of green, yellow, and orange-red create a colorful backdrop.  Include bushes and foliage around the path, using rich greens and yellows.  Specifically include a noticeable bush with large, bright yellow and orange leaves near the bottom right. The overall effect should be one of bright, cheerful tranquility.
+
+**Lighting:** The scene is bathed in bright, even sunlight, indicating a clear and sunny day. The light should cast gentle shadows, without harsh contrasts, maintaining a bright and cheerful atmosphere.
+
+**Style:** The art style should be distinctly cartoonish.  Lines are clean and simple, colors are saturated and bold, without complex shading or textures.  The overall effect should be charming and playful, reminiscent of animation for young children. Trees and leaves should have a simplified, almost 'child-drawn' feel.  The buildings should have a modern, slightly simplistic design, without intricate details.
+
+
+**Composition:** The composition should be balanced, with the park and city elements in harmonious proportion. The path guides the viewer's eye from the bench towards the city in the background. The central focus should be the bench and the immediate vicinity. The skyline should occupy a considerable portion of the background, creating a juxtaposition between nature and urban environments.
+
+
+Specifically mention these elements for the model:
+
+* **Trees:** Several trees with autumn leaves (yellows, oranges, reds) and some evergreen trees.
+* **River/Stream:** A stylized, calm body of water.
+* **Path:** A light tan or sandy colored pathway leading towards the buildings.
+* **Bench:** A simple wooden park bench.
+* **Buildings:** Tall, modern buildings, a simple light teal/aqua color.
+* **Lamposts:** Two or three simple, black lampposts with classic-style lamps.
+
+
+The overall mood should be happy, peaceful, and inviting, creating a sense of a pleasant autumn day in a city park.

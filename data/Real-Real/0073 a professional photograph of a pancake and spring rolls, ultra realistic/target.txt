@@ -1,0 +1,15 @@
+Generate an image of a plate of food containing several spring rolls, a small white bowl of dipping sauce, and a garnish of shredded carrots and lettuce.  A large, round pancake is superimposed on the plate, partially obscuring some of the spring rolls.
+
+
+Specifically:
+
+* **Background:** A white plate holds several golden-brown spring rolls arranged somewhat haphazardly.  A small, white ramekin sits near the spring rolls, containing a dark brown dipping sauce.  A small pile of shredded carrots and lettuce is visible in the upper left quadrant of the plate.  The overall lighting is bright and even.
+
+
+* **Foreground Element:** A large, round pancake, golden-brown in color, is digitally added to the plate.  It is centrally located but slightly off-center towards the bottom right.  The pancake shows irregular texture and subtle darker brown marks, suggesting cooking. It has a noticeable heart-shaped pattern within its surface. The pancake rests directly on top of the plate, partially obscuring some of the spring rolls in the lower section of the scene. The pancake does not interact physically with the other elements (it is a digital addition).
+
+
+* **Interaction:** The pancake sits on top of the other food items, creating a visual juxtaposition.  The overall composition is slightly chaotic due to the unexpected presence of the pancake. The pancake's light brown color contrasts with the more muted tones of the spring rolls and sauce. The visual effect is one of surprise and unconventional food pairing.
+
+
+The final image should maintain the high resolution and realistic rendering of the original photo, with the added pancake seamlessly integrated into the scene without any obvious artifacts of compositing.  The pancake should have a slightly glossy texture.

@@ -1,0 +1,20 @@
+Generate an image of a serene autumnal park scene with a modern, multi-story building unexpectedly superimposed in the background.
+
+
+**Background:** The base image should depict a tranquil park, possibly in a city's outskirts. The style should be cartoonish, bright, and cheerful.  Key elements include:
+
+* **Sky:** A clear, bright blue sky with fluffy white clouds.
+* **Trees:** Lush, vibrant green deciduous trees with some showing autumnal colors – oranges, yellows, and reds. These trees should be positioned around the perimeter of a gently curving path.
+* **Path:** A light tan, winding path cuts through the park, leading towards the background.
+* **Water:** A calm blue stream or river meanders through the park alongside the path.
+* **Benches:** A simple wooden park bench sits invitingly near the water, on the sandy bank.  
+* **Lighting:**  Two ornate, black lampposts with multiple lights stand on either side of the path near the bench.
+
+
+**Foreground Element:** A modern, multi-story building, composed primarily of off-white and dark grey panels, is digitally superimposed onto the background.  This building is angular and contemporary in design, contrasting sharply with the peaceful, cartoonish nature of the park. It should appear as if it’s partially overlapping the existing cityscape in the background. The bottom of this building appears to be slightly obscured or blended to sit in front of the park's cityscape.
+
+
+**Interaction:** The building should appear to be floating slightly above the existing background cityscape; it doesn't seamlessly integrate with the park's elements.  The cartoon style of the park contrasts dramatically with the realistic look of the building, creating a surprising and slightly surreal juxtaposition. The building should be positioned roughly in the center to slightly off-center, partially obscuring the background cityscape but not completely dominating the scene. The perspective should ensure the building appears to loom large behind the park, enhancing the visual disparity. The autumnal colors and the park scene should not be altered by the addition of the building beyond being partially obscured.
+
+
+The overall impression should be one of incongruity – a peaceful park disrupted by the presence of an imposing modern building.  The lighting should be consistent across both the park and the building, maintaining a sense of unity despite the stark visual differences in style. The image should maintain the cartoonish art style found throughout the base image.

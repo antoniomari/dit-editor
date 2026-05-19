@@ -1,0 +1,24 @@
+Generate a grayscale image depicting a tranquil, sunset scene over a body of water.  The scene is rendered in a realistic pencil sketch style, with careful attention to shading and texture to create depth.
+
+
+**Background:**
+
+* **Sky:** A relatively light gray sky, subtly graded to suggest depth and atmospheric perspective.  The shading should create a soft, calming mood.  Several small birds are subtly rendered in flight across the sky.
+* **Sunset:** A large, round, partially obscured sun is positioned near the horizon, creating a reflective glow on the water's surface. The sun's reflection should be detailed, mirroring the texture of the sun itself.  The edges of the sun are slightly blurred to convey a softer light.
+* **Water:** A calm body of water reflecting the sunset.  The surface texture of the water should show subtle ripples and a slight mirroring of the sky and sun.
+* **Reeds/Grasses:** Tall reeds or grasses line the edges of the water, detailed with varying shades of gray to represent depth and texture.  These should be rendered with individual stalks and some variation in height for realism.
+* **Dock:** A wooden dock extends from the foreground into the scene. It is constructed from planks running horizontally; the lines and shading of the planks should suggest wood grain and texture, creating a sense of depth and perspective.
+
+
+**Foreground:**
+
+* **Puppy:** A small, fluffy white puppy, reminiscent of a Bichon Frise or similar breed, is positioned on the wooden dock in the lower center of the frame. The puppy is lying down, appearing relaxed or sleepy.  The fur should be detailed, showing individual highlights and shadows. The eyes, nose and mouth should be distinctly rendered.
+
+**Interaction:**
+
+The puppy appears to be resting peacefully on the dock, as if observing the serene sunset scene.  The puppy's placement should create a sense of scale, highlighting the size of the puppy compared to the vastness of the background scene.  There should be no digital manipulation to the background itself.  The puppy is simply superimposed onto the existing sketch.  The lighting on the puppy should seem natural and consistent with the lighting of the background, further integrating it into the scene.
+
+
+**Overall Mood:**
+
+The overall mood of the image should be peaceful, serene, and calming.  The contrast between the bright white of the puppy and the grayscale background creates a captivating focal point. The image should mimic a composite image where a photograph of a puppy has been digitally inserted onto a pencil drawing of a calm, sunset scene.

@@ -1,0 +1,13 @@
+Generate a grayscale image in the style of a realistic charcoal or graphite drawing.  The scene is a still life composition on a loosely draped, light-colored fabric, possibly linen or cotton. The fabric should have subtle wrinkles and folds, suggesting a soft texture.
+
+The main elements are:
+
+* **A wine glass:** A stemmed wine glass, partially filled with a clear liquid, possibly white wine. The glass should be rendered with meticulous detail, showing reflections and refractions of light. The stem should be slender and elegant.  Pay close attention to the highlights and shadows on the glass, particularly the way light passes through the liquid.
+
+* **A crushed can:** A discarded aluminum soda can, lying on its side, slightly crushed. Show the texture of the metal, including dents and the embossed details on the can. The top should be clearly visible, open.
+
+* **A chocolate bar:** A rectangular chocolate bar, partially eaten, lying on the fabric next to the can.  The squares of chocolate should be clearly defined, with some showing a slight bite mark.  Render the texture of the chocolate, showing a slightly glossy sheen.
+
+* **An apple:** A single, slightly shadowed apple, resting near the wine glass and slightly behind it.  It should be a simple, realistically rendered apple, not overly detailed. Render its round shape and subtle shading to imply its smooth skin.
+
+The lighting should be soft and diffused, likely coming from an unseen source slightly above and to the left of the composition.  This should create subtle shadows and highlights, emphasizing the three-dimensionality of the objects. The background should be a simple, slightly darker gray, providing a neutral backdrop that doesn't distract from the still life elements.  The overall mood should be calm and contemplative, evocative of a classic still life painting.  The level of detail should be high, mirroring the precision of a highly skilled pencil drawing. The focus should be sharpest on the central objects—the wine glass and the chocolate bar—with a slightly softer focus on the apple and crushed can.

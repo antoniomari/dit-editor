@@ -1,0 +1,9 @@
+Generate an image of a suburban backyard scene on a slightly overcast day.  The style should be photorealistic, with a slightly muted color palette.
+
+The main focus is a large expanse of bright green, slightly unkempt lawn that dominates the foreground and middle ground.  This lawn is slightly uneven in texture, with some patches appearing a little drier or sandier, particularly in the immediate foreground.  Sparse patches of small weeds or grass are visible on this foreground area.
+
+In the mid-ground, there's a well-maintained, single-story house with a dark brown or grey roof. The house is simple in design, not ornate.  It is partially obscured by mature deciduous trees with full, green canopies that partially frame the house.  A chain-link fence runs partially across the scene in the middle ground, separating the lawn from what appears to be another property or perhaps a neighbor's yard.  Behind the fence, hints of other landscaping, including some shrubs and potentially another building, are visible.
+
+The background features more of these mature trees, creating a dense but not overwhelmingly dark canopy.  The lighting is soft and diffused, suggesting an overcast sky, with no harsh shadows.  The overall lighting is even and natural.
+
+The composition is straightforward; the viewer's perspective is from a slightly lower angle, looking towards the house across the lawn.  The image should have a relatively shallow depth of field, focusing sharply on the lawn in the foreground and gradually softening focus towards the background trees.  There's a sense of calm and quiet in the overall atmosphere. No people should be explicitly visible, although some subtle indications of human activity (like a glimpse of something near the fence) may be acceptable.

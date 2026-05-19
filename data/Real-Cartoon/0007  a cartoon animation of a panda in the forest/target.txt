@@ -1,0 +1,16 @@
+Generate an image of a cartoon-style forest clearing with a realistically rendered giant panda bear sitting in the foreground.
+
+**Background:**
+
+The background should be a stylized cartoon forest scene.  It features a clearing of pale yellowish-tan sand or dirt.  Surrounding the clearing are numerous tall, slender trees with dark brown trunks and lush green canopies. The trees are evenly spaced, creating a sense of depth.  Small bushes and tufts of grass are scattered around the base of the trees and within the clearing.  The overall style should be bright, cheerful, and reminiscent of children's book illustrations. The lighting is soft and diffused, with no harsh shadows.
+
+**Foreground:**
+
+In the center of the clearing, slightly off-center towards the lower portion, sits a realistically rendered giant panda. The panda should appear slightly larger than the scale of the background elements, implying a sense of presence. The panda is sitting with its head slightly bowed, giving it a peaceful or pensive expression.  Its fur should be highly detailed, showing the texture and shading of the black and white fur.  It should not be cartoonized but photorealistic in contrast to the background.
+
+**Interaction:**
+
+The panda is clearly superimposed onto the background.  There should be no attempt to blend the panda into the background; the contrast between the photorealistic panda and the cartoon background should be obvious.  The panda casts no shadow on the ground, preserving the flat plane and cartoonish style of the background.  The panda's presence slightly changes the clearing.  The slightly uneven dirt/sand surface of the clearing should still be visible around and slightly under the panda.
+
+
+The overall feeling of the image should be whimsical and slightly surreal due to the clash of styles between the realistic panda and the cartoon forest.

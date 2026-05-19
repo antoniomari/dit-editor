@@ -1,0 +1,11 @@
+Generate an image of a tranquil waterfront scene at sunset.  The style should be photorealistic, aiming for a slightly muted, almost melancholic color palette.
+
+**Foreground:** The immediate foreground is a gently sloping sandy beach, composed of fine, dark-grey sand with small, scattered pebbles and debris. The focus should be sharply on the sand in the very foreground, gradually softening into a slight blur as it recedes towards the water.
+
+**Midground:**  A calm, dark-grey-blue body of water occupies the midground, reflecting the sky and the bridge in a slightly blurred, long-exposure effect suggesting a gentle current. The water should appear relatively still, with subtle ripples visible.
+
+**Background:** The background features a long, modern bridge spanning across the water. The bridge is a muted grey-brown color, with a fairly simple design.  Behind the bridge, a cityscape is visible. The most prominent structure is a tall, rectangular high-rise building, dark in silhouette,  evoking a slightly industrial or business feel. Several other smaller buildings are visible but less distinct.
+
+**Sky:** The sky dominates the upper portion of the image. It's a dramatic blend of colors – a mostly overcast sky with streaks of pale yellow and orange hinting at a sunset hidden behind the clouds. The clouds are mostly dark grey-blue and light grey-white,  with a dynamic, somewhat turbulent feel suggesting the possibility of an approaching storm or the remnants of one.  The lighting should be soft, diffused sunset light, casting long shadows and creating a contrast between the brightly lit sky and the darker silhouettes of the buildings and bridge.
+
+**Overall Composition:** The composition should be a wide shot, with the foreground sand leading the eye towards the bridge and city skyline in the distance. The horizon line should be placed roughly in the lower third of the image. The overall mood should be serene yet slightly dramatic, due to the contrast between the peaceful water and the somewhat brooding sky.  The image should have a slightly desaturated or vintage feel, enhancing the nostalgic atmosphere.

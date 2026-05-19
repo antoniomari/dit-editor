@@ -1,0 +1,28 @@
+Generate an image of a tranquil waterfront scene at sunset.  The focus should be on a long, modern bridge spanning a calm body of water. The bridge should be a dark grey or black silhouette against a vibrant but muted sunset sky.
+
+**Scene:**
+
+* The bridge is the central element, extending across most of the image's width. It's a multi-lane bridge with visible supports and potentially some architectural detail suggesting a drawbridge mechanism.
+* Beyond the bridge, a cityscape is visible on the opposite shore.  Include a prominent, dark-colored high-rise building as a key part of the skyline. Other, less prominent buildings should be visible.
+* The foreground should consist of a textured, sandy beach, with a shallow depth of field emphasizing the texture of the sand close to the camera. The sand should appear dark, almost grey-brown, in the low light.  Small, light-colored particles or shells can be scattered across the sand for added realism.
+* The water should be relatively calm, reflecting the sky and the bridge, though with a subtle, almost imperceptible motion blur to suggest gentle currents.
+
+
+**Lighting:**
+
+* The lighting should evoke a sunset scene. The sky should display a mix of warm oranges and yellows near the horizon, gradually transitioning into cooler blues and purples higher up.  There should be a soft, diffused light, avoiding harsh shadows. The overall color palette should be fairly subdued, leaning towards the muted side. The bridge and city should be dark silhouettes against this vibrant sky.
+
+
+**Style:**
+
+* The overall style should be realistic, with a slightly painterly or photographic feel.  Focus on capturing a sense of peace and tranquility. The image should have a widescreen cinematic aspect ratio.
+
+
+**Composition:**
+
+* The composition should utilize the rule of thirds, with the bridge positioned off-center and the cityscape as a visual counterpoint. The beach in the foreground acts as a leading line drawing the eye towards the bridge and cityscape. The sky should take up a significant portion of the upper part of the frame.
+
+
+**Overall:**
+
+The image should communicate a serene and contemplative atmosphere, focusing on the interplay of architecture, nature, and the beauty of a sunset over water. The overall mood should be peaceful and slightly melancholic.
